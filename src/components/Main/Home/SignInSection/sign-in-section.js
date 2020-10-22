@@ -22,31 +22,32 @@ const styles = StyleSheet.create({
       height: 100,
       width: "80%",
       margin: 20,
-      alignSelf: "center"
+      alignSelf: "center",
+      marginBottom: 50,
+      marginTop: 30
     },
     text: {
        color: 'white',
-       width: "80%"
     },
     textBold: {
       color: 'white',
       //fontWeight: 'bold',
-      fontSize: 18
+      fontSize: 20
    },
    
     signInBtn:{
       width:"100%",
       backgroundColor:"#2384ae",
       borderRadius:5,
-      height:30,
+      height: 35,
       alignItems:"center",
       justifyContent:"center",
-      marginTop:10,
-      marginBottom:20,
+      marginTop:20,
+      marginBottom:30,
     },
     buttonText:{
       color:"white",
-      fontSize:11,
+      fontSize:12,
       textTransform: "uppercase",
       fontWeight: "bold"
     },
