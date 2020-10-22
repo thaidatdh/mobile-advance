@@ -1,7 +1,7 @@
 import React from "react";
 import { ScrollView, View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Button } from "react-native-paper";
-import SectionAuthorItem from "../SectionAuthorItem/section-author-item";
+import SectionAuthorItem from "./SectionAuthorItem/section-author-item";
 
 const SectionAuthor = (props) => {
   const tagsList = [{

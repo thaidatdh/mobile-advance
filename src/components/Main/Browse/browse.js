@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { ScrollView, View, StyleSheet } from "react-native";
-/*import ImageButton from "../../Common/image-button";
-import SectionCategories from "./SectionCategories/section-categories";*/
-import SectionCourses from "./SectionCourses/section-courses";
-/*import SignInSection from "./SignInSection/sign-in-section";
+import ImageButton from "../../Common/image-button";
+import SectionCategories from "./SectionCategories/section-categories";
+import SignInSection from "./SignInSection/sign-in-section";
 import SectionTags from "./SectionTags/section-tag"
-import SectionAuthor from "./SectionAuthors/section-authors"*/
+import SectionAuthor from "./SectionAuthors/section-authors"
 
-const Home = (props) => {
+const Browse = (props) => {
   const imageButtonData = [{
     id: 1,
     title: ["New", "Releases"],
@@ -26,7 +25,7 @@ const Home = (props) => {
 
   return (
     <ScrollView style={styles.container}>
-      {/*<SignInSection
+      <SignInSection
         style={isSignedIn ? styles.signedIn : styles.notSignedIn}
         isSignedIn={isSignedIn}
       />
@@ -41,12 +40,12 @@ const Home = (props) => {
         onPress={onPressNewReleaseButton()}
       />
       <SectionCategories/>
-      <SectionTags title="Popular Skills"/>*/}
-      <SectionCourses title="Continue learning" />
+      <SectionTags title="Popular Skills"/>
+      {/*<SectionCourses title="Continue learning" />
       <SectionCourses title="Path" />
       <SectionCourses title="Channel" />
-      <SectionCourses title="Bookmark" />
-      {/*<SectionAuthor title="Top Authors"/>*/}
+      <SectionCourses title="Bookmark" />*/}
+  <SectionAuthor title="Top Authors"/>
     </ScrollView>
   );
 };
@@ -62,4 +61,4 @@ const styles = StyleSheet.create({
     margin: 0,
   },
 });
-export default Home;
+export default Browse;

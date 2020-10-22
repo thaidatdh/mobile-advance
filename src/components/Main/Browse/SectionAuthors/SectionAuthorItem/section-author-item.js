@@ -5,7 +5,7 @@ const SectionAuthorItem = (props) => {
   return (
     <View style={styles.item}>
       <Image
-        source={require("../../../../../assets/bg.png")}
+        source={require("../../../../../../assets/bg.png")}
         style={styles.image}
       />
       <View style={styles.titleView}>
