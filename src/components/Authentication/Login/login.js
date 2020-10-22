@@ -16,7 +16,31 @@ const Login = (props) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [secureTextEntry, setSecureTextEntry] = useState(true);
-
+  const [isReadyToLogin, setIsReadyToLogin] = useState(false);
+  const onUsernameChange = (text) => {
+    setUsername(text);
+    if (username.length > 0 && password.length > 0) {
+      setIsReadyToLogin(true);
+    }
+    else {
+      setIsReadyToLogin(false);
+    }
+  }
+  const onPasswordChange = (text) => {
+    setPassword(text);
+    if (username.length > 0 && password.length > 0) {
+      setIsReadyToLogin(true);
+    }
+    else {
+      setIsReadyToLogin(false);
+    }
+  }
+  const onLogin = () => {
+    if (!isReadyToLogin) {
+      return;
+    }
+    console.log("Login");
+  }
   const updateSecureTextEntry = () => {
     setSecureTextEntry(!secureTextEntry);
   };
@@ -39,16 +63,16 @@ const Login = (props) => {
           label="Username (or Email)"
           theme={themeTextInput}
           value={username}
-          onChangeText={(text) => setUsername(text)}
+          onChangeText={(text) => onUsernameChange(text)}
         />
         <TextInput
           name="password"
           style={styles.input}
           label="Password"
           theme={themeTextInput}
-          secureTextEntry={secureTextEntry ? true : false}
+          secureTextEntry={secureTextEntry}
           value={password}
-          onChangeText={(text) => setPassword(text)}
+          onChangeText={(text) => onPasswordChange(text)}
           right={
             secureTextEntry ? (
               <TextInput.Icon
@@ -73,9 +97,13 @@ const Login = (props) => {
           }
         />
       </View>
-      <Button style={styles.signInBtn}>
+      <TouchableOpacity 
+        style={isReadyToLogin ? styles.signInBtn : styles.signInBtnDisabled} 
+        disabled={!isReadyToLogin}
+        onPress={onLogin}
+      >
         <Text style={styles.buttonText}>SIGN IN</Text>
-      </Button>
+      </TouchableOpacity>
       <TouchableOpacity style={styles.linkBtn}>
         <Text style={styles.buttonTextBlue}>Forgot Password?</Text>
       </TouchableOpacity>
@@ -118,13 +146,24 @@ const styles = StyleSheet.create({
   signInBtn: {
     borderRadius: 5,
     width: width * 0.8,
-
+    height: height * 0.05,
+    backgroundColor: "#2384ae",
+    color: "#818286",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 10,
+    marginBottom: 20,
+  },
+  signInBtnDisabled: {
+    borderRadius: 5,
+    width: width * 0.8,
+    height: height * 0.05,
     backgroundColor: "#2b2c30",
     color: "#818286",
     alignItems: "center",
     justifyContent: "center",
-    marginTop: width * 0.025,
-    marginBottom: width * 0.05,
+    marginTop:10,
+    marginBottom: 10,
   },
   signOnSSOBtn: {
     width: width * 0.8,
@@ -134,7 +173,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderColor: "#2384ae",
     borderWidth: 2,
-    marginBottom: width * 0.025,
+    marginBottom: 10,
   },
   linkBtn: {
     width: width * 0.8,
@@ -142,7 +181,7 @@ const styles = StyleSheet.create({
     height: width * 0.1,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: width * 0.025,
+    marginBottom: 10,
   },
 });
 
