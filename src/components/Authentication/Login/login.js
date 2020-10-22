@@ -1,13 +1,21 @@
 import React, { useState } from "react";
-import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  Dimensions,
+  
+} from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-import { TextInput } from "react-native-paper";
+import { Button,TextInput } from "react-native-paper";
+
+const { width, height } = Dimensions.get("screen");
+
 const Login = (props) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [secureTextEntry, setSecureTextEntry] = useState(true);
-  const [usernameFocus, setUsernameFocus] = useState(false);
-  const [passwordFocus, setPasswordFocus] = useState(false);
 
   const updateSecureTextEntry = () => {
     setSecureTextEntry(!secureTextEntry);
@@ -24,7 +32,7 @@ const Login = (props) => {
   return (
     <View style={styles.container}>
       <View style={{ margin: 20 }} />
-      <View style={usernameFocus ? styles.inputViewFocus : styles.inputView}>
+      <View>
         <TextInput
           name="username"
           style={styles.input}
@@ -32,11 +40,7 @@ const Login = (props) => {
           theme={themeTextInput}
           value={username}
           onChangeText={(text) => setUsername(text)}
-          onFocus={() => setUsernameFocus(true)}
-          onBlur={() => setUsernameFocus(false)}
         />
-      </View>
-      <View style={passwordFocus ? styles.inputViewFocus : styles.inputView}>
         <TextInput
           name="password"
           style={styles.input}
@@ -45,8 +49,6 @@ const Login = (props) => {
           secureTextEntry={secureTextEntry ? true : false}
           value={password}
           onChangeText={(text) => setPassword(text)}
-          onFocus={() => setPasswordFocus(true)}
-          onBlur={() => setPasswordFocus(false)}
           right={
             secureTextEntry ? (
               <TextInput.Icon
@@ -71,15 +73,15 @@ const Login = (props) => {
           }
         />
       </View>
-      <TouchableOpacity style={styles.signInBtn}>
+      <Button style={styles.signInBtn}>
         <Text style={styles.buttonText}>SIGN IN</Text>
-      </TouchableOpacity>
+      </Button>
       <TouchableOpacity style={styles.linkBtn}>
         <Text style={styles.buttonTextBlue}>Forgot Password?</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.signOnSSOBtn}>
+      <Button style={styles.signOnSSOBtn}>
         <Text style={styles.buttonTextBlue}>Use Single Sign-On (SSO)</Text>
-      </TouchableOpacity>
+      </Button>
       <TouchableOpacity style={styles.linkBtn}>
         <Text style={styles.buttonTextBlue}>Sign up FREE</Text>
       </TouchableOpacity>
@@ -93,32 +95,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#0E0F13",
     alignItems: "center",
   },
-  inputView: {
-    width: "80%",
-    backgroundColor: "#1f242a",
-    borderRadius: 5,
-    height: 50,
-    marginBottom: 20,
-    alignItems: "center",
-    borderBottomColor: "gray",
-    borderBottomWidth: 2,
-  },
-  inputViewFocus: {
-    width: "80%",
-    backgroundColor: "#1f242a",
-    borderRadius: 5,
-    height: 50,
-    marginBottom: 20,
-    alignItems: "center",
-    borderBottomColor: "#2384ae",
-    borderBottomWidth: 2,
-  },
   input: {
     flex: 1,
-    width: "100%",
-    height: "100%",
+    width: width * 0.8,
     color: "white",
     backgroundColor: "#1f242a",
+    margin: width * 0.01,
   },
   buttonText: {
     color: "white",
@@ -134,34 +116,33 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   signInBtn: {
-    width: "80%",
+    borderRadius: 5,
+    width: width * 0.8,
+
     backgroundColor: "#2b2c30",
     color: "#818286",
-    borderRadius: 5,
-    height: 40,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 10,
-    marginBottom: 20,
+    marginTop: width * 0.025,
+    marginBottom: width * 0.05,
   },
   signOnSSOBtn: {
-    width: "80%",
+    width: width * 0.8,
     backgroundColor: "#0E0F13",
     borderRadius: 5,
-    height: 40,
     alignItems: "center",
     justifyContent: "center",
     borderColor: "#2384ae",
     borderWidth: 2,
-    marginBottom: 10,
+    marginBottom: width * 0.025,
   },
   linkBtn: {
-    width: "80%",
+    width: width * 0.8,
     borderRadius: 5,
-    height: 40,
+    height: width * 0.1,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 10,
+    marginBottom: width * 0.025,
   },
 });
 

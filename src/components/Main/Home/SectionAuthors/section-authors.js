@@ -108,14 +108,5 @@ const styles = StyleSheet.create({
     fontSize: 16, 
     color:'white'
   },
-  tag: {
-    backgroundColor: '#2b2c30',
-    borderRadius: 20,
-    margin: 5,
-    color: 'white',
-    padding: 5,
-    paddingLeft: 10,
-    paddingRight: 10
-  },
 });
 export default SectionAuthor;

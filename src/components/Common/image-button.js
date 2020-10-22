@@ -4,7 +4,9 @@ import {
   StyleSheet,
   ImageBackground,
   TouchableOpacity,
+  Dimensions
 } from "react-native";
+const {width, height} = Dimensions.get("screen");
 
 const ImageButton = (props) => {
   const texts = [];
@@ -33,7 +35,7 @@ const ImageButton = (props) => {
 };
 const styles = StyleSheet.create({
   button: {
-    height: 100,
+    height: height * 0.12,
     marginLeft: 15,
     marginRight: 15,
     marginTop: 5,
@@ -51,7 +53,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     textTransform: "uppercase",
-    width: "50%",
   },
 });
 export default ImageButton;

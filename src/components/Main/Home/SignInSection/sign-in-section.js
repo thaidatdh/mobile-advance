@@ -1,5 +1,7 @@
 import React from 'react'
-import {View, StyleSheet, Text, TouchableOpacity} from 'react-native'
+import {View, StyleSheet, Text, TouchableOpacity, Dimensions} from 'react-native'
+import { Button } from 'react-native-paper';
+const {width, height} = Dimensions.get("screen");
 
 const SignInSection = (props) => {
    if (props.isSignedIn) {
@@ -7,11 +9,14 @@ const SignInSection = (props) => {
    }
 
    return <View style={styles.container}>
+     <View style={{width: width*0.7}}>
       <Text style={styles.textBold}>Sign in to skill up today</Text>
       <Text style={styles.text}>Keep your skill up-to-date with access to thousands of courses by industry experts.</Text>
-      <TouchableOpacity style={styles.signInBtn}>
+     </View>
+      
+      <Button style={styles.signInBtn}>
         <Text style={styles.buttonText}>sign in to start watching</Text>
-      </TouchableOpacity>
+      </Button>
    </View>
 }
 const styles = StyleSheet.create({
@@ -19,11 +24,10 @@ const styles = StyleSheet.create({
       flex:1, 
       backgroundColor: '#0E0F13',
       color: 'white',
-      height: 100,
-      width: "80%",
+      width: width* 0.8,
       margin: 20,
       alignSelf: "center",
-      marginBottom: 50,
+      marginBottom: 10,
       marginTop: 30
     },
     text: {
@@ -36,10 +40,10 @@ const styles = StyleSheet.create({
    },
    
     signInBtn:{
-      width:"100%",
+      width:width*0.8,
       backgroundColor:"#2384ae",
       borderRadius:5,
-      height: 35,
+      /*height: height * 0.01,*/
       alignItems:"center",
       justifyContent:"center",
       marginTop:20,

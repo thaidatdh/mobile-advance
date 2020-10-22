@@ -4,8 +4,9 @@ import {
   StyleSheet,
   ImageBackground,
   TouchableOpacity,
+  Dimensions
 } from "react-native";
-
+const {width, height} = Dimensions.get("screen");
 const SmallImageButton = (props) => {
   const texts = [];
 
@@ -35,24 +36,16 @@ const SmallImageButton = (props) => {
 };
 const styles = StyleSheet.create({
   button: {
-    height: 70,
+    height: height*0.075,
     marginTop: 5,
     marginBottom: 5,
-    width: 150,
+    width: width * 0.40,
   },
   touch: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "column",
-  },
-  text: {
-    fontSize: 24,
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
-    textTransform: "uppercase",
-    width: "80%",
   },
 });
 export default SmallImageButton;
