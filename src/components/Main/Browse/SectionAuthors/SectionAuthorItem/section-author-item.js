@@ -1,5 +1,6 @@
 import React from "react";
-import { Image, View, Text, StyleSheet } from "react-native";
+import { Image, View, Text, StyleSheet, Dimensions } from "react-native";
+const {width, height} = Dimensions.get("screen");
 
 const SectionAuthorItem = (props) => {
   return (
@@ -18,15 +19,15 @@ const styles = StyleSheet.create({
   item: {
     flex: 1,
     margin: 5,
-    width: 100,
-    height: 200,
+    width: width * 0.2,
+    height: width * 0.3,
     color: 'white',
     alignItems: "center",
   },
   image: {
-    height: 100,
-    width: 100,
-    borderRadius: 50,
+    height: width * 0.2,
+    width: width * 0.2,
+    borderRadius: width * 0.1,
   },
   titleView: {
     height: 50,
