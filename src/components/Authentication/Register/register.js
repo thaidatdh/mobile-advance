@@ -7,6 +7,7 @@ import {
   Dimensions,
   
 } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import { Button,TextInput } from "react-native-paper";
 
 const { width, height } = Dimensions.get("screen");
@@ -67,8 +68,8 @@ const Register = (props) => {
   };
   return (
     <View style={styles.container}>
-      <View style={{ margin: 20 }} />
-      <View>
+      <ScrollView horizontal={false}>
+        <View style={{ margin: 20 }} />
         <TextInput
           style={styles.input}
           label="Email *"
@@ -164,8 +165,7 @@ const Register = (props) => {
             )
           }
         />
-      </View>
-        {errorCode != -1 ? <Text style={{color: 'red'}}>{errorValue[errorCode]}</Text> : null}
+      {errorCode != -1 ? <Text style={{color: 'red'}}>{errorValue[errorCode]}</Text> : null}
       <TouchableOpacity style={styles.signInBtn} onPress={onRegister}>
         <Text style={styles.buttonText}>SIGN UP</Text>
       </TouchableOpacity>
@@ -175,7 +175,8 @@ const Register = (props) => {
       <Button style={styles.signOnSSOBtn}>
         <Text style={styles.buttonTextBlue}>Use Single Sign-On (SSO)</Text>
       </Button>
-
+      <View style={{ margin: 20 }} />
+      </ScrollView>
     </View>
   );
 };

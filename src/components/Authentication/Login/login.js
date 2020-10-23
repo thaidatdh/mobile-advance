@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import { Button,TextInput } from "react-native-paper";
+import { ScrollView } from "react-native-gesture-handler";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -56,7 +57,7 @@ const Login = (props) => {
   return (
     <View style={styles.container}>
       <View style={{ margin: 20 }} />
-      <View>
+      <ScrollView horizontal={false}>
         <TextInput
           name="username"
           style={styles.input}
@@ -96,23 +97,24 @@ const Login = (props) => {
             )
           }
         />
-      </View>
-      <TouchableOpacity 
+        <TouchableOpacity 
         style={isReadyToLogin ? styles.signInBtn : styles.signInBtnDisabled} 
         disabled={!isReadyToLogin}
         onPress={onLogin}
-      >
-        <Text style={styles.buttonText}>SIGN IN</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.linkBtn}>
-        <Text style={styles.buttonTextBlue}>Forgot Password?</Text>
-      </TouchableOpacity>
-      <Button style={styles.signOnSSOBtn}>
-        <Text style={styles.buttonTextBlue}>Use Single Sign-On (SSO)</Text>
-      </Button>
-      <TouchableOpacity style={styles.linkBtn}>
-        <Text style={styles.buttonTextBlue}>Sign up FREE</Text>
-      </TouchableOpacity>
+        >
+          <Text style={styles.buttonText}>SIGN IN</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.linkBtn}>
+          <Text style={styles.buttonTextBlue}>Forgot Password?</Text>
+        </TouchableOpacity>
+        <Button style={styles.signOnSSOBtn}>
+          <Text style={styles.buttonTextBlue}>Use Single Sign-On (SSO)</Text>
+        </Button>
+        <TouchableOpacity style={styles.linkBtn}>
+          <Text style={styles.buttonTextBlue}>Sign up FREE</Text>
+        </TouchableOpacity>
+      </ScrollView>
+      
     </View>
   );
 };

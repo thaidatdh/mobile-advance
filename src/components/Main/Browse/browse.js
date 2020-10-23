@@ -5,6 +5,7 @@ import SectionCategories from "./SectionCategories/section-categories";
 import SignInSection from "./SignInSection/sign-in-section";
 import SectionTags from "./SectionTags/section-tag"
 import SectionAuthor from "./SectionAuthors/section-authors"
+import SectionPath from "./SectionPaths/section-path"
 
 const Browse = (props) => {
   const imageButtonData = [{
@@ -41,11 +42,8 @@ const Browse = (props) => {
       />
       <SectionCategories/>
       <SectionTags title="Popular Skills"/>
-      {/*<SectionCourses title="Continue learning" />
-      <SectionCourses title="Path" />
-      <SectionCourses title="Channel" />
-      <SectionCourses title="Bookmark" />*/}
-  <SectionAuthor title="Top Authors"/>
+      <SectionPath title="Paths"/>
+      <SectionAuthor title="Top Authors"/>
     </ScrollView>
   );
 };

@@ -17,10 +17,10 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Sign Up" component={Register} />
-        <Stack.Screen name="Sign In" component={Login} />
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Browse" component={Browse} />
+        <Stack.Screen name="Sign Up" component={Register} />
+        <Stack.Screen name="Sign In" component={Login} />
         <Stack.Screen name="List" component={ListCourses} />
       </Stack.Navigator>
     </NavigationContainer>
