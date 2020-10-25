@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { ScrollView, View, StyleSheet } from "react-native";
-
+import { ScrollView, View, StyleSheet, Dimensions } from "react-native";
+const {width, height} = Dimensions.get("window");
 const Setting = (props) => {
    return (
       <View style={styles.container}>

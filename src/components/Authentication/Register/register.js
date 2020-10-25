@@ -10,7 +10,7 @@ import {
 import { ScrollView } from "react-native-gesture-handler";
 import { Button,TextInput } from "react-native-paper";
 
-const { width, height } = Dimensions.get("screen");
+const { width, height } = Dimensions.get("window");
 
 const Register = (props) => {
   const [username, setUsername] = useState("");

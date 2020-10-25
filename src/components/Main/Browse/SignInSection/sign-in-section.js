@@ -1,7 +1,7 @@
 import React from 'react'
 import {View, StyleSheet, Text, TouchableOpacity, Dimensions} from 'react-native'
 import { Button } from 'react-native-paper';
-const {width, height} = Dimensions.get("screen");
+const {width, height} = Dimensions.get("window");
 
 const SignInSection = (props) => {
    if (props.isSignedIn) {

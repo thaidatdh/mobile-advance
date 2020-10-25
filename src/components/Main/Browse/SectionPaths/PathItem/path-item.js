@@ -1,6 +1,6 @@
 import React from "react";
 import { Image, View, Text, StyleSheet, Dimensions } from "react-native";
-const {width, height} = Dimensions.get("screen");
+const {width, height} = Dimensions.get("window");
 const PathItem = (props) => {
   return (
     <View style={styles.item}>
@@ -22,7 +22,8 @@ const styles = StyleSheet.create({
   item: {
     margin: 5,
     width: width * 0.5,
-    height: height * 0.25,
+    maxWidth: 300,
+    minHeight: height * 0.25,
     backgroundColor: "#2b2c30",
   },
   imageView: {

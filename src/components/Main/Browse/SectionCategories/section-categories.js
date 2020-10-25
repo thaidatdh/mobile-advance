@@ -204,7 +204,7 @@ const SectionCategories = (props) => {
 
   const renderListItems = (category) => {
     return (
-      <View key={category[0].id + "+"} style={{ margin: 5 }}>
+      <View key={category[0].id + "+"} style={{ margin: 10 }}>
         <SmallImageButton
           key={category[0].id}
           title={category[0].title}

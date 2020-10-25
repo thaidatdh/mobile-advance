@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   Dimensions
 } from "react-native";
-const {width, height} = Dimensions.get("screen");
+const {width, height} = Dimensions.get("window");
+const maxWidth = width * 0.4 > 300 ? 300 : width * 0.4;
 const SmallImageButton = (props) => {
   const texts = [];
 
@@ -39,7 +40,7 @@ const styles = StyleSheet.create({
     height: height*0.075,
     marginTop: 5,
     marginBottom: 5,
-    width: width * 0.40,
+    width: maxWidth
   },
   touch: {
     flex: 1,

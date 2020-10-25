@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Text, View, StyleSheet, Image, Dimensions } from "react-native";
 import ProfileContentSecion from "./profile-content-section";
-const {width, height} = Dimensions.get("screen");
+const {width, height} = Dimensions.get("window");
 const Profile = (props) => {
   const sections = [{
     title: 'total active days',
@@ -21,7 +21,7 @@ const Profile = (props) => {
     lastName: "Ho",
   }
   const createSections = () => {
-    return sections.map((item) => <ProfileContentSecion title={item.title} value={item.value} subValue={item.subValue}/>);
+    return sections.map((item) => <ProfileContentSecion key={item.title} title={item.title} value={item.value} subValue={item.subValue}/>);
   }
 
   return (

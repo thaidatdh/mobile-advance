@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Dimensions
 } from "react-native";
-const {width, height} = Dimensions.get("screen");
+const {width, height} = Dimensions.get("window");
 
 const ImageButton = (props) => {
   const texts = [];

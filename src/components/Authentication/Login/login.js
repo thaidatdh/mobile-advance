@@ -11,7 +11,7 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import { Button,TextInput } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
 
-const { width, height } = Dimensions.get("screen");
+const { width, height } = Dimensions.get("window");
 
 const Login = (props) => {
   const [username, setUsername] = useState("");
