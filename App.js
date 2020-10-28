@@ -12,6 +12,7 @@ import Register from "./src/components/Authentication/Register/register"
 import Profile from "./src/components/AccountManagement/Profile/profile";
 import Setting from "./src/components/AccountManagement/Settings/settings";
 import CourseDetail from "./src/components/Courses/CourseDetail/course-detail"
+import CoursePath from "./src/components/Courses/CoursePath/course-path";
 
 
 const Stack = createStackNavigator();
@@ -21,6 +22,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+      <Stack.Screen name="Course Path" component={CoursePath}/>
         <Stack.Screen name="Course" component={renderCourseDetaul}/>
         <Stack.Screen name="Browse" component={Browse} />
         <Stack.Screen name="List" component={renderListCourse}  />
