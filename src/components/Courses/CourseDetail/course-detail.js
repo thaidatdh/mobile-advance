@@ -19,7 +19,8 @@ const CourseDetail = (props) => {
     duration: '9.6 h',
     rating: 4.5,
     ratingCount: 896,
-    descriptions: 'Descriptions\n12345\n12345\n12345',
+    descriptions: 'Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345',
+    transcript: 'Transcript\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345',
     sections: [{
       id: 1,
       title:'section 1',
@@ -45,7 +46,7 @@ const CourseDetail = (props) => {
             style={styles.image}
         />
       </View>
-      <ScrollView contentContainerStyle={{height: height*0.7}}>
+      <ScrollView style={{height: height * 0.7}}>
         <CourseInfo course={courseDetail} />
       </ScrollView>
     </View>

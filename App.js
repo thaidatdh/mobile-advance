@@ -21,8 +21,8 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Browse" component={Browse} />
         <Stack.Screen name="Course" component={renderCourseDetaul}/>
+        <Stack.Screen name="Browse" component={Browse} />
         <Stack.Screen name="List" component={renderListCourse}  />
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Sign Up" component={Register} />
