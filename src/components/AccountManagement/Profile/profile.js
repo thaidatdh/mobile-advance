@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     width: width * 0.15,
     maxHeight: 200,
     maxWidth: 200,
-    borderRadius: "50%",
+    borderRadius: width * 0.15 > 200 ? 100 : width * 0.15 * 0.5,
     margin: 20,
     alignSelf: "center",
   },

@@ -11,21 +11,24 @@ import Browse from "./src/components/Main/Browse/browse";
 import Register from "./src/components/Authentication/Register/register"
 import Profile from "./src/components/AccountManagement/Profile/profile";
 import Setting from "./src/components/AccountManagement/Settings/settings";
-
+import CourseDetail from "./src/components/Courses/CourseDetail/course-detail"
 
 
 const Stack = createStackNavigator();
 export default function App() {
+  const renderListCourse = () => {return <ListCourses title="Software Development"/>};
+  const renderCourseDetaul = () => {return <CourseDetail/>};
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Profile" component={Profile} />
-        <Stack.Screen name="Settings" component={Setting} />
         <Stack.Screen name="Browse" component={Browse} />
+        <Stack.Screen name="Course" component={renderCourseDetaul}/>
+        <Stack.Screen name="List" component={renderListCourse}  />
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Sign Up" component={Register} />
         <Stack.Screen name="Sign In" component={Login} />
-        <Stack.Screen name="List" component={ListCourses} />
+        <Stack.Screen name="Profile" component={Profile} />
+        <Stack.Screen name="Settings" component={Setting} />
       </Stack.Navigator>
     </NavigationContainer>
   );

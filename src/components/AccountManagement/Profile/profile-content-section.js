@@ -14,7 +14,6 @@ const ProfileContentSecion = (props) => {
 };
 const styles = StyleSheet.create({
    container: {
-      flex: 1,
       backgroundColor: "#0E0F13",
       marginTop: 10,
       marginBottom: 10

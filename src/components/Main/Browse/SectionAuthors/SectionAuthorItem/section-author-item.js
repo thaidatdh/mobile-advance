@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     width: width * 0.2,
     maxHeight: 100,
     maxWidth: 100,
-    borderRadius: "50%",
+    borderRadius: width * 0.15 > 100 ? 50 : width * 0.2 * 0.5,
   },
   titleView: {
     height: 50,

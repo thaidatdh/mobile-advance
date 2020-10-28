@@ -14,13 +14,13 @@ const SmallImageButton = (props) => {
   if (Array.isArray(props.title)) {
     for (const [index, value] of props.title.entries()) {
       if (props.style.length > index) {
-        texts.push(<Text style={props.style[index]}>{value}</Text>);
+        texts.push(<Text key={value} style={props.style[index]}>{value}</Text>);
       } else {
-        texts.push(<Text>{value}</Text>);
+        texts.push(<Text key={value} >{value}</Text>);
       }
     }
   } else {
-    texts.push(<Text style={props.style}>{props.title}</Text>);
+    texts.push(<Text key={value}  style={props.style}>{props.title}</Text>);
   }
 
   return (

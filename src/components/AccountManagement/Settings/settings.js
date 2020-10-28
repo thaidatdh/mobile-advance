@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, View, StyleSheet, Dimensions, Image } from "react-native";
+import { Text, View, StyleSheet, Dimensions, Image, ScrollView } from "react-native";
 import TextSettingButton from "./SettingComponent/text-setting-button";
 import { Button } from "react-native-paper";
 import CheckSettingButton from "./SettingComponent/check-setting-button";
@@ -84,18 +84,18 @@ const Setting = (props) => {
   const renderAccountSection = () => {
     return accountSetting.map((item) =>
       item.type === "text" ? (
-        <TextSettingButton item={item} />
+        <TextSettingButton key={item.title} item={item} />
       ) : (
-        <CheckSettingButton item={item} />
+        <CheckSettingButton key={item.title} item={item} />
       )
     );
   };
   const renderSettingSection = () => {
     return mainSetting.map((item) =>
       item.type === "text" ? (
-        <TextSettingButton item={item} />
+        <TextSettingButton key={item.title} item={item} />
       ) : (
-        <CheckSettingButton item={item} />
+        <CheckSettingButton key={item.title} item={item} />
       )
     );
   };
@@ -103,7 +103,7 @@ const Setting = (props) => {
     return <TextSettingButton item={appVersion} />;
   };
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={{alignItems: 'center'}}>
       <View style={styles.userContainer}>
         <Image
           source={require("../../../../assets/bg.png")}
@@ -120,19 +120,18 @@ const Setting = (props) => {
       <Button style={styles.signOut}>
         <Text style={styles.buttonTextBlue}>Sign Out</Text>
       </Button>
-    </View>
+    </ScrollView>
   );
 };
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#0E0F13",
-    alignItems: "center",
   },
   userContainer: {
     flexDirection: "row",
     justifyContent: "flex-start",
-    width: width * 0.8,
+    width: width * 0.9,
   },
   nameView: {
     flexDirection: "column",
@@ -147,7 +146,7 @@ const styles = StyleSheet.create({
     width: width * 0.15,
     maxHeight: 100,
     maxWidth: 100,
-    borderRadius: "50%",
+    borderRadius: width * 0.15 > 100 ? 50 : width * 0.15 * 0.5,
     margin: 20,
     alignSelf: "center",
   },
@@ -157,11 +156,11 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     borderBottomColor: "gray",
     borderBottomWidth: 1,
-    width: width * 0.8,
+    width: width * 0.9,
   },
   signOut: {
     margin: 20,
-    width: width * 0.8,
+    width: width * 0.9,
     backgroundColor: "#0E0F13",
     borderRadius: 5,
     alignItems: "center",

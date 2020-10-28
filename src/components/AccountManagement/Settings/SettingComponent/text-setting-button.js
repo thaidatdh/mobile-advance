@@ -5,12 +5,12 @@ const {width, height} = Dimensions.get("window");
 const TextSettingButton = (props) => {
     
   return (
-    <TouchableOpacity style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.textContainer}>
         <Text style={{color: 'white'}}>{props.item.title}</Text>
         {props.item.desc ? <Text style={{color: 'gray', fontSize: 12}}>{props.item.desc}</Text> : null}
       </View>
-    </TouchableOpacity>
+    </View>
   );
 };
 const styles = StyleSheet.create({

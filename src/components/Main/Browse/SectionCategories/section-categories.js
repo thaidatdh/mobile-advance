@@ -1,5 +1,6 @@
 import React from "react";
 import { FlatList, View, Text, StyleSheet } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import SmallImageButton from "../../../Common/small-image-button";
 
 const SectionCategories = (props) => {
@@ -202,9 +203,10 @@ const SectionCategories = (props) => {
     },
   ];
 
-  const renderListItems = (category) => {
+  const renderItem = (category) => {
+    const keyValue = category[0].id + "key";
     return (
-      <View key={category[0].id + "+"} style={{ margin: 10 }}>
+      <View key={keyValue} style={{ margin: 10 }}>
         <SmallImageButton
           key={category[0].id}
           title={category[0].title}
@@ -220,16 +222,17 @@ const SectionCategories = (props) => {
       </View>
     );
   };
+  const renderListItems = (list) => {
+    return list.map(item => renderItem(item));
+  }
   var arrays = [];
   var size = 2;
   while (categoryList.length > 0) arrays.push(categoryList.splice(0, size));
   return (
     <View>
-      <FlatList style={{paddingLeft: 10}}
-        data={arrays}
-        horizontal={true}
-        renderItem={({ item, index }) => renderListItems(item)}
-      />
+      <ScrollView horizontal={true}>
+        {renderListItems(arrays)}
+      </ScrollView>
     </View>
   );
 };

@@ -4,22 +4,6 @@ import SectionPath from "../Browse/SectionPaths/section-path";
 import SectionCourses from "./SectionCourses/section-courses";
 
 const Home = (props) => {
-  const imageButtonData = [{
-    id: 1,
-    title: ["New", "Releases"],
-  },
-  {
-    id: 2,
-    title: ["Recommended", "For you"],
-  },
-]
-
-  const [isSignedIn, setSignedIn] = useState(false);
-  const onPressNewReleaseButton = () => {
-    console.log("clicked New Release");
-  };
-
-
   return (
     <ScrollView style={styles.container}>
       <SectionCourses title="Continue learning" />

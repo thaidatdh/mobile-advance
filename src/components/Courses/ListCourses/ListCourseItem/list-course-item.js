@@ -6,8 +6,10 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
+  Dimensions
 } from "react-native";
-
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
+const {width, height} = Dimensions.get("window");
 const ListCourseItem = (props) => {
   return (
     <TouchableOpacity
@@ -30,16 +32,25 @@ const ListCourseItem = (props) => {
       }}
     >
       <Image
-        source={require("../../../../assets/bg.png")}
+        source={require("../../../../../assets/bg.png")}
         style={styles.image}
       />
-      <View style={{ margin: 5 }}>
-        <Text>{props.item.title}</Text>
+      <View style={{ marginLeft: 10 }}>
+        <Text style={styles.title}>{props.item.title}</Text>
         <Text style={styles.darkText}>{props.item.author}</Text>
         <Text style={styles.darkText}>
           {props.item.level} - {props.item.released} - {props.item.duration}
         </Text>
+        <View style={{
+          flexDirection: "row",
+        }}>
+          <Text style={{color:"#f1c40f"}}>{props.item.rating}/5 </Text>
+          <Text style={styles.darkText}>({props.item.ratingCount})</Text>
+        </View>
       </View>
+      <TouchableOpacity style={styles.options}>
+        <FontAwesome5 style={{color: 'lightgray', alignSelf: 'flex-end'}} name="ellipsis-v" size={15}/>
+      </TouchableOpacity>
     </TouchableOpacity>
   );
 };
@@ -47,18 +58,28 @@ const styles = StyleSheet.create({
   item: {
     flexDirection: "row",
     margin: 5,
+    marginLeft: 10,
+    marginRight: 10,
     borderBottomColor: "gray",
     borderBottomWidth: 1,
+    height: height * 0.15,
+    maxHeight: 100,
   },
   image: {
-    width: 100,
-    height: 50,
+    width: width * 0.2,
+    height: "80%",
   },
   title: {
-    fontWeight: "bold",
+    fontSize: 16,
+    color: 'white'
   },
   darkText: {
     color: "darkgray",
+    textTransform: 'capitalize'
   },
+  options: {
+    flex: 1,
+    alignSelf: 'center',
+  }
 });
 export default ListCourseItem;
