@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {
   FlatList,
   ScrollView,
@@ -8,9 +8,10 @@ import {
   Text,
   Dimensions
 } from "react-native";
-import ListCourseItem from "./ListCourseItem/list-course-item";
+import DownloadData from "./download-data";
+import DownloadEmpty from "./download-empty"
 const {width, height} = Dimensions.get("window");
-const ListCourses = (props) => {
+const Download = (props) => {
   const courses = [
     {
       id: 1,
@@ -113,19 +114,13 @@ const ListCourses = (props) => {
       ratingCount: 10,
     },
   ];
-  const renderItems = (coursesList) => {
-    return coursesList.map(item => <ListCourseItem key={item.id.toString()} item={item} />);
-  }
+  const [isEmpty, setIsEmpty] = useState(true);
+
   return (
-    <View style={{flex: 1, backgroundColor: "#0E0F13"}}>
-      <View style={{marginLeft: 10, marginTop: 20, marginBottom: 20, color: 'white'}}>
-        <Text style={{color: 'white', fontSize: 20}}>{props.title}</Text>
-      </View>
-      <ScrollView>
-        {renderItems(courses)}
-      </ScrollView>
+    <View style={{flex:1, backgroundColor: "#0E0F13"}}>
+      {isEmpty ? <DownloadEmpty/> : <DownloadData courses={courses}/>}
     </View>
   );
 };
 
-export default ListCourses;
+export default Download;
