@@ -7,22 +7,20 @@ import {
   SectionList,
   Text,
   Dimensions,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
+import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 const { width, height } = Dimensions.get("window");
 const SearchEmpty = (props) => {
-  const [historyList, setHistoryList] = useState(props.history);
-  const onClearAll = () => {
-    setHistoryList([]);
-  };
   const renderItems = (coursesList) => {
     return coursesList.map((item) => (
       <TouchableOpacity
         key={item}
-        style={{ backgroundColor: "transparent", padding: 10 }}
+        style={{ backgroundColor: "transparent", padding: 10, paddingLeft: 20, flexDirection: 'row', alignItems: 'center' }}
         onPress={() => props.onSearch(item)}
       >
-        <Text style={{ color: "white" }}>{item}</Text>
+        <FontAwesome5Icon name="history" color="white" />
+        <Text style={{ color: "white", marginLeft: 10 }}>{item}</Text>
       </TouchableOpacity>
     ));
   };
@@ -40,7 +38,7 @@ const SearchEmpty = (props) => {
         }}
       >
         <Text style={{ color: "white", fontSize: 15 }}>Recent searches</Text>
-        <TouchableOpacity onPress={onClearAll}>
+        <TouchableOpacity onPress={props.onClearAll}>
           <Text
             style={{
               color: "#2384ae",
@@ -53,7 +51,7 @@ const SearchEmpty = (props) => {
           </Text>
         </TouchableOpacity>
       </View>
-      <ScrollView>{renderItems(historyList)}</ScrollView>
+      <ScrollView>{renderItems(props.history)}</ScrollView>
     </View>
   );
 };

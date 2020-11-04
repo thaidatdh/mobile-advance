@@ -14,7 +14,15 @@ import SearchEmpty from "./search-empty";
 const { width, height } = Dimensions.get("window");
 const Search = (props) => {
   const [searchValue, setSearchValue] = useState("");
-  const searches = [".net", "bob", "react"];
+  const [inputValue, setInputValue] = useState("");
+  const [searchHistory, setSearchHistory] = useState([".net", "bob", "react"]);
+
+  const onTextChangeSearchValue=(text) => {
+    setInputValue(text);
+    if (!text || text === '') {
+      setSearchValue('');
+    }
+  }
   return (
     <View style={{ flex: 1, backgroundColor: "#0E0F13" }}>
       <TextInput
@@ -28,11 +36,13 @@ const Search = (props) => {
         placeholderTextColor="white"
         placeholder="Search..."
         theme={{ colors: { text: "white" } }}
-        value={searchValue}
-        onChangeText={(value) => setSearchValue(value)}
+        returnKeyType='search'
+        value={inputValue}
+        onSubmitEditing={(e) => {setSearchValue(e.target.value); setSearchHistory(searchHistory.concat(e.target.value))}}
+        onChangeText={onTextChangeSearchValue}
       ></TextInput>
       {!searchValue ? (
-        <SearchEmpty onSearch={setSearchValue} history={searches} />
+        <SearchEmpty onSearch={setSearchValue} history={searchHistory} onClearAll={() => setSearchHistory([])} />
       ) : (
         <SearchData />
       )}

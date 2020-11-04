@@ -118,7 +118,7 @@ const Download = (props) => {
 
   return (
     <View style={{flex:1, backgroundColor: "#0E0F13"}}>
-      {isEmpty ? <DownloadEmpty/> : <DownloadData courses={courses}/>}
+      {isEmpty ? <DownloadEmpty onCheckNotEmpty={() => setIsEmpty(false)}/> : <DownloadData courses={courses} onCheckEmpty={() => setIsEmpty(true)}/>}
     </View>
   );
 };

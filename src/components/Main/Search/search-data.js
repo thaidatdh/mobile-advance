@@ -1,15 +1,16 @@
 import React from "react";
 import {
-  FlatList,
   ScrollView,
   View,
-  Button,
-  SectionList,
+  TouchableOpacity,
   Text,
-  Dimensions
+  Dimensions,
 } from "react-native";
 import ListCourseItem from "../../Courses/ListCourses/ListCourseItem/list-course-item";
-const {width, height} = Dimensions.get("window");
+import ListAuthorItem from "./components/list-author-item";
+import ListPathItem from "./components/list-path-item";
+import SearchHeader from "./components/search-header";
+const { width, height } = Dimensions.get("window");
 const SearchData = (props) => {
   const courses = [
     {
@@ -113,16 +114,79 @@ const SearchData = (props) => {
       ratingCount: 10,
     },
   ];
-  const renderItems = (coursesList) => {
-    return coursesList.map(item => <ListCourseItem key={item.id.toString()} item={item} />);
-  }
+  const paths = [
+    {
+      id: 1,
+      title: "Angular",
+    },
+    {
+      id: 2,
+      title: "JavaScript",
+    },
+    {
+      id: 3,
+      title: "C#",
+    },
+    {
+      id: 4,
+      title: "Java",
+    },
+    {
+      id: 5,
+      title: "Data Analysis",
+    },
+    {
+      id: 6,
+      title: "ASP.NET",
+    },
+    {
+      id: 7,
+      title: "Node.js",
+    },
+  ];
+  const authors = [
+    { id: 1, name: "Bob", courses: 5 },
+    { id: 2, name: "Venessa", courses: 3 },
+    { id: 3, name: "Tom", courses: 1 },
+  ];
+  const renderCourses = (coursesList) => {
+    return coursesList.map((item, index) =>
+      index <= 5 ? (
+        <ListCourseItem key={"C_" + item.id.toString()} item={item} />
+      ) : null
+    );
+  };
+  const renderPaths = (pathsList) => {
+    return pathsList.map((item, index) =>
+      index <= 5 ? (
+        <ListPathItem key={"P_" + item.id.toString()} item={item} />
+      ) : null
+    );
+  };
+  const renderAuthors = (authorsList) => {
+    return authorsList.map((item, index) =>
+      index <= 5 ? (
+        <ListAuthorItem key={"A_" + item.id.toString()} item={item} />
+      ) : null
+    );
+  };
   return (
-    <View style={{flex:1, backgroundColor: "#0E0F13"}}>
-      <View style={{marginLeft: 10, marginTop: 20, marginBottom: 20, marginRight: 20, color: 'white', flexDirection: 'row', justifyContent: 'space-between'}}>
-        <Text style={{color: 'white', fontSize: 15}}>{courses.length} courses</Text>
-      </View>
+    <View style={{ flex: 1, backgroundColor: "#0E0F13" }}>
       <ScrollView>
-        {renderItems(courses)}
+        <SearchHeader
+          key="courseList"
+          dataLength={courses.length}
+          data="Courses"
+        />
+        {renderCourses(courses)}
+        <SearchHeader key="pathList" dataLength={paths.length} data="Paths" />
+        {renderPaths(paths)}
+        <SearchHeader
+          key="authorList"
+          dataLength={authors.length}
+          data="Authors"
+        />
+        {renderAuthors(authors)}
       </ScrollView>
     </View>
   );
