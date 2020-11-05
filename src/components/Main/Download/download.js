@@ -1,16 +1,8 @@
-import React, {useState} from "react";
-import {
-  FlatList,
-  ScrollView,
-  View,
-  Button,
-  SectionList,
-  Text,
-  Dimensions
-} from "react-native";
+import React, { useState } from "react";
+import { SafeAreaView, Dimensions } from "react-native";
 import DownloadData from "./download-data";
-import DownloadEmpty from "./download-empty"
-const {width, height} = Dimensions.get("window");
+import DownloadEmpty from "./download-empty";
+const { width, height } = Dimensions.get("window");
 const Download = (props) => {
   const courses = [
     {
@@ -114,12 +106,18 @@ const Download = (props) => {
       ratingCount: 10,
     },
   ];
-  const [isEmpty, setIsEmpty] = useState(props.isEmpty === null ? true : props.isEmpty);
+  const [isEmpty, setIsEmpty] = useState(
+    props.isEmpty === null ? true : props.isEmpty
+  );
 
   return (
-    <View style={{flex:1, backgroundColor: "#0E0F13"}}>
-      {isEmpty ? <DownloadEmpty onCheckNotEmpty={() => setIsEmpty(false)}/> : <DownloadData courses={courses} onCheckEmpty={() => setIsEmpty(true)}/>}
-    </View>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#0E0F13" }}>
+      {isEmpty ? (
+        <DownloadEmpty onCheckNotEmpty={() => setIsEmpty(false)} />
+      ) : (
+        <DownloadData courses={courses} onCheckEmpty={() => setIsEmpty(true)} />
+      )}
+    </SafeAreaView>
   );
 };
 

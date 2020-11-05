@@ -3,17 +3,17 @@ import {
   FlatList,
   ScrollView,
   View,
-  Button,
+  SafeAreaView,
   SectionList,
   Text,
-  Dimensions
+  Dimensions,
 } from "react-native";
 import ListCourseItem from "../ListCourses/ListCourseItem/list-course-item";
-const {width, height} = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 const CoursePath = (props) => {
   const courses = [
     {
-      title: 'course 1',
+      title: "course 1",
       data: [
         {
           id: 1,
@@ -45,10 +45,10 @@ const CoursePath = (props) => {
           rating: 4.8,
           ratingCount: 10,
         },
-      ]
-    }, 
+      ],
+    },
     {
-      title: 'course 2',
+      title: "course 2",
       data: [
         {
           id: 4,
@@ -120,21 +120,34 @@ const CoursePath = (props) => {
           rating: 2.5,
           ratingCount: 10,
         },
-      ]
-    }
+      ],
+    },
   ];
 
   const renderItem = (course) => {
     return <ListCourseItem key={course.id.toString()} item={course} />;
-  }
+  };
   return (
-    <View style={{backgroundColor: "#0E0F13"}}>
-      <View style={{marginLeft: 10, marginTop: 20, marginBottom: 20, color: 'white'}}>
-        <Text style={{color: 'white', fontSize: 20}}>{props.title}</Text>
+    <SafeAreaView style={{ backgroundColor: "#0E0F13" }}>
+      <View
+        style={{
+          marginLeft: 10,
+          marginTop: 20,
+          marginBottom: 20,
+          color: "white",
+        }}
+      >
+        <Text style={{ color: "white", fontSize: 20 }}>{props.title}</Text>
       </View>
-      
-      <SectionList sections={courses} renderItem={({item}) => renderItem(item)} renderSectionHeader={({section: {title}}) => <Text style={{color:'white', padding: 20}}>{title}</Text>}/>
-    </View>
+
+      <SectionList
+        sections={courses}
+        renderItem={({ item }) => renderItem(item)}
+        renderSectionHeader={({ section: { title } }) => (
+          <Text style={{ color: "white", padding: 20 }}>{title}</Text>
+        )}
+      />
+    </SafeAreaView>
   );
 };
 

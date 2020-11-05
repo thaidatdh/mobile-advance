@@ -1,55 +1,71 @@
 import React from "react";
-import {View, Dimensions, StyleSheet, Text, Image,FlatList, ScrollView } from 'react-native'
-import CourseInfo from './CourseInfo/course-info'
-const {width, height} = Dimensions.get("window");
+import {
+  View,
+  Dimensions,
+  StyleSheet,
+  Text,
+  Image,
+  SafeAreaView,
+  ScrollView,
+} from "react-native";
+import CourseInfo from "./CourseInfo/course-info";
+const { width, height } = Dimensions.get("window");
 
 const CourseDetail = (props) => {
   const courseDetail = {
-    title: 'Angular Fundamentals',
-    authors: [{
-      icon: '../../../../../assets/bg.png',
-      name: 'James Eames'
-    },
-    {
-      icon: '../../../../../assets/bg.png',
-      name: 'Jim Cooper'
-    }],
-    level: 'Intermediate',
-    released: '2019-02-01',
-    duration: '9.6 h',
+    title: "Angular Fundamentals",
+    authors: [
+      {
+        icon: "../../../../../assets/bg.png",
+        name: "James Eames",
+      },
+      {
+        icon: "../../../../../assets/bg.png",
+        name: "Jim Cooper",
+      },
+    ],
+    level: "Intermediate",
+    released: "2019-02-01",
+    duration: "9.6 h",
     rating: 4.5,
     ratingCount: 896,
-    descriptions: 'Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345',
-    transcript: 'Transcript\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345',
-    sections: [{
-      id: 1,
-      title:'section 1',
-      content: [{
+    descriptions:
+      "Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345",
+    transcript:
+      "Transcript\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345Descriptions\n12345\n12345\n1ddddd dddddddddff ffffff ffffffffffff fffffffffddddd dddddd2345\n12345\n12345\n12345",
+    sections: [
+      {
         id: 1,
-        name: 'video 1'
+        title: "section 1",
+        content: [
+          {
+            id: 1,
+            name: "video 1",
+          },
+          {
+            id: 2,
+            name: "video 2",
+          },
+          {
+            id: 3,
+            name: "video 3",
+          },
+        ],
       },
-      {
-        id: 2,
-        name: 'video 2'
-      },
-      {
-        id: 3,
-        name: 'video 3'
-      }]
-    }]
-  }
+    ],
+  };
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.imageView}>
         <Image
-            source={require("../../../../assets/bg.png")}
-            style={styles.image}
+          source={require("../../../../assets/bg.png")}
+          style={styles.image}
         />
       </View>
-      <ScrollView style={{height: height * 0.7}}>
+      <ScrollView style={{ height: height * 0.7 }}>
         <CourseInfo course={courseDetail} />
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -60,12 +76,12 @@ const styles = StyleSheet.create({
   },
   imageView: {
     width: width,
-    height: height * 0.3
+    height: height * 0.3,
   },
   image: {
     height: "100%",
-    width: "100%"
-  }
+    width: "100%",
+  },
 });
 
 export default CourseDetail;

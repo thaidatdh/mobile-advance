@@ -5,10 +5,10 @@ import {
   TouchableOpacity,
   Text,
   Dimensions,
-  
+  SafeAreaView,
 } from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-import { Button,TextInput } from "react-native-paper";
+import { Button, TextInput } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
 
 const { width, height } = Dimensions.get("window");
@@ -22,26 +22,24 @@ const Login = (props) => {
     setUsername(text);
     if (username.length > 0 && password.length > 0) {
       setIsReadyToLogin(true);
-    }
-    else {
+    } else {
       setIsReadyToLogin(false);
     }
-  }
+  };
   const onPasswordChange = (text) => {
     setPassword(text);
     if (username.length > 0 && password.length > 0) {
       setIsReadyToLogin(true);
-    }
-    else {
+    } else {
       setIsReadyToLogin(false);
     }
-  }
+  };
   const onLogin = () => {
     if (!isReadyToLogin) {
       return;
     }
     console.log("Login");
-  }
+  };
   const updateSecureTextEntry = () => {
     setSecureTextEntry(!secureTextEntry);
   };
@@ -55,7 +53,7 @@ const Login = (props) => {
     },
   };
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={{ margin: 20 }} />
       <ScrollView horizontal={false}>
         <TextInput
@@ -97,10 +95,10 @@ const Login = (props) => {
             )
           }
         />
-        <TouchableOpacity 
-        style={isReadyToLogin ? styles.signInBtn : styles.signInBtnDisabled} 
-        disabled={!isReadyToLogin}
-        onPress={onLogin}
+        <TouchableOpacity
+          style={isReadyToLogin ? styles.signInBtn : styles.signInBtnDisabled}
+          disabled={!isReadyToLogin}
+          onPress={onLogin}
         >
           <Text style={styles.buttonText}>SIGN IN</Text>
         </TouchableOpacity>
@@ -114,8 +112,7 @@ const Login = (props) => {
           <Text style={styles.buttonTextBlue}>Sign up FREE</Text>
         </TouchableOpacity>
       </ScrollView>
-      
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -164,7 +161,7 @@ const styles = StyleSheet.create({
     color: "#818286",
     alignItems: "center",
     justifyContent: "center",
-    marginTop:10,
+    marginTop: 10,
     marginBottom: 10,
   },
   signOnSSOBtn: {

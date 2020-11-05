@@ -1,13 +1,5 @@
 import React, { useRef, useState } from "react";
-import {
-  FlatList,
-  ScrollView,
-  View,
-  Button,
-  SectionList,
-  Text,
-  Dimensions,
-} from "react-native";
+import { SafeAreaView, Dimensions, Platform } from "react-native";
 import { TextInput } from "react-native-paper";
 import SearchData from "./search-data";
 import SearchEmpty from "./search-empty";
@@ -17,14 +9,24 @@ const Search = (props) => {
   const [inputValue, setInputValue] = useState("");
   const [searchHistory, setSearchHistory] = useState([".net", "bob", "react"]);
 
-  const onTextChangeSearchValue=(text) => {
+  const onTextChangeSearchValue = (text) => {
     setInputValue(text);
-    if (!text || text === '') {
-      setSearchValue('');
+    if (!text || text === "") {
+      setSearchValue("");
     }
+  };
+  const onSearch = (text) => {
+    setInputValue(text);
+    setSearchValue(text);
   }
   return (
-    <View style={{ flex: 1, backgroundColor: "#0E0F13" }}>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: "#0E0F13",
+        paddingTop: Platform.OS === "android" ? 25 : 0,
+      }}
+    >
       <TextInput
         style={{
           backgroundColor: "#1f242a",
@@ -36,17 +38,24 @@ const Search = (props) => {
         placeholderTextColor="white"
         placeholder="Search..."
         theme={{ colors: { text: "white" } }}
-        returnKeyType='search'
+        returnKeyType="search"
         value={inputValue}
-        onSubmitEditing={(e) => {setSearchValue(e.target.value); setSearchHistory(searchHistory.concat(e.target.value))}}
+        onSubmitEditing={(e) => {
+          setSearchValue(e.target.value);
+          setSearchHistory(searchHistory.concat(e.target.value));
+        }}
         onChangeText={onTextChangeSearchValue}
       ></TextInput>
-      {!searchValue ? (
-        <SearchEmpty onSearch={setSearchValue} history={searchHistory} onClearAll={() => setSearchHistory([])} />
+      {searchValue === '' ? (
+        <SearchEmpty
+          onSearch={onSearch}
+          history={searchHistory}
+          onClearAll={() => setSearchHistory([])}
+        />
       ) : (
         <SearchData />
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 

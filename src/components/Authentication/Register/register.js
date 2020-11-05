@@ -5,10 +5,10 @@ import {
   TouchableOpacity,
   Text,
   Dimensions,
-  
+  SafeAreaView,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import { Button,TextInput } from "react-native-paper";
+import { Button, TextInput } from "react-native-paper";
 
 const { width, height } = Dimensions.get("window");
 
@@ -28,7 +28,7 @@ const Register = (props) => {
     "Please enter required fields (*)",
     "Email is not valid",
     "Password should include atleast 8 characters",
-    "Repeat Password is incorrect"
+    "Repeat Password is incorrect",
   ];
   const updateSecureTextEntry = () => {
     setSecureTextEntry(!secureTextEntry);
@@ -38,7 +38,7 @@ const Register = (props) => {
   };
   const validateEmail = (email) => {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      return re.test(email);
+    return re.test(email);
   };
   const onRegister = () => {
     if (email.length == 0 || firstName.length == 0 || lastName.length == 0) {
@@ -56,7 +56,7 @@ const Register = (props) => {
     }
     setErrorCode(-1);
     console.log("Sign Up");
-  }
+  };
   const themeTextInput = {
     colors: {
       placeholder: "#b4b5ba",
@@ -67,7 +67,7 @@ const Register = (props) => {
     },
   };
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <ScrollView horizontal={false}>
         <View style={{ margin: 20 }} />
         <TextInput
@@ -165,19 +165,21 @@ const Register = (props) => {
             )
           }
         />
-      {errorCode != -1 ? <Text style={{color: 'red'}}>{errorValue[errorCode]}</Text> : null}
-      <TouchableOpacity style={styles.signInBtn} onPress={onRegister}>
-        <Text style={styles.buttonText}>SIGN UP</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.linkBtn}>
-        <Text style={styles.buttonTextBlue}>Sign In</Text>
-      </TouchableOpacity>
-      <Button style={styles.signOnSSOBtn}>
-        <Text style={styles.buttonTextBlue}>Use Single Sign-On (SSO)</Text>
-      </Button>
-      <View style={{ margin: 20 }} />
+        {errorCode != -1 ? (
+          <Text style={{ color: "red" }}>{errorValue[errorCode]}</Text>
+        ) : null}
+        <TouchableOpacity style={styles.signInBtn} onPress={onRegister}>
+          <Text style={styles.buttonText}>SIGN UP</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.linkBtn}>
+          <Text style={styles.buttonTextBlue}>Sign In</Text>
+        </TouchableOpacity>
+        <Button style={styles.signOnSSOBtn}>
+          <Text style={styles.buttonTextBlue}>Use Single Sign-On (SSO)</Text>
+        </Button>
+        <View style={{ margin: 20 }} />
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 

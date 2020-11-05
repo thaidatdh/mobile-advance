@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Text, View, StyleSheet, Image, Dimensions } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  Dimensions,
+  SafeAreaView,
+} from "react-native";
 import ProfileContentSecion from "./profile-content-section";
 const { width, height } = Dimensions.get("window");
 const Profile = (props) => {
@@ -35,7 +42,7 @@ const Profile = (props) => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
         <Image
           source={require("../../../../assets/bg.png")}
@@ -51,7 +58,7 @@ const Profile = (props) => {
         </Text>
         {createSections()}
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
@@ -68,7 +75,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     height: width * 0.15,
-    alignSelf: 'center'
+    alignSelf: "center",
   },
   name: { color: "white", fontSize: width * 0.05 },
   image: {

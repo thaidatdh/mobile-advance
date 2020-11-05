@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Text, View, StyleSheet, Dimensions, Image, ScrollView } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Dimensions,
+  Image,
+  ScrollView,
+  SafeAreaView,
+} from "react-native";
 import TextSettingButton from "./SettingComponent/text-setting-button";
 import { Button } from "react-native-paper";
 import CheckSettingButton from "./SettingComponent/check-setting-button";
@@ -103,24 +111,29 @@ const Setting = (props) => {
     return <TextSettingButton item={appVersion} />;
   };
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{alignItems: 'center'}}>
-      <View style={styles.userContainer}>
-        <Image
-          source={require("../../../../assets/bg.png")}
-          style={styles.image}
-        />
-        <View style={styles.nameView}>
-          <Text style={styles.name}>{data.name}</Text>
-          <Text style={styles.username}>{data.username}</Text>
+    <SafeAreaView style={styles.container}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={{ alignItems: "center" }}
+      >
+        <View style={styles.userContainer}>
+          <Image
+            source={require("../../../../assets/bg.png")}
+            style={styles.image}
+          />
+          <View style={styles.nameView}>
+            <Text style={styles.name}>{data.name}</Text>
+            <Text style={styles.username}>{data.username}</Text>
+          </View>
         </View>
-      </View>
-      <View style={styles.sectionContainer}>{renderAccountSection()}</View>
-      <View style={styles.sectionContainer}>{renderSettingSection()}</View>
-      <View style={styles.sectionContainer}>{renderAppVersion()}</View>
-      <Button style={styles.signOut}>
-        <Text style={styles.buttonTextBlue}>Sign Out</Text>
-      </Button>
-    </ScrollView>
+        <View style={styles.sectionContainer}>{renderAccountSection()}</View>
+        <View style={styles.sectionContainer}>{renderSettingSection()}</View>
+        <View style={styles.sectionContainer}>{renderAppVersion()}</View>
+        <Button style={styles.signOut}>
+          <Text style={styles.buttonTextBlue}>Sign Out</Text>
+        </Button>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
@@ -137,7 +150,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     height: width * 0.15,
-    alignSelf: 'center'
+    alignSelf: "center",
   },
   name: { color: "white", fontSize: width * 0.05 },
   username: { color: "gray", fontSize: width * 0.03 },

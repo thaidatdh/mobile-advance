@@ -7,16 +7,15 @@ import {
   TouchableOpacity,
   Alert,
   Share,
-  Dimensions
+  Dimensions,
 } from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-const {width, height} = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 const ListCourseItem = (props) => {
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message:
-          'Share ' + props.item.title,
+        message: "Share " + props.item.title,
       });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
@@ -32,10 +31,7 @@ const ListCourseItem = (props) => {
     }
   };
   return (
-    <TouchableOpacity
-      style={styles.item}
-      onPress={() => {}}
-    >
+    <TouchableOpacity style={styles.item} onPress={() => {}}>
       <Image
         source={require("../../../../../assets/bg.png")}
         style={styles.image}
@@ -46,15 +42,21 @@ const ListCourseItem = (props) => {
         <Text style={styles.darkText}>
           {props.item.level} - {props.item.released} - {props.item.duration}
         </Text>
-        <View style={{
-          flexDirection: "row",
-        }}>
-          <Text style={{color:"#f1c40f"}}>{props.item.rating}/5 </Text>
+        <View
+          style={{
+            flexDirection: "row",
+          }}
+        >
+          <Text style={{ color: "#f1c40f" }}>{props.item.rating}/5 </Text>
           <Text style={styles.darkText}>({props.item.ratingCount})</Text>
         </View>
       </View>
       <TouchableOpacity style={styles.options} onPress={onShare}>
-        <FontAwesome5 style={{color: 'lightgray', alignSelf: 'flex-end'}} name="ellipsis-v" size={15}/>
+        <FontAwesome5
+          style={{ color: "lightgray", alignSelf: "flex-end" }}
+          name="ellipsis-v"
+          size={15}
+        />
       </TouchableOpacity>
     </TouchableOpacity>
   );
@@ -76,15 +78,14 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    color: 'white'
+    color: "white",
   },
   darkText: {
     color: "darkgray",
-    textTransform: 'capitalize'
+    textTransform: "capitalize",
   },
   options: {
-    flex: 1,
-    alignSelf: 'center',
-  }
+    alignSelf: "center",
+  },
 });
 export default ListCourseItem;

@@ -4,12 +4,12 @@ import {
   ScrollView,
   View,
   Button,
-  SectionList,
+  SafeAreaView,
   Text,
-  Dimensions
+  Dimensions,
 } from "react-native";
 import ListCourseItem from "./ListCourseItem/list-course-item";
-const {width, height} = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 const ListCourses = (props) => {
   const courses = [
     {
@@ -114,17 +114,24 @@ const ListCourses = (props) => {
     },
   ];
   const renderItems = (coursesList) => {
-    return coursesList.map(item => <ListCourseItem key={item.id.toString()} item={item} />);
-  }
+    return coursesList.map((item) => (
+      <ListCourseItem key={item.id.toString()} item={item} />
+    ));
+  };
   return (
-    <View style={{flex: 1, backgroundColor: "#0E0F13"}}>
-      <View style={{marginLeft: 10, marginTop: 20, marginBottom: 20, color: 'white'}}>
-        <Text style={{color: 'white', fontSize: 20}}>{props.title}</Text>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#0E0F13" }}>
+      <View
+        style={{
+          marginLeft: 10,
+          marginTop: 20,
+          marginBottom: 20,
+          color: "white",
+        }}
+      >
+        <Text style={{ color: "white", fontSize: 20 }}>{props.title}</Text>
       </View>
-      <ScrollView>
-        {renderItems(courses)}
-      </ScrollView>
-    </View>
+      <ScrollView>{renderItems(courses)}</ScrollView>
+    </SafeAreaView>
   );
 };
 
