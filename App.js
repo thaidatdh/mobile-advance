@@ -40,10 +40,6 @@ const HomeStack = () => {
           },
         }}
       />
-      <HomeS.Screen name="List Courses" component={ListCourses} />
-      <HomeS.Screen name="Course" component={CourseDetail} />
-      <HomeS.Screen name="Sign In" component={Login} />
-      <HomeS.Screen name="Sign Up" component={Register} />
     </HomeS.Navigator>
   );
 };
@@ -63,10 +59,6 @@ const BrowseStack = () => {
   return (
     <BrowseS.Navigator initialRouteName="Browse">
       <BrowseS.Screen name="Browse" component={Browse} />
-      <BrowseS.Screen name="List Courses" component={ListCourses} />
-      <BrowseS.Screen name="Course" component={CourseDetail} />
-      <BrowseS.Screen name="Sign In" component={Login} />
-      <BrowseS.Screen name="Sign Up" component={Register} />
     </BrowseS.Navigator>
   );
 };
@@ -104,9 +96,9 @@ const BottomTabNavigator = () => {
         inactiveBackgroundColor: "#1f242a",
       }}
     >
-      <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Download" component={Download} />
-      <Tab.Screen name="Browse" component={Browse} />
+      <Tab.Screen name="Home" component={HomeStack} />
+      <Tab.Screen name="Download" component={DownloadStack} />
+      <Tab.Screen name="Browse" component={BrowseStack} />
       <Tab.Screen name="Search" component={Search} />
     </Tab.Navigator>
   );
