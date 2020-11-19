@@ -82,7 +82,7 @@ const SectionTags = (props) => {
 
   const renderListItems = (tags) => {
     return tags.map((item) => (
-      <TouchableOpacity key={item.id}>
+      <TouchableOpacity key={item.id} onPress={() => props.onPress(item.title)}>
         <Text style={styles.tag}>{item.title}</Text>
       </TouchableOpacity>
     ));

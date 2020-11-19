@@ -22,7 +22,28 @@ const HomeS = createStackNavigator();
 const HomeStack = () => {
   return (
     <HomeS.Navigator initialRouteName="Home">
-      <HomeS.Screen name="Home" component={Home} />
+      <HomeS.Screen
+        name="Home"
+        component={Home}
+        options={{
+          headerRight: () => {
+            return (
+              <View
+                style={{
+                  width: 20,
+                  height: 20,
+                  backgroundColor: "white",
+                  marginRight: 10,
+                }}
+              ></View>
+            );
+          },
+        }}
+      />
+      <HomeS.Screen name="List Courses" component={ListCourses} />
+      <HomeS.Screen name="Course" component={CourseDetail} />
+      <HomeS.Screen name="Sign In" component={Login} />
+      <HomeS.Screen name="Sign Up" component={Register} />
     </HomeS.Navigator>
   );
 };
@@ -42,68 +63,72 @@ const BrowseStack = () => {
   return (
     <BrowseS.Navigator initialRouteName="Browse">
       <BrowseS.Screen name="Browse" component={Browse} />
+      <BrowseS.Screen name="List Courses" component={ListCourses} />
+      <BrowseS.Screen name="Course" component={CourseDetail} />
+      <BrowseS.Screen name="Sign In" component={Login} />
+      <BrowseS.Screen name="Sign Up" component={Register} />
     </BrowseS.Navigator>
   );
 };
+const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
-export default function App() {
-  const renderListCourse = () => {
-    return <ListCourses title="Software Development" />;
-  };
-  const renderCourseDetail = () => {
-    return <CourseDetail />;
-  };
-
+const BottomTabNavigator = () => {
   return (
-    <NavigationContainer theme={{colors: {background: "#1f242a", text: 'white'}}}>
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
-            if (route.name === "Home") {
-              iconName = "home";
-            } else if (route.name === "Download") {
-              iconName = "arrow-alt-circle-down";
-            } else if (route.name === "Browse") {
-              iconName = "keyboard";
-            } else if (route.name === "Search") {
-              iconName = "search";
-            }
-            return (
-              <FontAwesome5Icon
-                name={iconName}
-                size={size}
-                color={color}
-                solid={focused}
-              />
-            );
-          },
-        })}
-        tabBarOptions={{
-          activeTintColor: "#2384ae",
-          inactiveTintColor: "gray",
-          activeBackgroundColor: "#1f242a",
-          inactiveBackgroundColor: "#1f242a",
-        }}
-      >
-        <Tab.Screen name="Home" component={HomeStack} />
-        <Tab.Screen name="Download" component={DownloadStack} />
-        <Tab.Screen name="Browse" component={BrowseStack} />
-        <Tab.Screen name="Search" component={Search} />
-      </Tab.Navigator>
-      {/*<Stack.Navigator initialRouteName="Search">
-        <Stack.Screen name="Search" component={Search}/>
-        <Stack.Screen name="Download" component={renderDownload}/>
-        <Stack.Screen name="List" component={renderListCourse}  />
-        <Stack.Screen name="Course Path" component={CoursePath}/>
-        <Stack.Screen name="Course" component={renderCourseDetail}/>
-        <Stack.Screen name="Browse" component={Browse} />
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Sign Up" component={Register} />
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+          if (route.name === "Home") {
+            iconName = "home";
+          } else if (route.name === "Download") {
+            iconName = "arrow-alt-circle-down";
+          } else if (route.name === "Browse") {
+            iconName = "keyboard";
+          } else if (route.name === "Search") {
+            iconName = "search";
+          }
+          return (
+            <FontAwesome5Icon
+              name={iconName}
+              size={size}
+              color={color}
+              solid={focused}
+            />
+          );
+        },
+      })}
+      tabBarOptions={{
+        activeTintColor: "#2384ae",
+        inactiveTintColor: "gray",
+        activeBackgroundColor: "#1f242a",
+        inactiveBackgroundColor: "#1f242a",
+      }}
+    >
+      <Tab.Screen name="Home" component={Home} />
+      <Tab.Screen name="Download" component={Download} />
+      <Tab.Screen name="Browse" component={Browse} />
+      <Tab.Screen name="Search" component={Search} />
+    </Tab.Navigator>
+  );
+}
+export default function App() {
+  return (
+    <NavigationContainer
+      theme={{ colors: { background: "#1f242a", text: "white" } }}
+    >
+      <Stack.Navigator>
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Home"
+          component={BottomTabNavigator}
+        />
+        <Stack.Screen name="List Courses" component={ListCourses} />
+        <Stack.Screen name="Course" component={CourseDetail} />
         <Stack.Screen name="Sign In" component={Login} />
+        <Stack.Screen name="Sign Up" component={Register} />
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="Settings" component={Setting} />
-      </Stack.Navigator>*/}
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }

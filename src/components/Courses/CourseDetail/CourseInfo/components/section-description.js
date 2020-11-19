@@ -6,8 +6,8 @@ const {width, height} = Dimensions.get("window");
 const SectionDescription = (props) => {
   return (
       <ScrollView style={styles.container}  nestedScrollEnabled = {true}>
-        <View style={{height: "100%", width: width}}>
-          <Text style={{color: 'white'}}>{props.description}</Text>
+        <View style={{height: "100%", width: width * 0.9}}>
+          <Text style={{color: 'white', textAlign: 'justify'}}>{props.description}</Text>
         </View>
       </ScrollView>
   );

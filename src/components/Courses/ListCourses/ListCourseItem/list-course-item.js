@@ -31,7 +31,7 @@ const ListCourseItem = (props) => {
     }
   };
   return (
-    <TouchableOpacity style={styles.item} onPress={() => {}}>
+    <TouchableOpacity style={styles.item} onPress={() => props.onPress(props.item)}>
       <Image
         source={require("../../../../../assets/bg.png")}
         style={styles.image}

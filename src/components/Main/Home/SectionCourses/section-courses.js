@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { ScrollView, View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import SectionCourseItem from "./SectionCourseItem/section-course-item";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-const SectionCourses = (props) => {
-  const courses = [
+import {coursesData} from "../../../../data/dataMockup"
+const SectionCourses = ({onSeeAll, title, onPressCourse}) => {
+  const courses_mock = [
     {
       id: 1,
       title: "title 1",
@@ -85,10 +86,11 @@ const SectionCourses = (props) => {
       ratingCount: 10,
     },
   ];
+  const [courses] = useState(coursesData);
 
   const renderListItems = (courses) => {
     return courses.map((item) => (
-      <SectionCourseItem key={item.id} item={item} />
+      <SectionCourseItem key={item.id} item={item} onPress={onPressCourse} />
     ));
   };
 
@@ -101,8 +103,8 @@ const SectionCourses = (props) => {
           justifyContent: "space-between",
         }}
       >
-        <Text style={styles.titleText}>{props.title}</Text>
-        <TouchableOpacity style={styles.seeAllButtonView}>
+        <Text style={styles.titleText}>{title}</Text>
+        <TouchableOpacity style={styles.seeAllButtonView} onPress={() => onSeeAll(title)}>
           <Text style={{ color: "lightgray", fontSize: 10 }}>See all <FontAwesome5 name={"angle-right"} color="lightgray" size={10}/></Text>
          
         </TouchableOpacity>

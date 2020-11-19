@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { SafeAreaView, Dimensions, Platform } from "react-native";
+import { SafeAreaView, Dimensions, Platform, StatusBar } from "react-native";
 import { TextInput } from "react-native-paper";
 import SearchData from "./search-data";
 import SearchEmpty from "./search-empty";
@@ -24,9 +24,9 @@ const Search = (props) => {
       style={{
         flex: 1,
         backgroundColor: "#0E0F13",
-        paddingTop: Platform.OS === "android" ? 25 : 0,
       }}
     >
+      <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
       <TextInput
         style={{
           backgroundColor: "#1f242a",
@@ -46,7 +46,7 @@ const Search = (props) => {
         }}
         onChangeText={onTextChangeSearchValue}
       ></TextInput>
-      {searchValue === '' ? (
+      {searchValue === "" ? (
         <SearchEmpty
           onSearch={onSearch}
           history={searchHistory}

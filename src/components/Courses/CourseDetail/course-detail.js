@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Dimensions,
@@ -7,12 +7,13 @@ import {
   Image,
   SafeAreaView,
   ScrollView,
+  StatusBar,
 } from "react-native";
 import CourseInfo from "./CourseInfo/course-info";
 const { width, height } = Dimensions.get("window");
 
-const CourseDetail = (props) => {
-  const courseDetail = {
+const CourseDetail = ({navigation, route}) => {
+  const courseDetail_mock = {
     title: "Angular Fundamentals",
     authors: [
       {
@@ -54,8 +55,10 @@ const CourseDetail = (props) => {
       },
     ],
   };
+  const [courseDetail] = useState(route.params.course);
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
       <View style={styles.imageView}>
         <Image
           source={require("../../../../assets/bg.png")}

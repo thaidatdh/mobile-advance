@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SafeAreaView, Dimensions } from "react-native";
+import { SafeAreaView, Dimensions, StatusBar } from "react-native";
 import DownloadData from "./download-data";
 import DownloadEmpty from "./download-empty";
 const { width, height } = Dimensions.get("window");
@@ -112,6 +112,7 @@ const Download = (props) => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#0E0F13" }}>
+      <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
       {isEmpty ? (
         <DownloadEmpty onCheckNotEmpty={() => setIsEmpty(false)} />
       ) : (

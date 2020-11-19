@@ -14,7 +14,7 @@ const SignInSection = (props) => {
       <Text style={styles.text}>Keep your skill up-to-date with access to thousands of courses by industry experts.</Text>
      </View>
       
-      <Button style={styles.signInBtn}>
+      <Button style={styles.signInBtn} onPress={() => props.onPress()}>
         <Text style={styles.buttonText}>sign in to start watching</Text>
       </Button>
    </View>

@@ -24,9 +24,6 @@ const ContentSubsection = (props) => {
             </View>
             <Text style={{color: 'white', width: width*0.9,paddingLeft: 20, alignSelf: 'center'}}>{props.item.title}</Text>
           </View>
-          <View>
-            <FontAwesome5 name="ellipsis-v" size={20} color='white'/>
-          </View>
         </View>
          <View style={{width: width*0.9}}>
           {renderListContent(props.item.content)}

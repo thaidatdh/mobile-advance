@@ -5,7 +5,7 @@ import ContentSubsection from "./content-subsection";
 const {width, height} = Dimensions.get("window");
 
 const SectionDescription = (props) => {
-  const data = [
+  const data_mock = [
   {
     id: 1,
     title: 'Title 1',
@@ -63,6 +63,7 @@ const SectionDescription = (props) => {
         }]
       }
   ];
+  const [data] = useState(props.content);
   const renderSubSections = (sections) => {
     return sections.map(item => <ContentSubsection key={item.id} item={item}/>);
   }

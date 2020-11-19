@@ -112,6 +112,7 @@ const Setting = (props) => {
   };
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
       <ScrollView
         style={styles.container}
         contentContainerStyle={{ alignItems: "center" }}

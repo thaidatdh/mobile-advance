@@ -34,14 +34,18 @@ const CourseInfo = (props) => {
   }
 
   const renderAuthors = (authors) => {
-    return authors.map((item) => <AuthorTag key={item.name} author={item}/>)
+    return Array.isArray(authors) ? (
+      authors.map((item) => <AuthorTag key={item.name} author={item} />)
+    ) : (
+      <AuthorTag key={authors} author={authors} />
+    );
   }
   return (
     <View style={styles.container}>
       <View style={styles.infoSection}>
         <Text style={styles.title}>{props.course.title}</Text>
         <View style={styles.authors}>
-          {renderAuthors(props.course.authors)}
+          {renderAuthors(props.course.author)}
         </View>
 
         <View style={{flexDirection: 'row'}}>
@@ -79,7 +83,7 @@ const CourseInfo = (props) => {
       </View>
 
       <View style={styles.contentView}>
-        {isInContent == 0 ? <SectionDescription description={props.course.descriptions}/> : (isInContent == 1 ? <SectionContent/> : <SectionDescription description={props.course.transcript}/>)}
+        {isInContent == 0 ? <SectionDescription description={props.course.description}/> : (isInContent == 1 ? <SectionContent content={props.course.content}/> : <SectionDescription description={props.course.transcript}/>)}
       </View>
     </View>
   );
@@ -90,15 +94,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#0E0F13",
   },
-  infoSection: {padding: 10, height: height * 0.4, backgroundColor: '#1f242a', color: 'white'},
-  title: {color:'white', fontSize: 20, marginTop: 10},
+  infoSection: {padding: 10, height: height * 0.45, backgroundColor: '#1f242a', color: 'white'},
+  title: {color:'white', fontSize: 17, marginTop: 10},
   authors: {flexDirection: 'row', marginTop: 10, marginBottom: 10},
   buttonSwitch : {backgroundColor:'#1f242a', width: width * 0.3},
   buttonSwitchSelected : {backgroundColor:'#1f242a', borderBottomWidth: 2,borderBottomColor: '#2384ae', width: width * 0.3},
   buttonText: {color: 'white', alignSelf: 'center', textTransform: 'uppercase'},
   buttonTextSelect: {color: '#2384ae', alignSelf: 'center', textTransform: 'uppercase'},
   contentView: {
-    height: height * 0.65, 
+    height: height * 0.58, 
     backgroundColor: 'white'
   },
   buttons: {

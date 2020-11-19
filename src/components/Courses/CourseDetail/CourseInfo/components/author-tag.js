@@ -4,7 +4,7 @@ import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 const AuthorTag = (props) => {
   return (
     <TouchableOpacity style={styles.container}>
-      <Text style={styles.title}>{props.author.name}</Text>
+      <Text style={styles.title}>{props.author}</Text>
     </TouchableOpacity>
   );
 };

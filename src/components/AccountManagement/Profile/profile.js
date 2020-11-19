@@ -6,6 +6,7 @@ import {
   Image,
   Dimensions,
   SafeAreaView,
+  StatusBar
 } from "react-native";
 import ProfileContentSecion from "./profile-content-section";
 const { width, height } = Dimensions.get("window");
@@ -43,6 +44,7 @@ const Profile = (props) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
       <View style={styles.headerContainer}>
         <Image
           source={require("../../../../assets/bg.png")}

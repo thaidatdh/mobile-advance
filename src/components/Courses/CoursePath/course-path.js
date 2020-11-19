@@ -7,6 +7,7 @@ import {
   SectionList,
   Text,
   Dimensions,
+  StatusBar,
 } from "react-native";
 import ListCourseItem from "../ListCourses/ListCourseItem/list-course-item";
 const { width, height } = Dimensions.get("window");
@@ -129,6 +130,7 @@ const CoursePath = (props) => {
   };
   return (
     <SafeAreaView style={{ backgroundColor: "#0E0F13" }}>
+      <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
       <View
         style={{
           marginLeft: 10,

@@ -6,6 +6,7 @@ import {
   Text,
   Dimensions,
   SafeAreaView,
+  StatusBar,
 } from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import { Button, TextInput } from "react-native-paper";
@@ -13,7 +14,7 @@ import { ScrollView } from "react-native-gesture-handler";
 
 const { width, height } = Dimensions.get("window");
 
-const Login = (props) => {
+const Login = ({navigation}) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [secureTextEntry, setSecureTextEntry] = useState(true);
@@ -40,6 +41,9 @@ const Login = (props) => {
     }
     console.log("Login");
   };
+  const onSignUp = () => {
+    navigation.navigate('Sign Up');
+  }
   const updateSecureTextEntry = () => {
     setSecureTextEntry(!secureTextEntry);
   };
@@ -54,6 +58,7 @@ const Login = (props) => {
   };
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
       <View style={{ margin: 20 }} />
       <ScrollView horizontal={false}>
         <TextInput
@@ -108,7 +113,7 @@ const Login = (props) => {
         <Button style={styles.signOnSSOBtn}>
           <Text style={styles.buttonTextBlue}>Use Single Sign-On (SSO)</Text>
         </Button>
-        <TouchableOpacity style={styles.linkBtn}>
+        <TouchableOpacity style={styles.linkBtn} onPress={onSignUp}>
           <Text style={styles.buttonTextBlue}>Sign up FREE</Text>
         </TouchableOpacity>
       </ScrollView>

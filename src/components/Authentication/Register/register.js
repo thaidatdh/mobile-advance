@@ -6,13 +6,14 @@ import {
   Text,
   Dimensions,
   SafeAreaView,
+  StatusBar,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Button, TextInput } from "react-native-paper";
 
 const { width, height } = Dimensions.get("window");
 
-const Register = (props) => {
+const Register = ({navigation}) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
@@ -40,6 +41,9 @@ const Register = (props) => {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
   };
+  const onSignIn = () => {
+    navigation.navigate('Sign In');
+  }
   const onRegister = () => {
     if (email.length == 0 || firstName.length == 0 || lastName.length == 0) {
       setErrorCode(0);
@@ -55,7 +59,6 @@ const Register = (props) => {
       return;
     }
     setErrorCode(-1);
-    console.log("Sign Up");
   };
   const themeTextInput = {
     colors: {
@@ -68,6 +71,7 @@ const Register = (props) => {
   };
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
       <ScrollView horizontal={false}>
         <View style={{ margin: 20 }} />
         <TextInput
@@ -171,7 +175,7 @@ const Register = (props) => {
         <TouchableOpacity style={styles.signInBtn} onPress={onRegister}>
           <Text style={styles.buttonText}>SIGN UP</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.linkBtn}>
+        <TouchableOpacity style={styles.linkBtn} onPress={onSignIn}>
           <Text style={styles.buttonTextBlue}>Sign In</Text>
         </TouchableOpacity>
         <Button style={styles.signOnSSOBtn}>

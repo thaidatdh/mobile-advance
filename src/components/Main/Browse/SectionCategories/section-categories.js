@@ -211,12 +211,14 @@ const SectionCategories = (props) => {
           key={category[0].id}
           title={category[0].title}
           style={category[0].style}
+          onPress={props.onPress}
         />
         {category.length > 1 ? (
           <SmallImageButton
             key={category[1].id}
             title={category[1].title}
             style={category[1].style}
+            onPress={props.onPress}
           />
         ) : null}
       </View>
