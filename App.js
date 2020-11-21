@@ -17,51 +17,8 @@ import CoursePath from "./src/components/Courses/CoursePath/course-path";
 import Download from "./src/components/Main/Download/download";
 import Search from "./src/components/Main/Search/search";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
-
-const HomeS = createStackNavigator();
-const HomeStack = () => {
-  return (
-    <HomeS.Navigator initialRouteName="Home">
-      <HomeS.Screen
-        name="Home"
-        component={Home}
-        options={{
-          headerRight: () => {
-            return (
-              <View
-                style={{
-                  width: 20,
-                  height: 20,
-                  backgroundColor: "white",
-                  marginRight: 10,
-                }}
-              ></View>
-            );
-          },
-        }}
-      />
-    </HomeS.Navigator>
-  );
-};
-const DownloadS = createStackNavigator();
-const DownloadStack = () => {
-  const renderDownload = () => {
-    return <Download isEmpty={true} />;
-  };
-  return (
-    <DownloadS.Navigator initialRouteName="Download">
-      <DownloadS.Screen name="Download" component={renderDownload} />
-    </DownloadS.Navigator>
-  );
-};
-const BrowseS = createStackNavigator();
-const BrowseStack = () => {
-  return (
-    <BrowseS.Navigator initialRouteName="Browse">
-      <BrowseS.Screen name="Browse" component={Browse} />
-    </BrowseS.Navigator>
-  );
-};
+import AuthProvider from "./src/Contexts/AuthContextProvider";
+import { Provider } from "react-native-paper";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const BottomTabNavigator = () => {
@@ -96,32 +53,36 @@ const BottomTabNavigator = () => {
         inactiveBackgroundColor: "#1f242a",
       }}
     >
-      <Tab.Screen name="Home" component={HomeStack} />
-      <Tab.Screen name="Download" component={DownloadStack} />
-      <Tab.Screen name="Browse" component={BrowseStack} />
+      <Tab.Screen name="Home" component={Home} />
+      <Tab.Screen name="Download" component={Download} />
+      <Tab.Screen name="Browse" component={Browse} />
       <Tab.Screen name="Search" component={Search} />
     </Tab.Navigator>
   );
-}
+};
 export default function App() {
   return (
-    <NavigationContainer
-      theme={{ colors: { background: "#1f242a", text: "white" } }}
-    >
-      <Stack.Navigator>
-        <Stack.Screen
-          options={{ headerShown: false }}
-          name="Home"
-          component={BottomTabNavigator}
-        />
-        <Stack.Screen name="List Courses" component={ListCourses} />
-        <Stack.Screen name="Course" component={CourseDetail} />
-        <Stack.Screen name="Sign In" component={Login} />
-        <Stack.Screen name="Sign Up" component={Register} />
-        <Stack.Screen name="Profile" component={Profile} />
-        <Stack.Screen name="Settings" component={Setting} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Provider>
+      <AuthProvider>
+        <NavigationContainer
+          theme={{ colors: { background: "#1f242a", text: "white" } }}
+        >
+          <Stack.Navigator>
+            <Stack.Screen
+              options={{ headerShown: false }}
+              name="Home"
+              component={BottomTabNavigator}
+            />
+            <Stack.Screen name="List Courses" component={ListCourses} />
+            <Stack.Screen name="Course" component={CourseDetail} />
+            <Stack.Screen name="Sign In" component={Login} />
+            <Stack.Screen name="Sign Up" component={Register} />
+            <Stack.Screen name="Profile" component={Profile} />
+            <Stack.Screen name="Settings" component={Setting} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </AuthProvider>
+    </Provider>
   );
 }
 

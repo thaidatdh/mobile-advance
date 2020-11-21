@@ -984,8 +984,8 @@ export const authorsData = [
     ],
   },
 ];
-export let searchHistory = ["C#", "Node", "React"];
-export const users = [
+export const searchHistoryData = ["C#", "Node", "React"];
+export const usersData = [
   {
     name: "Administrator",
     username: "admin",

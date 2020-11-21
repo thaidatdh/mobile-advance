@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { SafeAreaView, Dimensions, StatusBar } from "react-native";
 import DownloadData from "./download-data";
 import DownloadEmpty from "./download-empty";
+import MAppBar from "../app-bar";
 const { width, height } = Dimensions.get("window");
-const Download = (props) => {
+const Download = ({navigation}) => {
   const courses = [
     {
       id: 1,
@@ -106,13 +107,12 @@ const Download = (props) => {
       ratingCount: 10,
     },
   ];
-  const [isEmpty, setIsEmpty] = useState(
-    props.isEmpty === null ? true : props.isEmpty
-  );
+  const [isEmpty, setIsEmpty] = useState(true);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#0E0F13" }}>
       <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
+      <MAppBar navigation={navigation} title="Download" />
       {isEmpty ? (
         <DownloadEmpty onCheckNotEmpty={() => setIsEmpty(false)} />
       ) : (

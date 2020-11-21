@@ -6,6 +6,7 @@ import SignInSection from "./SignInSection/sign-in-section";
 import SectionTags from "./SectionTags/section-tag";
 import SectionAuthor from "./SectionAuthors/section-authors";
 import SectionPath from "./SectionPaths/section-path";
+import MAppBar from "../app-bar";
 import { authorsData, coursesData } from "../../../data/dataMockup";
 
 const Browse = ({ navigation }) => {
@@ -52,6 +53,7 @@ const Browse = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
+      <MAppBar navigation={navigation} title="Browse" />
       <ScrollView style={styles.container}>
         <SignInSection
           style={isSignedIn ? styles.signedIn : styles.notSignedIn}
