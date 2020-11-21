@@ -4,9 +4,8 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { Switch } from "react-native-paper";
 const { width, height } = Dimensions.get("window");
 const CheckSettingButton = (props) => {
-  const [isCheck, setIsCheck] = useState(props.item.isCheck);
   const updateCheck = () => {
-    setIsCheck(!isCheck);
+    props.onChange(props.item.title, { isCheck: !props.item.isCheck });
   }
   return (
     <View style={styles.container}>
@@ -17,8 +16,12 @@ const CheckSettingButton = (props) => {
         ) : null}
       </View>
       <View style={styles.checkContainer}>
-        <Switch color='#2384ae' value={isCheck} tintColor='white' onValueChange={updateCheck}/>
-       
+        <Switch
+          color="#2384ae"
+          value={props.item.isCheck}
+          tintColor="white"
+          onValueChange={updateCheck}
+        />
       </View>
     </View>
   );

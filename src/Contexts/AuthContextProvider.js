@@ -4,20 +4,27 @@ import {
   searchHistoryData,
   coursesData,
   authorsData,
+  defaultSetting
 } from "../data/dataMockup";
 export const AuthContext = React.createContext(null);
 
 export default ({ children }) => {
-  const [user, setUser] = useState();
+  const [user, setUser] = useState(usersData[0]);
   const [searchHistory, setSearchHistory] = useState(searchHistoryData);
   const [downloaded, setDownloaded] = useState([]);
-  const [bookmark, setBookmark] = useState([]);
+  const [bookmark, setBookmark] = useState(coursesData.slice(0, 3));
+  const [settings, setSettings] = useState(defaultSetting);
+  const [channel, setChannel] = useState(coursesData.slice(5, 7));
   const login = (username, password) => {
     let user = usersData.find(
       (e) => e.username == username && e.password == password
     );
     if (user) {
       setUser(user);
+      return "";
+    }
+    else {
+      return "Username or Password is incorrect!";
     }
   };
   const logout = () => {
@@ -26,7 +33,7 @@ export default ({ children }) => {
     setDownloaded([]);
   };
   const addDownloaded = (course) => {
-    let newDownloaded = downloaded.splice().push(course);
+    let newDownloaded = downloaded.slice().concat(course);
     setDownloaded(newDownloaded);
   };
   const removeDownloaded = (course) => {
@@ -37,29 +44,52 @@ export default ({ children }) => {
     setDownloaded([]);
   };
   const addBookmark = (course) => {
-    let newBookmark = bookmark.splice().push(course);
+    let newBookmark = bookmark.slice().concat(course);
     setBookmark(newBookmark);
   };
   const removeBookmark = (course) => {
     let newBookmark = bookmark.filter((e) => e !== course);
     setBookmark(newBookmark);
   };
+  const addChannel = (course) => {
+    let newChannel = channel.slice().concat(course);
+    setBookmark(newChannel);
+  };
+  const removeChannel = (course) => {
+    let newChannel = channel.filter((e) => e !== course);
+    setChannel(newChannel);
+  };
   const addSearchHistory = (searchValue) => {
-    let newSearchHistory = searchHistory.splice().push(searchValue);
+    let newSearchHistory = searchHistory.slice().concat(searchValue);
     setSearchHistory(newSearchHistory);
   };
   const removeSearchHistory = (searchValue) => {
-    let newSearchHistory = searchHistory.filter((e) => e !== searchValue);
+    let newSearchHistory = searchHistory
+      .slice()
+      .filter((e) => e !== searchValue);
     setSearchHistory(newSearchHistory);
   };
   const removeAllSearchHistory = () => {
     setSearchHistory([]);
   };
+  const updateSetting = (title, updateAttribute) => {
+    var index = settings.findIndex((x) => x.title === title);
+    if (index !== -1)
+    {
+        setSettings([
+        ...settings.slice(0, index),
+        Object.assign({}, settings[index], updateAttribute),
+        ...settings.slice(index + 1),
+        ]);
+    }
+  }
   const store = {
     user,
     searchHistory,
     downloaded,
     bookmark,
+    channel,
+    settings,
     login: login,
     logout: logout,
     addDownloaded: addDownloaded,
@@ -70,6 +100,9 @@ export default ({ children }) => {
     addSearchHistory: addSearchHistory,
     removeAllSearchHistory: removeAllSearchHistory,
     removeSearchHistory: removeSearchHistory,
+    updateSetting: updateSetting,
+    addChannel: addChannel,
+    removeChannel: removeChannel
   };
 
   return <AuthContext.Provider value={store}>{children}</AuthContext.Provider>;

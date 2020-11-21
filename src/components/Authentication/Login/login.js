@@ -11,7 +11,7 @@ import {
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import { Button, TextInput } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
-
+import { AuthContext } from "../../../Contexts/AuthContextProvider";
 const { width, height } = Dimensions.get("window");
 
 const Login = ({navigation}) => {
@@ -19,6 +19,8 @@ const Login = ({navigation}) => {
   const [password, setPassword] = useState("");
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [isReadyToLogin, setIsReadyToLogin] = useState(false);
+  const [error, setError] = useState('');
+  const { login } = React.useContext(AuthContext);
   const onUsernameChange = (text) => {
     setUsername(text);
     if (username.length > 0 && password.length > 0) {
@@ -39,7 +41,13 @@ const Login = ({navigation}) => {
     if (!isReadyToLogin) {
       return;
     }
-    console.log("Login");
+    let result = login(username, password);
+    if (result === '') {
+      navigation.navigate('Main');
+    }
+    else {
+      setError(result);
+    }
   };
   const onSignUp = () => {
     navigation.navigate('Sign Up');
@@ -100,6 +108,7 @@ const Login = ({navigation}) => {
             )
           }
         />
+        {error === "" ? null : <Text style={{ color: "red", alignSelf: 'center' }}>{error}</Text>}
         <TouchableOpacity
           style={isReadyToLogin ? styles.signInBtn : styles.signInBtnDisabled}
           disabled={!isReadyToLogin}

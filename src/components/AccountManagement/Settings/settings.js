@@ -7,12 +7,15 @@ import {
   Image,
   ScrollView,
   SafeAreaView,
+  StatusBar,
 } from "react-native";
 import TextSettingButton from "./SettingComponent/text-setting-button";
 import { Button } from "react-native-paper";
 import CheckSettingButton from "./SettingComponent/check-setting-button";
+import { AuthContext } from "../../../Contexts/AuthContextProvider";
 const { width, height } = Dimensions.get("window");
-const Setting = (props) => {
+const Setting = ({ navigation }) => {
+  const { user, settings, updateSetting, logout } = React.useContext(AuthContext);
   const accountSetting = [
     {
       type: "text",
@@ -28,82 +31,39 @@ const Setting = (props) => {
       title: "Communication Preference",
     },
   ];
-  const mainSetting = [
-    {
-      type: "text",
-      title: "Default Caption Language",
-      desc: "Free",
-    },
-    {
-      type: "check",
-      title: "Require Wifi for streaming",
-      isCheck: true,
-    },
-    {
-      type: "check",
-      title: "Require Wifi for downloading",
-      isCheck: true,
-    },
-    {
-      type: "check",
-      title: "Show quiz at the end of video",
-      isCheck: true,
-    },
-    {
-      type: "text",
-      title: "Download location",
-      desc: "Default Download location",
-    },
-    {
-      type: "check",
-      title: "Recommended content push notifications",
-      desc: "Receive notification about recommended content.",
-      isCheck: false,
-    },
-    {
-      type: "check",
-      title: "Reminder to learn notifications",
-      desc:
-        "Schedule the app to learn to skill up faster and conquer your goals.",
-      isCheck: false,
-    },
-    {
-      type: "text",
-      title: "Caption",
-    },
-    {
-      type: "text",
-      title: "Notification",
-    },
-    {
-      type: "text",
-      title: "Advanced Options",
-    },
-  ];
+
   const appVersion = {
     type: "text",
     title: "App version",
     desc: "1.0.0",
   };
-  const data = {
-    name: "Dat Ho",
-    username: "datho324",
-  };
+  const onSignOut = () => {
+    navigation.navigate('Main');
+    logout();
+  }
   const renderAccountSection = () => {
     return accountSetting.map((item) =>
       item.type === "text" ? (
         <TextSettingButton key={item.title} item={item} />
       ) : (
-        <CheckSettingButton key={item.title} item={item} />
+        <CheckSettingButton
+          key={item.title}
+          item={item}
+          onChange={updateSetting}
+        />
       )
     );
   };
   const renderSettingSection = () => {
-    return mainSetting.map((item) =>
+    return settings.map((item) =>
       item.type === "text" ? (
         <TextSettingButton key={item.title} item={item} />
       ) : (
-        <CheckSettingButton key={item.title} item={item} />
+        <CheckSettingButton
+          key={item.title}
+          item={item}
+          onChange={updateSetting}
+        />
       )
     );
   };
@@ -123,14 +83,14 @@ const Setting = (props) => {
             style={styles.image}
           />
           <View style={styles.nameView}>
-            <Text style={styles.name}>{data.name}</Text>
-            <Text style={styles.username}>{data.username}</Text>
+            <Text style={styles.name}>{user.name}</Text>
+            <Text style={styles.username}>{user.username}</Text>
           </View>
         </View>
         <View style={styles.sectionContainer}>{renderAccountSection()}</View>
         <View style={styles.sectionContainer}>{renderSettingSection()}</View>
         <View style={styles.sectionContainer}>{renderAppVersion()}</View>
-        <Button style={styles.signOut}>
+        <Button style={styles.signOut} onPress={onSignOut}>
           <Text style={styles.buttonTextBlue}>Sign Out</Text>
         </Button>
       </ScrollView>

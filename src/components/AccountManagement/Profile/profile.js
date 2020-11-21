@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Text,
   View,
@@ -9,8 +9,10 @@ import {
   StatusBar
 } from "react-native";
 import ProfileContentSecion from "./profile-content-section";
+import { AuthContext } from "../../../Contexts/AuthContextProvider";
 const { width, height } = Dimensions.get("window");
-const Profile = (props) => {
+
+const Profile = ({navigation}) => {
   const sections = [
     {
       title: "total active days",
@@ -28,9 +30,8 @@ const Profile = (props) => {
       subValue: "",
     },
   ];
-  const data = {
-    name: "Dat Ho",
-  };
+  const { user } = React.useContext(AuthContext);
+
   const createSections = () => {
     return sections.map((item) => (
       <ProfileContentSecion
@@ -41,7 +42,6 @@ const Profile = (props) => {
       />
     ));
   };
-
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
@@ -51,7 +51,7 @@ const Profile = (props) => {
           style={styles.image}
         />
         <View style={styles.nameView}>
-          <Text style={styles.name}>{data.name}</Text>
+          <Text style={styles.name}>{user.name}</Text>
         </View>
       </View>
       <View style={{ margin: 20 }}>

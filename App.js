@@ -18,6 +18,7 @@ import Download from "./src/components/Main/Download/download";
 import Search from "./src/components/Main/Search/search";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import AuthProvider from "./src/Contexts/AuthContextProvider";
+import DataProvider from "./src/Contexts/DataContextProvider";
 import { Provider } from "react-native-paper";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -64,23 +65,28 @@ export default function App() {
   return (
     <Provider>
       <AuthProvider>
-        <NavigationContainer
-          theme={{ colors: { background: "#1f242a", text: "white" } }}
-        >
-          <Stack.Navigator>
-            <Stack.Screen
-              options={{ headerShown: false }}
-              name="Home"
-              component={BottomTabNavigator}
-            />
-            <Stack.Screen name="List Courses" component={ListCourses} />
-            <Stack.Screen name="Course" component={CourseDetail} />
-            <Stack.Screen name="Sign In" component={Login} />
-            <Stack.Screen name="Sign Up" component={Register} />
-            <Stack.Screen name="Profile" component={Profile} />
-            <Stack.Screen name="Settings" component={Setting} />
-          </Stack.Navigator>
-        </NavigationContainer>
+        <DataProvider>
+          <NavigationContainer
+            theme={{ colors: { background: "#1f242a", text: "white" } }}
+          >
+            <Stack.Navigator>
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="Main"
+                component={BottomTabNavigator}
+              />
+              <Stack.Screen name="List Courses" component={ListCourses} />
+              <Stack.Screen
+                name="Course"
+                component={CourseDetail}
+              />
+              <Stack.Screen name="Sign In" component={Login} />
+              <Stack.Screen name="Sign Up" component={Register} />
+              <Stack.Screen name="Profile" component={Profile} />
+              <Stack.Screen name="Settings" component={Setting} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </DataProvider>
       </AuthProvider>
     </Provider>
   );

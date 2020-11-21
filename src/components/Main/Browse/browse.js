@@ -7,8 +7,8 @@ import SectionTags from "./SectionTags/section-tag";
 import SectionAuthor from "./SectionAuthors/section-authors";
 import SectionPath from "./SectionPaths/section-path";
 import MAppBar from "../app-bar";
-import { authorsData, coursesData } from "../../../data/dataMockup";
-
+import { AuthContext } from "../../../Contexts/AuthContextProvider";
+import { DataContext } from "../../../Contexts/DataContextProvider";
 const Browse = ({ navigation }) => {
   const imageButtonData = [
     {
@@ -20,28 +20,29 @@ const Browse = ({ navigation }) => {
       title: ["Recommended", "For you"],
     },
   ];
-
-  const [isSignedIn, setSignedIn] = useState(false);
+  const { user } = React.useContext(AuthContext);
+  const { courses, authors } = React.useContext(DataContext);
+  const [isSignedIn, setSignedIn] = useState(user ? true : false);
   const onPressNewReleaseButton = () => {
     navigation.navigate("List Courses", {
       title: "New Released",
-      courses: coursesData,
+      courses: courses,
     });
   };
   const onPressRecommendedButton = () => {
     navigation.navigate("List Courses", {
       title: "Recommended for you",
-      courses: coursesData,
+      courses: courses,
     });
   };
   const onPressCategory = (category) => {
     navigation.navigate("List Courses", {
       title: category,
-      courses: coursesData,
+      courses: courses,
     });
   }
   const onPressSkills = (skills) => {
-    const data = coursesData.filter(n => n.title.includes(skills));
+    const data = courses.filter((n) => n.title.includes(skills));
     navigation.navigate("List Courses", {
       title: skills,
       courses: data,
@@ -73,7 +74,7 @@ const Browse = ({ navigation }) => {
         <SectionCategories onPress={onPressCategory} />
         <SectionTags title="Popular Skills" onPress={onPressSkills} />
         {/*<SectionPath title="Paths" />*/}
-        <SectionAuthor title="Top Authors" authors={authorsData} />
+        <SectionAuthor title="Top Authors" authors={authors} />
       </ScrollView>
     </SafeAreaView>
   );

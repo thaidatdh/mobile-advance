@@ -1,4 +1,4 @@
-export let coursesData = [
+export const coursesData = [
   {
     id: 1,
     title: "Agular: Getting Started",
@@ -994,3 +994,55 @@ export const usersData = [
     created_date: "Oct 10, 2020",
   },
 ];
+export const defaultSetting = [
+    {
+      type: "text",
+      title: "Default Caption Language",
+      desc: "Free",
+    },
+    {
+      type: "check",
+      title: "Require Wifi for streaming",
+      isCheck: true,
+    },
+    {
+      type: "check",
+      title: "Require Wifi for downloading",
+      isCheck: true,
+    },
+    {
+      type: "check",
+      title: "Show quiz at the end of video",
+      isCheck: true,
+    },
+    {
+      type: "text",
+      title: "Download location",
+      desc: "Default Download location",
+    },
+    {
+      type: "check",
+      title: "Recommended content push notifications",
+      desc: "Receive notification about recommended content.",
+      isCheck: false,
+    },
+    {
+      type: "check",
+      title: "Reminder to learn notifications",
+      desc:
+        "Schedule the app to learn to skill up faster and conquer your goals.",
+      isCheck: false,
+    },
+    {
+      type: "text",
+      title: "Caption",
+    },
+    {
+      type: "text",
+      title: "Notification",
+    },
+    {
+      type: "text",
+      title: "Advanced Options",
+    },
+  ];

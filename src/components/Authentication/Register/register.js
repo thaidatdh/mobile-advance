@@ -18,8 +18,7 @@ const Register = ({navigation}) => {
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const [email, setEmail] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [secureTextEntryRepeat, setSecureTextEntryRepeat] = useState(true);
@@ -45,7 +44,7 @@ const Register = ({navigation}) => {
     navigation.navigate('Sign In');
   }
   const onRegister = () => {
-    if (email.length == 0 || firstName.length == 0 || lastName.length == 0) {
+    if (email.length == 0 || name.length == 0) {
       setErrorCode(0);
       return;
     } else if (!validateEmail(email)) {
@@ -83,17 +82,10 @@ const Register = ({navigation}) => {
         />
         <TextInput
           style={styles.input}
-          label="First Name *"
+          label="Full Name *"
           theme={themeTextInput}
-          value={firstName}
-          onChangeText={(text) => setFirstName(text)}
-        />
-        <TextInput
-          style={styles.input}
-          label="Last Name *"
-          theme={themeTextInput}
-          value={lastName}
-          onChangeText={(text) => setLastName(text)}
+          value={name}
+          onChangeText={(text) => setName(text)}
         />
         <TextInput
           style={styles.input}

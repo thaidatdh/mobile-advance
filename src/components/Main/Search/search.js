@@ -3,22 +3,41 @@ import { SafeAreaView, Dimensions, Platform, StatusBar } from "react-native";
 import { TextInput } from "react-native-paper";
 import SearchData from "./search-data";
 import SearchEmpty from "./search-empty";
+import { AuthContext } from "../../../Contexts/AuthContextProvider";
+import { DataContext } from "../../../Contexts/DataContextProvider";
 const { width, height } = Dimensions.get("window");
-const Search = (props) => {
+const Search = ({navigation}) => {
   const [searchValue, setSearchValue] = useState("");
   const [inputValue, setInputValue] = useState("");
-  const [searchHistory, setSearchHistory] = useState([".net", "bob", "react"]);
-
+  const [courseData, setCourseData] = useState([]);
+  const [authorData, setAuthorData] = useState([]);
+  const {
+    searchHistory,
+    addSearchHistory,
+    removeAllSearchHistory,
+  } = React.useContext(AuthContext);
+  const { courses, authors, searchCourses, searchAuthor } = React.useContext(DataContext);
+  const onPressCourse = (course) => {
+    navigation.navigate("Course", { course: course });
+  };
   const onTextChangeSearchValue = (text) => {
     setInputValue(text);
-    if (!text || text === "") {
+    if (text === undefined || text === "") {
       setSearchValue("");
     }
   };
   const onSearch = (text) => {
     setInputValue(text);
+    if (text === undefined || text === "") {
+      return;
+    }
     setSearchValue(text);
-  }
+    if (!searchHistory.includes(text)) {
+      addSearchHistory(text);
+    }
+    setCourseData(searchCourses(text));
+    setAuthorData(searchAuthor(text));
+  };
   return (
     <SafeAreaView
       style={{
@@ -41,8 +60,7 @@ const Search = (props) => {
         returnKeyType="search"
         value={inputValue}
         onSubmitEditing={(e) => {
-          setSearchValue(e.target.value);
-          setSearchHistory(searchHistory.concat(e.target.value));
+          onSearch(e.target.value);
         }}
         onChangeText={onTextChangeSearchValue}
       ></TextInput>
@@ -50,10 +68,15 @@ const Search = (props) => {
         <SearchEmpty
           onSearch={onSearch}
           history={searchHistory}
-          onClearAll={() => setSearchHistory([])}
+          onClearAll={removeAllSearchHistory}
         />
       ) : (
-        <SearchData />
+        <SearchData
+          searchValue={searchValue}
+          coursesData={courseData}
+          authorsData={authorData}
+          onPressCourse={onPressCourse}
+        />
       )}
     </SafeAreaView>
   );

@@ -11,13 +11,15 @@ const { width, height } = Dimensions.get("window");
 const ListAuthorItem = (props) => {
   return (
     <TouchableOpacity style={styles.item}>
-      <Image
-        source={require("../../../../../assets/bg.png")}
-        style={styles.image}
-      />
+      <View style={styles.imageView}>
+        <Image
+          source={require("../../../../../assets/bg.png")}
+          style={styles.image}
+        />
+      </View>
       <View style={{ marginLeft: 10 }}>
-        <Text style={styles.title}>{props.item.name}</Text>
-        <Text style={styles.darkText}>{props.item.courses} Courses</Text>
+        <Text style={styles.title}>{props.item.title}</Text>
+        <Text style={styles.darkText}>{props.item.coursesCount} Courses</Text>
       </View>
     </TouchableOpacity>
   );
@@ -33,9 +35,19 @@ const styles = StyleSheet.create({
     height: height * 0.1,
     maxHeight: 100,
   },
-  image: {
+  imageView: {
     width: width * 0.2,
     height: "80%",
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  image: {
+    width: width * 0.2 > height * 0.1 ? height * 0.1 : width * 0.2,
+    height: width * 0.2 > height * 0.1 ? height * 0.1 : width * 0.2,
+    borderRadius:
+      width * 0.2 > height * 0.1 ? height * 0.1 * 0.5 : width * 0.2 * 0.5,
+    paddingBottom: 5,
+    alignSelf: 'center'
   },
   title: {
     fontSize: 16,
