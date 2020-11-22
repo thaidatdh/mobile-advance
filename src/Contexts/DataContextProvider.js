@@ -7,6 +7,16 @@ function onlyUnique(value, index, self) {
 export default ({ children }) => {
   const [courses, setCourses] = React.useState(coursesData);
   const [authors, setAuthors] = React.useState(authorsData);
+  const getAuthorCourses = (authorName) => {
+    const courseResult = courses
+      .slice()
+      .filter(
+        (n) =>
+          (!Array.isArray(n.author) && n.author === authorName) ||
+          (Array.isArray(n.author) && n.author.includes(authorName))
+      );
+    return courseResult;
+  };
   const searchCourses = (courseName) => {
     const courseResult = courses
       .slice()
@@ -15,8 +25,12 @@ export default ({ children }) => {
       .slice()
       .filter(
         (n) =>
-          n.author.toUpperCase().includes(courseName.toUpperCase()) &&
-          !courseResult.includes(n)
+          (
+            (Array.isArray(n.author) && n.author.includes(courseName)) 
+            ||
+            (!Array.isArray(n.author) && n.author.toUpperCase().includes(courseName.toUpperCase()))
+          )
+          &&!courseResult.includes(n)
       );
     return courseResult.concat(courseOfAuthor).slice();
   };
@@ -35,6 +49,7 @@ export default ({ children }) => {
       .slice()
       .filter((n) => n.title.toUpperCase().includes(authorSearch.toUpperCase()))
       .map((n) => n.author)
+      .flat()
       .filter(onlyUnique);
     const authorHasCourses = authors
       .slice()
@@ -47,7 +62,7 @@ export default ({ children }) => {
       .concat(authorHasCourses)
       .slice()
       .forEach((n) => {
-        const count = courses.filter((c) => c.author === n.title).length;
+        const count = courses.filter((c) => (Array.isArray(c.author) && c.author.includes(n.title)) || (!Array.isArray(c.author) &&c.author === n.title)).length;
         let tempAuthor = Object.assign({ coursesCount: count }, n);
         result = result.concat(tempAuthor);
       });
@@ -58,6 +73,7 @@ export default ({ children }) => {
     authors,
     searchCourses,
     searchAuthor,
+    getAuthorCourses,
   };
 
   return <DataContext.Provider value={store}>{children}</DataContext.Provider>;

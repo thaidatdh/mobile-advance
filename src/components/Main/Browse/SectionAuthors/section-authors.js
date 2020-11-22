@@ -5,9 +5,12 @@ import SectionAuthorItem from "./SectionAuthorItem/section-author-item";
 
 const SectionAuthor = (props) => {
   const [authors] = useState(props.authors);
+  const onPressAuthor = (author) => {
+    props.navigation.navigate("Author", { author: author });
+  };
   const renderListItems = (tags) => {
     return tags.map((item) => (
-      <SectionAuthorItem key={item.id} author={item}/>
+      <SectionAuthorItem key={item.id} author={item} onPress={onPressAuthor}/>
     ));
   };
 

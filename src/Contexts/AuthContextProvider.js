@@ -4,7 +4,7 @@ import {
   searchHistoryData,
   coursesData,
   authorsData,
-  defaultSetting
+  defaultSetting,
 } from "../data/dataMockup";
 export const AuthContext = React.createContext(null);
 
@@ -22,8 +22,7 @@ export default ({ children }) => {
     if (user) {
       setUser(user);
       return "";
-    }
-    else {
+    } else {
       return "Username or Password is incorrect!";
     }
   };
@@ -43,6 +42,13 @@ export default ({ children }) => {
   const removeAllDownloaded = () => {
     setDownloaded([]);
   };
+  const isDownloaded = (courseTitle) => {
+    const course = downloaded.find((e) => e.title === courseTitle);
+    if (course) {
+      return true;
+    }
+    return false;
+  };
   const addBookmark = (course) => {
     let newBookmark = bookmark.slice().concat(course);
     setBookmark(newBookmark);
@@ -51,13 +57,27 @@ export default ({ children }) => {
     let newBookmark = bookmark.filter((e) => e !== course);
     setBookmark(newBookmark);
   };
+  const isBookmarked = (courseTitle) => {
+    const bookmarked = bookmark.find((e) => e.title === courseTitle);
+    if (bookmarked) {
+      return true;
+    }
+    return false;
+  };
   const addChannel = (course) => {
     let newChannel = channel.slice().concat(course);
-    setBookmark(newChannel);
+    setChannel(newChannel);
   };
   const removeChannel = (course) => {
     let newChannel = channel.filter((e) => e !== course);
     setChannel(newChannel);
+  };
+  const isChanneled = (courseTitle) => {
+    const channeled = channel.find((e) => e.title === courseTitle);
+    if (channeled) {
+      return true;
+    }
+    return false;
   };
   const addSearchHistory = (searchValue) => {
     let newSearchHistory = searchHistory.slice().concat(searchValue);
@@ -74,15 +94,14 @@ export default ({ children }) => {
   };
   const updateSetting = (title, updateAttribute) => {
     var index = settings.findIndex((x) => x.title === title);
-    if (index !== -1)
-    {
-        setSettings([
+    if (index !== -1) {
+      setSettings([
         ...settings.slice(0, index),
         Object.assign({}, settings[index], updateAttribute),
         ...settings.slice(index + 1),
-        ]);
+      ]);
     }
-  }
+  };
   const store = {
     user,
     searchHistory,
@@ -102,7 +121,10 @@ export default ({ children }) => {
     removeSearchHistory: removeSearchHistory,
     updateSetting: updateSetting,
     addChannel: addChannel,
-    removeChannel: removeChannel
+    removeChannel: removeChannel,
+    isBookmarked,
+    isChanneled,
+    isDownloaded,
   };
 
   return <AuthContext.Provider value={store}>{children}</AuthContext.Provider>;

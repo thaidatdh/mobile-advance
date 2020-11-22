@@ -25,6 +25,7 @@ const ListCourses = ({ navigation, route }) => {
         key={item.id.toString()}
         item={item}
         onPress={onPressCourse}
+        navigation={navigation}
       />
     ));
   };

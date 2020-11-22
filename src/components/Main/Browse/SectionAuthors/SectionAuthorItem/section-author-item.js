@@ -1,10 +1,20 @@
 import React from "react";
-import { Image, View, Text, StyleSheet, Dimensions } from "react-native";
+import {
+  Image,
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
 const {width, height} = Dimensions.get("window");
 
 const SectionAuthorItem = (props) => {
   return (
-    <View style={styles.item}>
+    <TouchableOpacity
+      style={styles.item}
+      onPress={() => props.onPress(props.author)}
+    >
       <Image
         source={require("../../../../../../assets/bg.png")}
         style={styles.image}
@@ -12,7 +22,7 @@ const SectionAuthorItem = (props) => {
       <View style={styles.titleView}>
         <Text style={styles.title}>{props.author.title}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 const styles = StyleSheet.create({

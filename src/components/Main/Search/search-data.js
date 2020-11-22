@@ -34,10 +34,17 @@ const SearchData = (props) => {
       .slice()
       .map((item, index) =>
         index <= 5 ? (
-          <ListAuthorItem key={"A_" + item.id.toString()} item={item} />
+          <ListAuthorItem
+            key={"A_" + item.id.toString()}
+            item={item}
+            onPress={props.onPressAuthor}
+          />
         ) : null
       );
   };
+  const onSeeAllCourses = () => {
+    props.onPressSeeAllCourse(props.coursesData);
+  }
   return (
     <View style={{ flex: 1, backgroundColor: "#0E0F13" }}>
       <ScrollView>
@@ -45,6 +52,7 @@ const SearchData = (props) => {
           key="courseList"
           dataLength={props.coursesData.length}
           data="Courses"
+          onPress={onSeeAllCourses}
         />
         {renderCourses(props.coursesData)}
         {/*<SearchHeader key="pathList" dataLength={paths.length} data="Paths" />

@@ -16,10 +16,16 @@ const Search = ({navigation}) => {
     addSearchHistory,
     removeAllSearchHistory,
   } = React.useContext(AuthContext);
-  const { courses, authors, searchCourses, searchAuthor } = React.useContext(DataContext);
+  const { searchCourses, searchAuthor } = React.useContext(DataContext);
   const onPressCourse = (course) => {
     navigation.navigate("Course", { course: course });
   };
+  const onPressAuthor = (author) => {
+    navigation.navigate("Author", { author: author });
+  }
+  const onPressSeeAllCourse = (courses) => {
+    navigation.navigate("List Courses", { courses: courses, title: "Search" });
+  }
   const onTextChangeSearchValue = (text) => {
     setInputValue(text);
     if (text === undefined || text === "") {
@@ -76,6 +82,8 @@ const Search = ({navigation}) => {
           coursesData={courseData}
           authorsData={authorData}
           onPressCourse={onPressCourse}
+          onPressAuthor={onPressAuthor}
+          onPressSeeAllCourse={onPressSeeAllCourse}
         />
       )}
     </SafeAreaView>

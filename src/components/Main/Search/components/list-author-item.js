@@ -10,7 +10,7 @@ import {
 const { width, height } = Dimensions.get("window");
 const ListAuthorItem = (props) => {
   return (
-    <TouchableOpacity style={styles.item}>
+    <TouchableOpacity style={styles.item} onPress={() => props.onPress(props.item)}>
       <View style={styles.imageView}>
         <Image
           source={require("../../../../../assets/bg.png")}

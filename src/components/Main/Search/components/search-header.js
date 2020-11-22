@@ -23,7 +23,7 @@ const SearchHeader = (props) => {
     <Text style={{ color: "white", fontSize: 15 }}>
       {props.dataLength} {props.data}
     </Text>
-    <TouchableOpacity>
+    <TouchableOpacity onPress={props.onPress}>
     <Text
       style={{
         color: "#2384ae",

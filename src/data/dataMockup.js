@@ -514,7 +514,7 @@ export const coursesData = [
   {
     id: 9,
     title: "Core Python: Getting Started",
-    author: "Austin Bingham",
+    author: ["Austin Bingham", "Robert Smallshire"],
     level: "Beginner",
     released: "Dec 12, 2019",
     duration: "4h 5m",
@@ -576,7 +576,7 @@ export const coursesData = [
   {
     id: 10,
     title: "The Future of Python",
-    author: "Austin Bingham",
+    author: ["Austin Bingham", "Robert Smallshire"],
     level: "Beginner",
     released: "Sep 3, 2020",
     duration: "45m",

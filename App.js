@@ -20,6 +20,7 @@ import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import AuthProvider from "./src/Contexts/AuthContextProvider";
 import DataProvider from "./src/Contexts/DataContextProvider";
 import { Provider } from "react-native-paper";
+import Author from "./src/components/Courses/Author/author";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const BottomTabNavigator = () => {
@@ -76,10 +77,8 @@ export default function App() {
                 component={BottomTabNavigator}
               />
               <Stack.Screen name="List Courses" component={ListCourses} />
-              <Stack.Screen
-                name="Course"
-                component={CourseDetail}
-              />
+              <Stack.Screen name="Author" component={Author} />
+              <Stack.Screen name="Course" component={CourseDetail} />
               <Stack.Screen name="Sign In" component={Login} />
               <Stack.Screen name="Sign Up" component={Register} />
               <Stack.Screen name="Profile" component={Profile} />

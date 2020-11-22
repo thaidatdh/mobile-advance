@@ -4,8 +4,6 @@ import SectionCourseItem from "./SectionCourseItem/section-course-item";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import {coursesData} from "../../../../data/dataMockup"
 const SectionCourses = ({ onSeeAll, title, onPressCourse, coursesList }) => {
-  const [courses] = useState(coursesList);
-
   const renderListItems = (courses) => {
     return courses ? courses.map((item) => (
       <SectionCourseItem key={item.id} item={item} onPress={onPressCourse} />
@@ -33,7 +31,7 @@ const SectionCourses = ({ onSeeAll, title, onPressCourse, coursesList }) => {
         </TouchableOpacity>
       </View>
       <ScrollView style={{ paddingLeft: 10 }} horizontal={true}>
-        {renderListItems(courses)}
+        {renderListItems(coursesList)}
       </ScrollView>
     </View>
   );

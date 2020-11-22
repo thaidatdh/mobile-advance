@@ -74,7 +74,7 @@ const Browse = ({ navigation }) => {
         <SectionCategories onPress={onPressCategory} />
         <SectionTags title="Popular Skills" onPress={onPressSkills} />
         {/*<SectionPath title="Paths" />*/}
-        <SectionAuthor title="Top Authors" authors={authors} />
+        <SectionAuthor title="Top Authors" authors={authors} navigation={navigation}/>
       </ScrollView>
     </SafeAreaView>
   );
