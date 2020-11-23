@@ -10,13 +10,21 @@ import {
   StatusBar,
 } from "react-native";
 import CourseInfo from "./CourseInfo/course-info";
+import { DataContext } from "../../../Contexts/DataContextProvider";
 const { width, height } = Dimensions.get("window");
 
-const CourseDetail = ({navigation, route}) => {
+const CourseDetail = ({ navigation, route }) => {
   const [courseDetail] = useState(route.params.course);
+  const { authors } = React.useContext(DataContext);
   useEffect(() => {
     navigation.setOptions({ title: courseDetail.title });
-  },[])
+  }, []);
+  const onPressAuthor = (authorName) => {
+    const author = authors.find((n) => n.title === authorName);
+    if (author) {
+      navigation.navigate("Author", { author: author });
+    }
+  };
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
@@ -27,7 +35,7 @@ const CourseDetail = ({navigation, route}) => {
         />
       </View>
       <ScrollView style={{ height: height * 0.7 }}>
-        <CourseInfo course={courseDetail} />
+        <CourseInfo course={courseDetail} onPressAuthor={onPressAuthor} />
       </ScrollView>
     </SafeAreaView>
   );

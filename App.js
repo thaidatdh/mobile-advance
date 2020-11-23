@@ -21,6 +21,7 @@ import AuthProvider from "./src/Contexts/AuthContextProvider";
 import DataProvider from "./src/Contexts/DataContextProvider";
 import { Provider } from "react-native-paper";
 import Author from "./src/components/Courses/Author/author";
+import ListAuthors from "./src/components/Courses/Author/list-authors";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const BottomTabNavigator = () => {
@@ -78,6 +79,7 @@ export default function App() {
               />
               <Stack.Screen name="List Courses" component={ListCourses} />
               <Stack.Screen name="Author" component={Author} />
+              <Stack.Screen name="List Authors" component={ListAuthors} />
               <Stack.Screen name="Course" component={CourseDetail} />
               <Stack.Screen name="Sign In" component={Login} />
               <Stack.Screen name="Sign Up" component={Register} />

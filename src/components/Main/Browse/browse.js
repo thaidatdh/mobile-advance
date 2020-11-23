@@ -22,7 +22,6 @@ const Browse = ({ navigation }) => {
   ];
   const { user } = React.useContext(AuthContext);
   const { courses, authors } = React.useContext(DataContext);
-  const [isSignedIn, setSignedIn] = useState(user ? true : false);
   const onPressNewReleaseButton = () => {
     navigation.navigate("List Courses", {
       title: "New Released",
@@ -57,8 +56,8 @@ const Browse = ({ navigation }) => {
       <MAppBar navigation={navigation} title="Browse" />
       <ScrollView style={styles.container}>
         <SignInSection
-          style={isSignedIn ? styles.signedIn : styles.notSignedIn}
-          isSignedIn={isSignedIn}
+          style={user ? styles.signedIn : styles.notSignedIn}
+          isSignedIn={user ? true : false}
           onPress={onPressSignIn}
         />
         <ImageButton
@@ -74,7 +73,11 @@ const Browse = ({ navigation }) => {
         <SectionCategories onPress={onPressCategory} />
         <SectionTags title="Popular Skills" onPress={onPressSkills} />
         {/*<SectionPath title="Paths" />*/}
-        <SectionAuthor title="Top Authors" authors={authors} navigation={navigation}/>
+        <SectionAuthor
+          title="Top Authors"
+          authors={authors}
+          navigation={navigation}
+        />
       </ScrollView>
     </SafeAreaView>
   );

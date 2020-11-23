@@ -26,6 +26,9 @@ const Search = ({navigation}) => {
   const onPressSeeAllCourse = (courses) => {
     navigation.navigate("List Courses", { courses: courses, title: "Search" });
   }
+  const onPressSeeAllAuthor = (authors) => {
+    navigation.navigate("List Authors", { authors: authors, title: "Search" });
+  };
   const onTextChangeSearchValue = (text) => {
     setInputValue(text);
     if (text === undefined || text === "") {
@@ -84,6 +87,7 @@ const Search = ({navigation}) => {
           onPressCourse={onPressCourse}
           onPressAuthor={onPressAuthor}
           onPressSeeAllCourse={onPressSeeAllCourse}
+          onPressSeeAllAuthor={onPressSeeAllAuthor}
         />
       )}
     </SafeAreaView>

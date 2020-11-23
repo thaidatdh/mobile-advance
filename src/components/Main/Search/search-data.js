@@ -45,6 +45,9 @@ const SearchData = (props) => {
   const onSeeAllCourses = () => {
     props.onPressSeeAllCourse(props.coursesData);
   }
+  const onSeeAllAuthors = () => {
+    props.onPressSeeAllAuthor(props.authorsData);
+  };
   return (
     <View style={{ flex: 1, backgroundColor: "#0E0F13" }}>
       <ScrollView>
@@ -61,6 +64,7 @@ const SearchData = (props) => {
           key="authorList"
           dataLength={props.authorsData.length}
           data="Authors"
+          onPress={onSeeAllAuthors}
         />
         {renderAuthors(props.authorsData)}
       </ScrollView>
