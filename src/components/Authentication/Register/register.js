@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Button, TextInput } from "react-native-paper";
+import { AuthContext } from "../../../Contexts/AuthContextProvider";
 
 const { width, height } = Dimensions.get("window");
 
@@ -24,6 +25,9 @@ const Register = ({navigation}) => {
   const [secureTextEntryRepeat, setSecureTextEntryRepeat] = useState(true);
 
   const [errorCode, setErrorCode] = useState(-1);
+
+  const { register } = React.useContext(AuthContext);
+
   const errorValue = [
     "Please enter required fields (*)",
     "Email is not valid",
@@ -57,7 +61,17 @@ const Register = ({navigation}) => {
       setErrorCode(3);
       return;
     }
-    setErrorCode(-1);
+    let user = {
+      email: email,
+      username: username,
+      password: password,
+      phone: phone,
+    }
+    let result = register(user);
+    setErrorCode(result);
+    if (result === -1) {
+      onSignIn();
+    }
   };
   const themeTextInput = {
     colors: {

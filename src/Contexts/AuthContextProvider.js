@@ -9,6 +9,7 @@ import {
 export const AuthContext = React.createContext(null);
 
 export default ({ children }) => {
+  const [usersList, setUsersList] = useState(usersData);
   const [user, setUser] = useState(usersData[0]);
   const [searchHistory, setSearchHistory] = useState(searchHistoryData);
   const [downloaded, setDownloaded] = useState([]);
@@ -16,7 +17,7 @@ export default ({ children }) => {
   const [settings, setSettings] = useState(defaultSetting);
   const [channel, setChannel] = useState(coursesData.slice(5, 7));
   const login = (username, password) => {
-    let user = usersData.find(
+    let user = usersList.find(
       (e) => e.username == username && e.password == password
     );
     if (user) {
@@ -31,6 +32,17 @@ export default ({ children }) => {
     setBookmark([]);
     setDownloaded([]);
   };
+  const register = (user) => {
+    let exist = usersList.find(n => n.username);
+    if (exist) {
+      return 4;
+    }
+    else {
+      let newList = usersList.concat(user);
+      setUsersList(newList);
+      return -1;
+    }
+  }
   const addDownloaded = (course) => {
     let newDownloaded = downloaded.slice().concat(course);
     setDownloaded(newDownloaded);
@@ -104,6 +116,7 @@ export default ({ children }) => {
   };
   const store = {
     user,
+    register,
     searchHistory,
     downloaded,
     bookmark,
