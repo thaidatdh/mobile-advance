@@ -33,6 +33,7 @@ const Register = ({navigation}) => {
     "Email is not valid",
     "Password should include atleast 8 characters",
     "Repeat Password is incorrect",
+    "Username already exists"
   ];
   const updateSecureTextEntry = () => {
     setSecureTextEntry(!secureTextEntry);
