@@ -68,8 +68,9 @@ const Search = ({navigation}) => {
         theme={{ colors: { text: "white" } }}
         returnKeyType="search"
         value={inputValue}
+        multiline={false}
         onSubmitEditing={(e) => {
-          onSearch(e.target.value);
+          onSearch(e.nativeEvent.text);
         }}
         onChangeText={onTextChangeSearchValue}
       ></TextInput>

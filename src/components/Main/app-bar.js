@@ -39,8 +39,8 @@ const MAppBar = (props) => {
     props.navigation.navigate("Main");
   };
   return (
-    <Appbar.Header style={{ backgroundColor: "#1f242a" }}>
-      <Appbar.Content title={props.title} />
+    <Appbar.Header style={{ backgroundColor: "#1f242a"}} statusBarHeight={5}>
+      <Appbar.Content title={props.title}/>
       <Appbar.Action icon="account-circle" onPress={onClick} color="white" />
       {user ? (
         <Menu
@@ -64,22 +64,5 @@ const MAppBar = (props) => {
   );
 };
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "transparent",
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    alignSelf: "center",
-    marginRight: 20,
-    alignItems: "center",
-  },
-  rounded: {
-    backgroundColor: "gray",
-    borderRadius: 15,
-    width: 30,
-    height: 30,
-    alignItems: "center",
-    justifyContent: "center",
-  },
 });
 export default MAppBar;

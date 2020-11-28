@@ -35,7 +35,10 @@ const CourseDetail = ({ navigation, route }) => {
         />
       </View>
       <ScrollView style={{ height: height * 0.7 }}>
-        <CourseInfo course={courseDetail} onPressAuthor={onPressAuthor} />
+        <CourseInfo
+          course={route.params.course}
+          onPressAuthor={onPressAuthor}
+        />
       </ScrollView>
     </SafeAreaView>
   );

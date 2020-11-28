@@ -20,6 +20,7 @@ const { width, height } = Dimensions.get("window");
 const CourseInfo = (props) => {
   const [isInContent, setIsInContent] = useState(0);
   const {
+    user,
     addDownloaded,
     removeDownloaded,
     addBookmark,
@@ -31,13 +32,13 @@ const CourseInfo = (props) => {
     isDownloaded,
   } = React.useContext(AuthContext);
   const [isDownloadedCourse, setIsDownloadedCourse] = useState(
-    isDownloaded(props.course)
+    isDownloaded(props.course.title)
   );
   const [isChannelCourse, setIsChannelCourse] = useState(
-    isChanneled(props.course)
+    isChanneled(props.course.title)
   );
   const [isBookmarkedCourse, setIsBookmarkedCourse] = useState(
-    isBookmarked(props.course)
+    isBookmarked(props.course.title)
   );
   const onPressContent = () => {
     setIsInContent(1);
@@ -49,6 +50,9 @@ const CourseInfo = (props) => {
     setIsInContent(0);
   };
   const onPressBookmark = () => {
+    if (!user) {
+      return;
+    }
     if (!isBookmarkedCourse) {
       addBookmark(props.course);
       setIsBookmarkedCourse(true);
@@ -58,6 +62,9 @@ const CourseInfo = (props) => {
     }
   };
   const onPressAddToChannel = () => {
+    if (!user) {
+      return;
+    }
     if (!isChannelCourse) {
       addChannel(props.course);
       setIsChannelCourse(true);
@@ -67,6 +74,9 @@ const CourseInfo = (props) => {
     }
   };
   const onPressDownload = () => {
+    if (!user) {
+      return;
+    }
     if (!isDownloadedCourse) {
       addDownloaded(props.course);
       setIsDownloadedCourse(true);

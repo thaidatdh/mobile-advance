@@ -108,7 +108,9 @@ const Login = ({navigation}) => {
             )
           }
         />
-        {error === "" ? null : <Text style={{ color: "red", alignSelf: 'center' }}>{error}</Text>}
+        {error === "" ? null : (
+          <Text style={{ color: "red", alignSelf: "center" }}>{error}</Text>
+        )}
         <TouchableOpacity
           style={isReadyToLogin ? styles.signInBtn : styles.signInBtnDisabled}
           disabled={!isReadyToLogin}
@@ -116,12 +118,12 @@ const Login = ({navigation}) => {
         >
           <Text style={styles.buttonText}>SIGN IN</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.linkBtn}>
+        {/*<TouchableOpacity style={styles.linkBtn}>
           <Text style={styles.buttonTextBlue}>Forgot Password?</Text>
         </TouchableOpacity>
         <Button style={styles.signOnSSOBtn}>
           <Text style={styles.buttonTextBlue}>Use Single Sign-On (SSO)</Text>
-        </Button>
+        </Button>*/}
         <TouchableOpacity style={styles.linkBtn} onPress={onSignUp}>
           <Text style={styles.buttonTextBlue}>Sign up FREE</Text>
         </TouchableOpacity>

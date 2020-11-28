@@ -10,18 +10,20 @@ export const AuthContext = React.createContext(null);
 
 export default ({ children }) => {
   const [usersList, setUsersList] = useState(usersData);
-  const [user, setUser] = useState(usersData[0]);
+  const [user, setUser] = useState(null);
   const [searchHistory, setSearchHistory] = useState(searchHistoryData);
   const [downloaded, setDownloaded] = useState([]);
-  const [bookmark, setBookmark] = useState(coursesData.slice(0, 3));
+  const [bookmark, setBookmark] = useState([]);
   const [settings, setSettings] = useState(defaultSetting);
-  const [channel, setChannel] = useState(coursesData.slice(5, 7));
+  const [channel, setChannel] = useState([]);
   const login = (username, password) => {
     let user = usersList.find(
       (e) => e.username == username && e.password == password
     );
     if (user) {
       setUser(user);
+      setBookmark(coursesData.slice(0, 3));
+      setChannel(coursesData.slice(5, 7));
       return "";
     } else {
       return "Username or Password is incorrect!";
@@ -33,7 +35,7 @@ export default ({ children }) => {
     setDownloaded([]);
   };
   const register = (user) => {
-    let exist = usersList.find(n => n.username);
+    let exist = usersList.find(n => n.username === user.username);
     if (exist) {
       return 4;
     }

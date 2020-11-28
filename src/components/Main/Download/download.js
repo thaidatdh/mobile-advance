@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { SafeAreaView, Dimensions, StatusBar } from "react-native";
+import { Dimensions, StatusBar } from "react-native";
+import { SafeAreaView } from "react-navigation";
 import DownloadData from "./download-data";
 import DownloadEmpty from "./download-empty";
 import MAppBar from "../app-bar";

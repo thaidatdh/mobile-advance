@@ -67,6 +67,7 @@ const Register = ({navigation}) => {
       username: username,
       password: password,
       phone: phone,
+      name: name,
     }
     let result = register(user);
     setErrorCode(result);
@@ -185,9 +186,9 @@ const Register = ({navigation}) => {
         <TouchableOpacity style={styles.linkBtn} onPress={onSignIn}>
           <Text style={styles.buttonTextBlue}>Sign In</Text>
         </TouchableOpacity>
-        <Button style={styles.signOnSSOBtn}>
+        {/*<Button style={styles.signOnSSOBtn}>
           <Text style={styles.buttonTextBlue}>Use Single Sign-On (SSO)</Text>
-        </Button>
+        </Button>*/}
         <View style={{ margin: 20 }} />
       </ScrollView>
     </SafeAreaView>
