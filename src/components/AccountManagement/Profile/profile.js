@@ -46,12 +46,9 @@ const Profile = ({navigation}) => {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
       <View style={styles.headerContainer}>
-        <Image
-          source={require("../../../../assets/bg.png")}
-          style={styles.image}
-        />
+        <Image source={{ uri: user.avatar }} style={styles.image} />
         <View style={styles.nameView}>
-          <Text style={styles.name}>{user.name}</Text>
+          <Text style={styles.name}>{user.email}</Text>
         </View>
       </View>
       <View style={{ margin: 20 }}>

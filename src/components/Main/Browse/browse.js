@@ -17,31 +17,42 @@ const Browse = ({ navigation }) => {
     },
     {
       id: 2,
-      title: ["Recommended", "For you"],
+      title: ["Top Sell"],
     },
   ];
   const { user } = React.useContext(AuthContext);
-  const { courses, authors } = React.useContext(DataContext);
+  const {
+    courses,
+    authors,
+    loadNewReleased,
+    newReleased,
+    topSell,
+    loadTopSell
+  } = React.useContext(DataContext);
+  useEffect(() => {
+    loadNewReleased();
+    loadTopSell();
+  }, []);
   const onPressNewReleaseButton = () => {
     navigation.navigate("List Courses", {
       title: "New Released",
-      courses: courses,
+      courses: newReleased,
     });
   };
   const onPressRecommendedButton = () => {
     navigation.navigate("List Courses", {
-      title: "Recommended for you",
-      courses: courses,
+      title: "Top Sell",
+      courses: topSell,
     });
   };
   const onPressCategory = (category) => {
     navigation.navigate("List Courses", {
       title: category,
-      courses: courses,
+      courses: topSell,
     });
   }
   const onPressSkills = (skills) => {
-    const data = courses.filter((n) => n.title.includes(skills));
+    const data = topSell.filter((n) => n.title.includes(skills));
     navigation.navigate("List Courses", {
       title: skills,
       courses: data,

@@ -24,6 +24,7 @@ import Author from "./src/components/Courses/Author/author";
 import ListAuthors from "./src/components/Courses/Author/list-authors";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+
 const BottomTabNavigator = () => {
   return (
     <Tab.Navigator

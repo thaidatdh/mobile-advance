@@ -16,11 +16,11 @@ const SectionAuthorItem = (props) => {
       onPress={() => props.onPress(props.author)}
     >
       <Image
-        source={require("../../../../../../assets/bg.png")}
+        source={{ uri: props.author["user.avatar"] }}
         style={styles.image}
       />
       <View style={styles.titleView}>
-        <Text style={styles.title}>{props.author.title}</Text>
+        <Text style={styles.title}>{props.author["user.name"]}</Text>
       </View>
     </TouchableOpacity>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ScrollView,
   SafeAreaView,
@@ -12,8 +12,10 @@ import { coursesData } from "../../../data/dataMockup";
 import MAppBar from "../app-bar";
 import SignInSection from "../Browse/SignInSection/sign-in-section";
 import { AuthContext } from "../../../Contexts/AuthContextProvider";
+import { DataContext } from "../../../Contexts/DataContextProvider";
 const Home = ({ navigation }) => {
   const { user, channel, bookmark } = React.useContext(AuthContext);
+  const { getAuthors } = React.useContext(DataContext);
   const handleSeeAll = (title, coursesList) => {
     navigation.navigate("List Courses", { title: title, courses: coursesList });
   };
@@ -23,6 +25,9 @@ const Home = ({ navigation }) => {
   const onPressSignIn = () => {
     navigation.navigate("Sign In");
   };
+  useEffect(() => {
+    getAuthors();
+  }, []);
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
@@ -70,7 +75,7 @@ const styles = StyleSheet.create({
   },
   notSignedIn: {
     margin: 0,
-    alignSelf: 'center',
+    alignSelf: "center",
   },
 });
 export default Home;

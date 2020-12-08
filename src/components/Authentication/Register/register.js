@@ -24,7 +24,7 @@ const Register = ({navigation}) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [secureTextEntryRepeat, setSecureTextEntryRepeat] = useState(true);
 
-  const [errorCode, setErrorCode] = useState(-1);
+  const [errorCode, setErrorCode] = useState('');
 
   const { register } = React.useContext(AuthContext);
 
@@ -33,7 +33,7 @@ const Register = ({navigation}) => {
     "Email is not valid",
     "Password should include atleast 8 characters",
     "Repeat Password is incorrect",
-    "Username already exists"
+    "Username already exists",
   ];
   const updateSecureTextEntry = () => {
     setSecureTextEntry(!secureTextEntry);
@@ -50,16 +50,16 @@ const Register = ({navigation}) => {
   }
   const onRegister = async () => {
     if (email.length == 0 || phone.length == 0 || username.length == 0) {
-      setErrorCode(0);
+      setErrorCode(errorValue[0]);
       return;
     } else if (!validateEmail(email)) {
-      setErrorCode(1);
+      setErrorCode(errorValue[1]);
       return;
     } else if (password.length < 8) {
-      setErrorCode(2);
+      setErrorCode(errorValue[2]);
       return;
     } else if (password !== repeatPassword) {
-      setErrorCode(3);
+      setErrorCode(errorValue[3]);
       return;
     }
     let user = {
@@ -71,7 +71,7 @@ const Register = ({navigation}) => {
     }
     let result = await register(user);
     setErrorCode(result);
-    if (result === -1) {
+    if (result === "") {
       onSignIn();
     }
   };
@@ -177,8 +177,8 @@ const Register = ({navigation}) => {
             )
           }
         />
-        {errorCode != -1 ? (
-          <Text style={{ color: "red" }}>{errorValue[errorCode]}</Text>
+        {errorCode != "" ? (
+          <Text style={{ color: "red" }}>{errorCode}</Text>
         ) : null}
         <TouchableOpacity style={styles.signInBtn} onPress={onRegister}>
           <Text style={styles.buttonText}>SIGN UP</Text>

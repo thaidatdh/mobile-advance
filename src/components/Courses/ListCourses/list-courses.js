@@ -20,6 +20,9 @@ const ListCourses = ({ navigation, route }) => {
     navigation.navigate("Course", { course: course });
   };
   const renderItems = (coursesList) => {
+    if (coursesList === undefined || Promise.resolve(coursesList) == coursesList) {
+      return null;
+    }
     return coursesList.map((item) => (
       <ListCourseItem
         key={item.id.toString()}

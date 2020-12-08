@@ -10,16 +10,19 @@ import {
 const { width, height } = Dimensions.get("window");
 const ListAuthorItem = (props) => {
   return (
-    <TouchableOpacity style={styles.item} onPress={() => props.onPress(props.item)}>
+    <TouchableOpacity
+      style={styles.item}
+      onPress={() => props.onPress(props.item)}
+    >
       <View style={styles.imageView}>
         <Image
-          source={require("../../../../../assets/bg.png")}
+          source={{ uri: props.item["user.avatar"] }}
           style={styles.image}
         />
       </View>
       <View style={{ marginLeft: 10 }}>
-        <Text style={styles.title}>{props.item.title}</Text>
-        <Text style={styles.darkText}>{props.item.coursesCount} Courses</Text>
+        <Text style={styles.title}>{props.item["user.name"]}</Text>
+        <Text style={styles.darkText}>Point: {props.item.point}</Text>
       </View>
     </TouchableOpacity>
   );

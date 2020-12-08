@@ -17,11 +17,10 @@ const { width, height } = Dimensions.get("window");
 const Author = ({ navigation, route }) => {
   const { getAuthorCourses } = React.useContext(DataContext);
   const [author, setAuthor] = useState(route.params.author);
-  const [courses, setCourses] = useState(
-    getAuthorCourses(route.params.author.title)
-  );
+  const [courses, setCourses] = useState([]);
   useEffect(() => {
-    navigation.setOptions({ title: route.params.author.title });
+    navigation.setOptions({ title: route.params.author["user.name"] });
+    getAuthorCourses(route.params.author.id).then(res => setCourses(res));
   }, []);
   const onPressCourse = (course) => {
     navigation.navigate("Course", { course: course });
@@ -31,6 +30,7 @@ const Author = ({ navigation, route }) => {
       <ListCourseItem
         key={item.id.toString()}
         item={item}
+        author={author["user.name"]}
         onPress={onPressCourse}
         navigation={navigation}
       />
@@ -41,12 +41,10 @@ const Author = ({ navigation, route }) => {
       <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
       <ScrollView>
         <View key="AuthorInfo" style={styles.authorInfoView}>
-          <Image
-            source={require("../../../../assets/bg.png")}
-            style={styles.image}
-          />
-          <Text style={styles.authorName}>{author.title}</Text>
-          <Text style={styles.desc}>{author.description}</Text>
+          <Image source={{ uri: author["user.avatar"] }} style={styles.image} />
+          <Text style={styles.authorName}>{author["user.name"]}</Text>
+          {author.intro ? <Text style={styles.desc}>{author.intro}</Text> : null }
+          <Text style={styles.desc}>Email: {author["user.email"]}</Text>
         </View>
         {renderItems(courses)}
       </ScrollView>

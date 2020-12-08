@@ -78,13 +78,10 @@ const Setting = ({ navigation }) => {
         contentContainerStyle={{ alignItems: "center" }}
       >
         <View style={styles.userContainer}>
-          <Image
-            source={require("../../../../assets/bg.png")}
-            style={styles.image}
-          />
+          <Image source={{ uri: user.avatar }} style={styles.image} />
           <View style={styles.nameView}>
             <Text style={styles.name}>{user.name}</Text>
-            <Text style={styles.username}>{user.username}</Text>
+            <Text style={styles.username}>{user.email}</Text>
           </View>
         </View>
         <View style={styles.sectionContainer}>{renderAccountSection()}</View>

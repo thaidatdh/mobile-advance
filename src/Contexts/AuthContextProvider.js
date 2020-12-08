@@ -28,15 +28,15 @@ export default ({ children }) => {
     };
     try {
       let resLogin = await fetch(
-        "https://api.letstudy.org/user/login",
+        "http://api.dev.letstudy.org/user/login",
         requestOptions
       );
-      let responseLogin = resLogin.json();
+      let responseLogin = await resLogin.json();
       if (responseLogin.error || responseLogin.message != "OK") {
         return responseLogin.message;
       }
       setUser(responseLogin.userInfo);
-      setToken(responseLogin.token);
+      setToken("Bearer " + responseLogin.token);
 
       const requestOptionsUser = {
         method: "GET",
@@ -46,14 +46,14 @@ export default ({ children }) => {
         },
       };
       fetch(
-        "https://api.letstudy.org/user/get-favorite-courses",
+        "http://api.dev.letstudy.org/user/get-favorite-courses",
         requestOptionsUser
       )
         .then((resBookmark) => resBookmark.json())
         .then((responseBookmark) => setBookmark(responseBookmark.payload))
         .catch((err) => console.log(err));
       fetch(
-        "https://api.letstudy.org/user/get-process-courses",
+        "http://api.dev.letstudy.org/user/get-process-courses",
         requestOptionsUser
       )
         .then((resProcess) => resProcess.json())
@@ -83,18 +83,19 @@ export default ({ children }) => {
     };
     try {
       let res = await fetch(
-        "https://api.letstudy.org/user/register",
+        "http://api.dev.letstudy.org/user/register",
         requestOptions
       );
       let response = await res.json();
 
       if (response.message != "OK") {
-        return 4;
+        return response.message;
       } else {
-        return -1;
+        return "";
       }
     } catch (err) {
-      return 4;
+      console.log(err);
+      return err.message;
     }
   };
   const addDownloaded = (course) => {

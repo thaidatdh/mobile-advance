@@ -79,27 +79,25 @@ const ListCourseItem = (props) => {
       style={styles.item}
       onPress={() => props.onPress(props.item)}
     >
-      <Image
-        source={require("../../../../../assets/bg.png")}
-        style={styles.image}
-      />
+      <Image source={{ uri: props.item.imageUrl }} style={styles.image} />
       <View style={{ marginLeft: 10, flex: 1 }}>
         <Text style={styles.title}>{props.item.title}</Text>
         <Text style={styles.darkText}>
-          {Array.isArray(props.item.author)
-            ? props.item.author[0]
-            : props.item.author}
+          {props.item["instructor.user.name"]
+            ? props.item["instructor.user.name"]
+            : props.author}
         </Text>
         <Text style={styles.darkText}>
-          {props.item.level} - {props.item.released} - {props.item.duration}
+          {props.item.status} - {props.item.createdAt.substring(0, 10)} -{" "}
+          {props.item.totalHours.toFixed(3)} hours
         </Text>
         <View
           style={{
             flexDirection: "row",
           }}
         >
-          <Text style={{ color: "#f1c40f" }}>{props.item.rating}/5 </Text>
-          <Text style={styles.darkText}>({props.item.ratingCount})</Text>
+          <Text style={{ color: "#f1c40f" }}>{props.item.ratedNumber} </Text>
+          <Text style={styles.darkText}>({props.item.ratedNumber})</Text>
         </View>
       </View>
 
