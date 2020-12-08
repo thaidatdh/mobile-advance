@@ -11,40 +11,92 @@ export const AuthContext = React.createContext(null);
 export default ({ children }) => {
   const [usersList, setUsersList] = useState(usersData);
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
   const [searchHistory, setSearchHistory] = useState(searchHistoryData);
   const [downloaded, setDownloaded] = useState([]);
   const [bookmark, setBookmark] = useState([]);
   const [settings, setSettings] = useState(defaultSetting);
   const [channel, setChannel] = useState([]);
-  const login = (username, password) => {
-    let user = usersList.find(
-      (e) => e.username == username && e.password == password
-    );
-    if (user) {
-      setUser(user);
-      setBookmark(coursesData.slice(0, 3));
-      setChannel(coursesData.slice(5, 7));
-      return "";
-    } else {
-      return "Username or Password is incorrect!";
+  const login = async (email, password) => {
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
+    };
+    try {
+      let resLogin = await fetch(
+        "https://api.letstudy.org/user/login",
+        requestOptions
+      );
+      let responseLogin = resLogin.json();
+      if (responseLogin.error || responseLogin.message != "OK") {
+        return responseLogin.message;
+      }
+      setUser(responseLogin.userInfo);
+      setToken(responseLogin.token);
+
+      const requestOptionsUser = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authentication: token,
+        },
+      };
+      fetch(
+        "https://api.letstudy.org/user/get-favorite-courses",
+        requestOptionsUser
+      )
+        .then((resBookmark) => resBookmark.json())
+        .then((responseBookmark) => setBookmark(responseBookmark.payload))
+        .catch((err) => console.log(err));
+      fetch(
+        "https://api.letstudy.org/user/get-process-courses",
+        requestOptionsUser
+      )
+        .then((resProcess) => resProcess.json())
+        .then((responseProcess) => setChannel(responseProcess.payload))
+        .catch((err) => console.log(err));
+    } catch (err) {
+      return err.message;
     }
+    return "";
   };
   const logout = () => {
     setUser(null);
+    setToken(null);
     setBookmark([]);
-    setDownloaded([]);
+    setChannel([]);
   };
-  const register = (user) => {
-    let exist = usersList.find(n => n.username === user.username);
-    if (exist) {
+  const register = async (user) => {
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: user.email,
+        password: user.password,
+        username: user.username,
+        phone: user.phone,
+      }),
+    };
+    try {
+      let res = await fetch(
+        "https://api.letstudy.org/user/register",
+        requestOptions
+      );
+      let response = await res.json();
+
+      if (response.message != "OK") {
+        return 4;
+      } else {
+        return -1;
+      }
+    } catch (err) {
       return 4;
     }
-    else {
-      let newList = usersList.concat(user);
-      setUsersList(newList);
-      return -1;
-    }
-  }
+  };
   const addDownloaded = (course) => {
     let newDownloaded = downloaded.slice().concat(course);
     setDownloaded(newDownloaded);

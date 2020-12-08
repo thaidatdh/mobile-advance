@@ -37,11 +37,11 @@ const Login = ({navigation}) => {
       setIsReadyToLogin(false);
     }
   };
-  const onLogin = () => {
+  const onLogin = async () => {
     if (!isReadyToLogin) {
       return;
     }
-    let result = login(username, password);
+    let result = await login(username, password);
     if (result === '') {
       navigation.navigate('Main');
     }

@@ -19,7 +19,7 @@ const Register = ({navigation}) => {
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
+  //const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [secureTextEntryRepeat, setSecureTextEntryRepeat] = useState(true);
@@ -48,8 +48,8 @@ const Register = ({navigation}) => {
   const onSignIn = () => {
     navigation.navigate('Sign In');
   }
-  const onRegister = () => {
-    if (email.length == 0 || name.length == 0) {
+  const onRegister = async () => {
+    if (email.length == 0 || phone.length == 0 || username.length == 0) {
       setErrorCode(0);
       return;
     } else if (!validateEmail(email)) {
@@ -67,9 +67,9 @@ const Register = ({navigation}) => {
       username: username,
       password: password,
       phone: phone,
-      name: name,
+      //name: name,
     }
-    let result = register(user);
+    let result = await register(user);
     setErrorCode(result);
     if (result === -1) {
       onSignIn();
@@ -96,23 +96,23 @@ const Register = ({navigation}) => {
           value={email}
           onChangeText={(text) => setEmail(text)}
         />
-        <TextInput
+        {/*<TextInput
           style={styles.input}
           label="Full Name *"
           theme={themeTextInput}
           value={name}
           onChangeText={(text) => setName(text)}
-        />
+        />*/}
         <TextInput
           style={styles.input}
-          label="Phone"
+          label="Phone *"
           theme={themeTextInput}
           value={phone}
           onChangeText={(text) => setPhone(text)}
         />
         <TextInput
           style={styles.input}
-          label="Username"
+          label="Username *"
           theme={themeTextInput}
           value={username}
           onChangeText={(text) => setUsername(text)}
