@@ -110,8 +110,8 @@ const CourseInfo = (props) => {
 
         <View style={{ flexDirection: "row" }}>
           <Text style={{ color: "lightgray", fontSize: 12 }}>
-            {props.course.level} - {props.course.released} -{" "}
-            {props.course.duration}
+            {props.course.status} - {props.course.createdAt.substring(0, 10)} -
+            {props.course.totalHours.toFixed(3)} hours
           </Text>
           <Text
             style={{
@@ -121,10 +121,10 @@ const CourseInfo = (props) => {
               paddingLeft: 10,
             }}
           >
-            {props.course.rating}/5
+            {props.course.ratedNumber}
           </Text>
           <Text style={{ color: "lightgray", fontSize: 12 }}>
-            ({props.course.ratingCount})
+            ({props.course.ratedNumber})
           </Text>
         </View>
 
@@ -223,9 +223,9 @@ const CourseInfo = (props) => {
         {isInContent == 0 ? (
           <SectionDescription description={props.course.description} />
         ) : isInContent == 1 ? (
-          <SectionContent content={props.course.content} />
+          <SectionContent content={props.course.section} />
         ) : (
-          <SectionDescription description={props.course.transcript} />
+          <SectionDescription description={props.course.description} />
         )}
       </View>
     </View>
