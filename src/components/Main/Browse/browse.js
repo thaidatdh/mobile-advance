@@ -46,17 +46,17 @@ const Browse = ({ navigation }) => {
     });
   };
   const onPressCategory = (category) => {
-    navigation.navigate("List Courses", {
+    /*navigation.navigate("List Courses", {
       title: category,
       courses: topSell,
-    });
+    });*/
   }
   const onPressSkills = (skills) => {
-    const data = topSell.filter((n) => n.title.includes(skills));
+    /*const data = topSell.filter((n) => n.title.includes(skills));
     navigation.navigate("List Courses", {
       title: skills,
       courses: data,
-    });
+    });*/
   };
   const onPressSignIn = () => {
     navigation.navigate("Sign In");

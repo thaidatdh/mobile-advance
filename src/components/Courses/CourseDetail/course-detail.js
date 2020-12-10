@@ -17,24 +17,7 @@ const CourseDetail = ({ navigation, route }) => {
   const [courseDetail, setCourseDetail] = useState({});
   const { authors } = React.useContext(DataContext);
   useEffect(() => {
-    navigation.setOptions({ title: courseDetail.title });
-  }, []);
-  useEffect(() => {
-    ; //​
-    const url =
-      "http://api.dev.letstudy.org/course​/detail-with-lesson​/" +
-      route.params.course.id;
-    const requestOptionsUser = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authentication: token,
-      },
-    };
-    fetch(url, requestOptionsUser)
-      .then((res) => res.json())
-      .then((response) => setCourseDetail(response.payload))
-      .catch((err) => console.log(err));
+    navigation.setOptions({ title: route.params.course.title });
   }, []);
   const onPressAuthor = (authorName) => {
     const author = authors.find((n) => n.title === authorName);
@@ -53,7 +36,7 @@ const CourseDetail = ({ navigation, route }) => {
       </View>
       <ScrollView style={{ height: height * 0.7 }}>
         <CourseInfo
-          course={courseDetail}
+          course={route.params.course}
           onPressAuthor={onPressAuthor}
         />
       </ScrollView>

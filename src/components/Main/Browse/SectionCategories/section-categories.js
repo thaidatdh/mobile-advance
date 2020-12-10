@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FlatList, View, Text, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import SmallImageButton from "../../../Common/small-image-button";
@@ -202,22 +202,42 @@ const SectionCategories = (props) => {
       ],
     },
   ];
-
+  const [categories, setCategories] = useState([]);
+  useEffect(() => {
+    const loadData = async () => {
+      const requestOptions = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      try {
+        let res = await fetch(
+          "http://api.dev.letstudy.org/category/all",
+          requestOptions
+        );
+        let response = await res.json();
+        if (response.payload !== undefined) 
+          await setCategories(response.payload);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    loadData();
+  },[]);
   const renderItem = (category) => {
     const keyValue = category[0].id + "key";
     return (
       <View key={keyValue} style={{ margin: 10 }}>
         <SmallImageButton
           key={category[0].id}
-          title={category[0].title}
-          style={category[0].style}
+          title={category[0].name}
           onPress={props.onPress}
         />
         {category.length > 1 ? (
           <SmallImageButton
             key={category[1].id}
-            title={category[1].title}
-            style={category[1].style}
+            title={category[1].name}
             onPress={props.onPress}
           />
         ) : null}
@@ -227,9 +247,10 @@ const SectionCategories = (props) => {
   const renderListItems = (list) => {
     return list.map(item => renderItem(item));
   }
-  var arrays = [];
-  var size = 2;
-  while (categoryList.length > 0) arrays.push(categoryList.splice(0, size));
+  let arrays = [];
+  let size = 2;
+  let temp = categories.slice();
+  while (temp.length > 0) arrays.push(temp.splice(0, size));
   return (
     <View>
       <ScrollView horizontal={true}>

@@ -50,14 +50,22 @@ export default ({ children }) => {
         requestOptionsUser
       )
         .then((resBookmark) => resBookmark.json())
-        .then((responseBookmark) => setBookmark(responseBookmark.payload))
+        .then((responseBookmark) => {
+          if (responseBookmark.payload !== undefined)
+            setBookmark(responseBookmark.payload);
+          else setBookmark([]);
+        })
         .catch((err) => console.log(err));
       fetch(
         "http://api.dev.letstudy.org/user/get-process-courses",
         requestOptionsUser
       )
         .then((resProcess) => resProcess.json())
-        .then((responseProcess) => setChannel(responseProcess.payload))
+        .then((responseProcess) => {
+          if (responseProcess.payload !== undefined)
+            setChannel(responseProcess.payload);
+          else setChannel([]);
+        })
         .catch((err) => console.log(err));
     } catch (err) {
       return err.message;
@@ -171,6 +179,7 @@ export default ({ children }) => {
   };
   const store = {
     user,
+    token,
     register,
     searchHistory,
     downloaded,

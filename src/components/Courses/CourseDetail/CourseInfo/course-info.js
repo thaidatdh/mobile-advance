@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Dimensions,
@@ -15,12 +15,14 @@ import AuthorTag from "./components/author-tag";
 import SectionContent from "./components/section-content";
 import SectionDescription from "./components/section-description";
 import { AuthContext } from "../../../../Contexts/AuthContextProvider";
+import { coursesData } from "../../../../data/dataMockup";
 const { width, height } = Dimensions.get("window");
 
 const CourseInfo = (props) => {
   const [isInContent, setIsInContent] = useState(0);
   const {
     user,
+    token,
     addDownloaded,
     removeDownloaded,
     addBookmark,
@@ -31,6 +33,7 @@ const CourseInfo = (props) => {
     isChanneled,
     isDownloaded,
   } = React.useContext(AuthContext);
+
   const [isDownloadedCourse, setIsDownloadedCourse] = useState(
     isDownloaded(props.course.title)
   );
@@ -40,6 +43,35 @@ const CourseInfo = (props) => {
   const [isBookmarkedCourse, setIsBookmarkedCourse] = useState(
     isBookmarked(props.course.title)
   );
+  const [courseDetail, setCourseDetail] = useState(props.course);
+  useEffect(() => {
+    //​
+    const fetchData = async (id) => {
+      const url =
+        "http://api.dev.letstudy.org/course​/detail-with-lesson​/" + id;
+      console.log(url);
+      const requestOptionsUser = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authentication: token,
+        },
+      };
+      console.log(token);
+      try {
+        let res = await fetch(url, requestOptionsUser);
+        let response = await res.json();
+        console.log(response);
+        if (response.payload !== undefined) {
+          await setCourseDetail(response.payload);
+          console.log(response.payload.section);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchData(props.course.id);
+  }, []);
   const onPressContent = () => {
     setIsInContent(1);
   };
@@ -94,7 +126,7 @@ const CourseInfo = (props) => {
           onPress={() => props.onPressAuthor(item)}
         />
       ))
-    ) : (
+    ) : ( authors === undefined ? null :
       <AuthorTag
         key={authors}
         author={authors}
@@ -102,16 +134,19 @@ const CourseInfo = (props) => {
       />
     );
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.infoSection}>
-        <Text style={styles.title}>{props.course.title}</Text>
-        <View style={styles.authors}>{renderAuthors(props.course.author)}</View>
+        <Text style={styles.title}>{courseDetail.title}</Text>
+        <View style={styles.authors}>
+          {renderAuthors(courseDetail.instructorName)}
+        </View>
 
         <View style={{ flexDirection: "row" }}>
           <Text style={{ color: "lightgray", fontSize: 12 }}>
-            {props.course.status} - {props.course.createdAt.substring(0, 10)} -
-            {props.course.totalHours.toFixed(3)} hours
+            {courseDetail.status} - {courseDetail.createdAt.substring(0, 10)} -{" "}
+            {courseDetail.totalHours.toFixed(3)} hours
           </Text>
           <Text
             style={{
@@ -121,10 +156,10 @@ const CourseInfo = (props) => {
               paddingLeft: 10,
             }}
           >
-            {props.course.ratedNumber}
+            {courseDetail.ratedNumber}
           </Text>
           <Text style={{ color: "lightgray", fontSize: 12 }}>
-            ({props.course.ratedNumber})
+            ({courseDetail.ratedNumber})
           </Text>
         </View>
 
@@ -156,12 +191,12 @@ const CourseInfo = (props) => {
         <View>
           <Button style={styles.buttons}>
             <Text style={{ color: "white", textTransform: "none" }}>
-              Take a learning check
+              Price: {courseDetail.price}
             </Text>
           </Button>
           <Button style={styles.buttons}>
             <Text style={{ color: "white", textTransform: "none" }}>
-              View related Paths and courses
+              {courseDetail.videoNumber}
             </Text>
           </Button>
         </View>
@@ -221,11 +256,19 @@ const CourseInfo = (props) => {
 
       <View style={styles.contentView}>
         {isInContent == 0 ? (
-          <SectionDescription description={props.course.description} />
+          <SectionDescription description={courseDetail.description} />
         ) : isInContent == 1 ? (
-          <SectionContent content={props.course.section} />
+          <SectionContent content={courseDetail.section} />
         ) : (
-          <SectionDescription description={props.course.description} />
+          <SectionDescription
+            description={
+              courseDetail.subtitle +
+              "\nRequirement:\n - " +
+              courseDetail.requirement.join("\n - ") +
+              "\nLearn:\n - " +
+              courseDetail.learnWhat.join("\n - ")
+            }
+          />
         )}
       </View>
     </View>
