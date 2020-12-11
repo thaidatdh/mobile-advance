@@ -42,7 +42,7 @@ export default ({ children }) => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authentication: token,
+          Authorization: token,
         },
       };
       fetch(

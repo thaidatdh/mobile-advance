@@ -20,6 +20,7 @@ const { width, height } = Dimensions.get("window");
 
 const CourseInfo = (props) => {
   const [isInContent, setIsInContent] = useState(0);
+  const [authors, setAuthors] = useState(null);
   const {
     user,
     token,
@@ -49,12 +50,11 @@ const CourseInfo = (props) => {
     const fetchData = async (id) => {
       const url =
         "http://api.dev.letstudy.org/course​/detail-with-lesson​/" + id;
-      console.log(url);
       const requestOptionsUser = {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authentication: token,
+          Authorization: token,
         },
       };
       console.log(token);
@@ -64,13 +64,37 @@ const CourseInfo = (props) => {
         console.log(response);
         if (response.payload !== undefined) {
           await setCourseDetail(response.payload);
-          console.log(response.payload.section);
+          await setAuthors(response.payload.instructorName)
         }
       } catch (err) {
         console.log(err);
       }
     };
     fetchData(props.course.id);
+  }, []);
+  useEffect(() => {
+    //​
+    const fetchDataAuth = async (id) => {
+      const url = "http://api.dev.letstudy.org​/instructor​/detail​/" + id;
+      const requestOptionsUser = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      try {
+        let res = await fetch(url, requestOptionsUser);
+        let response = await res.json();
+        console.log(response);
+        if (response.payload !== undefined) {
+          await setAuthors(response.payload.name);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    if (authors === null || authors === undefined || authors === '')
+      fetchDataAuth(props.course.instructorId);
   }, []);
   const onPressContent = () => {
     setIsInContent(1);
@@ -118,6 +142,9 @@ const CourseInfo = (props) => {
     }
   };
   const renderAuthors = (authors) => {
+    if (authors === null || authors === undefined || authors === "") {
+      return null;
+    }
     return Array.isArray(authors) ? (
       authors.map((item) => (
         <AuthorTag
@@ -126,7 +153,7 @@ const CourseInfo = (props) => {
           onPress={() => props.onPressAuthor(item)}
         />
       ))
-    ) : ( authors === undefined ? null :
+    ) : (
       <AuthorTag
         key={authors}
         author={authors}
@@ -140,7 +167,7 @@ const CourseInfo = (props) => {
       <View style={styles.infoSection}>
         <Text style={styles.title}>{courseDetail.title}</Text>
         <View style={styles.authors}>
-          {renderAuthors(courseDetail.instructorName)}
+          {renderAuthors(authors)}
         </View>
 
         <View style={{ flexDirection: "row" }}>
