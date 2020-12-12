@@ -20,15 +20,16 @@ const Browse = ({ navigation }) => {
       title: ["Top Sell"],
     },
   ];
-  const { user } = React.useContext(AuthContext);
+  const { user, token } = React.useContext(AuthContext);
   const {
     courses,
     authors,
     loadNewReleased,
     newReleased,
     topSell,
-    loadTopSell
+    loadTopSell,
   } = React.useContext(DataContext);
+  const [categoryCourse, setCategoryCourse] = useState([]);
   useEffect(() => {
     loadNewReleased();
     loadTopSell();
@@ -45,12 +46,49 @@ const Browse = ({ navigation }) => {
       courses: topSell,
     });
   };
-  const onPressCategory = (category) => {
-    /*navigation.navigate("List Courses", {
-      title: category,
-      courses: topSell,
-    });*/
-  }
+  const onPressCategory = async (categoryName, categoryId) => {
+    const url = "http://api.dev.letstudy.org/course/search";
+    const requestOptionsUser = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        keyword: "",
+        opt: {
+          sort: {
+            attribute: "price",
+            rule: "DESC",
+          },
+          category: [categoryId],
+          time: [{ min: 0 }],
+          price: [
+            {
+              min: 0,
+            },
+          ],
+        },
+        limit: 10,
+        offset: 1,
+      }),
+    };
+    try {
+      let res = await fetch(url, requestOptionsUser);
+      let response = await res.json();
+      console.log(response.payload.rows);
+      if (response.payload !== undefined && response.payload.rows != undefined) {
+        await setCategoryCourse(response.payload.rows);
+      } else {
+        setCategoryCourse([]);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+    navigation.navigate("List Courses", {
+      title: categoryName,
+      courses: categoryCourse,
+    });
+  };
   const onPressSkills = (skills) => {
     /*const data = topSell.filter((n) => n.title.includes(skills));
     navigation.navigate("List Courses", {
@@ -60,7 +98,7 @@ const Browse = ({ navigation }) => {
   };
   const onPressSignIn = () => {
     navigation.navigate("Sign In");
-  }
+  };
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
@@ -82,8 +120,8 @@ const Browse = ({ navigation }) => {
           onPress={onPressRecommendedButton}
         />
         <SectionCategories onPress={onPressCategory} />
-        <SectionTags title="Popular Skills" onPress={onPressSkills} />
-        {/*<SectionPath title="Paths" />*/}
+        {/*<SectionTags title="Popular Skills" onPress={onPressSkills} />
+        <SectionPath title="Paths" />*/}
         <SectionAuthor
           title="Top Authors"
           authors={authors}

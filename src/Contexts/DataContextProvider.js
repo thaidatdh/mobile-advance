@@ -6,7 +6,7 @@ function onlyUnique(value, index, self) {
   return self.indexOf(value) === index;
 }
 export default ({ children }) => {
-  const [courses, setCourses] = React.useState(coursesData);
+  const [courses, setCourses] = React.useState([]);
   const [newReleased, setNewReleased] = React.useState([]);
   const [topSell, setTopSell] = React.useState([]);
   const [authors, setAuthors] = React.useState([]);

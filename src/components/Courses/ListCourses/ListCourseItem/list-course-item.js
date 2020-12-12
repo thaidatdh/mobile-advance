@@ -85,10 +85,15 @@ const ListCourseItem = (props) => {
         <Text style={styles.darkText}>
           {props.item["instructor.user.name"]
             ? props.item["instructor.user.name"]
+            : props.item.name
+            ? props.item.name
             : props.author}
         </Text>
         <Text style={styles.darkText}>
-          {props.item.status} - {props.item.createdAt.substring(0, 10)} -{" "}
+          {props.item.status ? props.item.status + " - " : ""}
+          {props.item.createdAt
+            ? props.item.createdAt.substring(0, 10) + " - "
+            : props.item.updatedAt ? props.item.updatedAt.substring(0, 10) + " - " : ""}
           {props.item.totalHours.toFixed(3)} hours
         </Text>
         <View

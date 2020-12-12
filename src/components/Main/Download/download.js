@@ -9,11 +9,11 @@ import { DataContext } from "../../../Contexts/DataContextProvider";
 const { width, height } = Dimensions.get("window");
 const Download = ({navigation}) => {
   const { downloaded, removeAllDownloaded } = React.useContext(AuthContext);
-  const { courses } = React.useContext(DataContext);
+  const { topSell } = React.useContext(DataContext);
   const findCourse = () => {
     navigation.navigate("List Courses", {
       title: "Courses",
-      courses: courses,
+      courses: topSell,
     });
   }
   return (

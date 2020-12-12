@@ -47,7 +47,7 @@ const SmallImageButton = (props) => {
           "https://th.bing.com/th/id/OIP.rv8UTbHAigbkqrZB1rKoHAHaEK?w=311&h=180&c=7&o=5&pid=1.7",
       }}
     >
-      <TouchableOpacity style={styles.touch} onPress={() => props.onPress(textValue)}>{texts}</TouchableOpacity>
+      <TouchableOpacity style={styles.touch} onPress={props.onPress}>{texts}</TouchableOpacity>
     </ImageBackground>
   );
 };

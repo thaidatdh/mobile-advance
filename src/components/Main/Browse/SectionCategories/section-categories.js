@@ -232,13 +232,13 @@ const SectionCategories = (props) => {
         <SmallImageButton
           key={category[0].id}
           title={category[0].name}
-          onPress={props.onPress}
+          onPress={() => props.onPress(category[0].name, category[0].id)}
         />
         {category.length > 1 ? (
           <SmallImageButton
             key={category[1].id}
             title={category[1].name}
-            onPress={props.onPress}
+            onPress={() => props.onPress(category[1].name, category[1].id)}
           />
         ) : null}
       </View>

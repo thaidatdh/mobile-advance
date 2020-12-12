@@ -57,14 +57,17 @@ const CourseInfo = (props) => {
           Authorization: token,
         },
       };
-      console.log(token);
       try {
         let res = await fetch(url, requestOptionsUser);
         let response = await res.json();
-        console.log(response);
         if (response.payload !== undefined) {
           await setCourseDetail(response.payload);
-          await setAuthors(response.payload.instructorName)
+          if (
+            response.payload.instructorName != undefined &&
+            response.payload.instructorName != null &&
+            response.payload.instructorName != ""
+          )
+            await setAuthors(response.payload.instructorName);
         }
       } catch (err) {
         console.log(err);
@@ -85,7 +88,6 @@ const CourseInfo = (props) => {
       try {
         let res = await fetch(url, requestOptionsUser);
         let response = await res.json();
-        console.log(response);
         if (response.payload !== undefined) {
           await setAuthors(response.payload.name);
         }
@@ -93,7 +95,8 @@ const CourseInfo = (props) => {
         console.log(err);
       }
     };
-    if (authors === null || authors === undefined || authors === '')
+    setAuthors(props.course["instructor.user.name"]);
+    if (authors === null || authors === undefined || authors === "")
       fetchDataAuth(props.course.instructorId);
   }, []);
   const onPressContent = () => {
@@ -166,9 +169,7 @@ const CourseInfo = (props) => {
     <View style={styles.container}>
       <View style={styles.infoSection}>
         <Text style={styles.title}>{courseDetail.title}</Text>
-        <View style={styles.authors}>
-          {renderAuthors(authors)}
-        </View>
+        <View style={styles.authors}>{renderAuthors(authors)}</View>
 
         <View style={{ flexDirection: "row" }}>
           <Text style={{ color: "lightgray", fontSize: 12 }}>

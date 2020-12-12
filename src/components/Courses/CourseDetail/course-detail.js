@@ -20,7 +20,7 @@ const CourseDetail = ({ navigation, route }) => {
     navigation.setOptions({ title: route.params.course.title });
   }, []);
   const onPressAuthor = (authorName) => {
-    const author = authors.find((n) => n.title === authorName);
+    const author = authors.find((n) => n["user.name"] === authorName);
     if (author) {
       navigation.navigate("Author", { author: author });
     }
