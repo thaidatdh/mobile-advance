@@ -9,7 +9,11 @@ export default ({ children }) => {
   const [courses, setCourses] = React.useState([]);
   const [newReleased, setNewReleased] = React.useState([]);
   const [topSell, setTopSell] = React.useState([]);
+  const [topRated, setTopRated] = React.useState([]);
   const [authors, setAuthors] = React.useState([]);
+  const [searchCourses, setSearchCourses] = React.useState([]);
+  const [categories, setCategories] = React.useState([]);
+  const [selectedCourse, setSelectedCourse] = React.useState(null);
   const loadNewReleased = async () => {
     if (newReleased !== undefined && newReleased.length > 0) {
       return;
@@ -64,11 +68,56 @@ export default ({ children }) => {
       console.log(err);
     }
   };
-  const getAuthors = () => {
+  const loadTopRated = async () => {
+    if (topRated !== undefined && topRated.length > 0) {
+      return;
+    }
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        accept: "application/json",
+      },
+      body: JSON.stringify({
+        limit: 100,
+        page: 1,
+      }),
+    };
+    try {
+      let res = await fetch(
+        "http://api.dev.letstudy.org/course/top-rate",
+        requestOptions
+      );
+      let response = await res.json();
+      setTopRated(response.payload);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const getAuthors = async () => {
     if (authors === undefined || authors.length == 0) {
       loadAuthors();
     }
   };
+  const loadCategories = async () => {
+    const requestOptions = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      try {
+        let res = await fetch(
+          "http://api.dev.letstudy.org/category/all",
+          requestOptions
+        );
+        let response = await res.json();
+        if (response.payload !== undefined) 
+          await setCategories(response.payload);
+      } catch (err) {
+        console.log(err);
+      }
+  }
   const loadAuthors = async () => {
     const requestOptions = {
       method: "GET",
@@ -113,7 +162,7 @@ export default ({ children }) => {
       );*/
     return courseResult;
   };
-  const searchCourses = (courseName) => {
+  const searchCourses_old = (courseName) => {
     const courseResult = courses
       .slice()
       .filter((n) => n.title.toUpperCase().includes(courseName.toUpperCase()));
@@ -128,6 +177,64 @@ export default ({ children }) => {
       );
     return courseResult.concat(courseOfAuthor).slice();
   };
+  const getSearchCourses = async (courseName) => {
+    if (categories == undefined || categories == null || categories.length == 0) {
+      await loadCategories();
+    }
+    const category_id = categories.map(n => n.id);
+    const url = "http://api.dev.letstudy.org/course/search";
+    const requestOptionsUser = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        keyword: courseName,
+        opt: {
+          sort: {
+            attribute: "price",
+            rule: "DESC",
+          },
+          category: category_id,
+          time: [{ min: 0 }],
+          price: [
+            {
+              min: 0,
+            },
+          ],
+        },
+        limit: 10,
+        offset: 1,
+      }),
+    };
+    try {
+      let res = await fetch(url, requestOptionsUser);
+      let response = await res.json();
+      
+      if (response.payload !== undefined && response.payload.rows != undefined) {
+        await setSearchCourses(response.payload.rows);
+      } else {
+        setSearchCourses([]);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const getCourse = async (course_id) => {
+    await loadNewReleased();
+    await loadTopRated();
+    await loadTopSell();
+    let data = topRated.concat(topSell);
+    data = data.concat(newReleased);
+    let rs = data.find((n) => n.id == course_id);
+      if (rs) {
+        setSelectedCourse(rs);
+      }
+      else {
+        setSelectedCourse(null);
+      }
+    return rs;
+  }
   const searchAuthor = (authorSearch) => {
     const authorsResult = authors
       .slice()
@@ -171,10 +278,17 @@ export default ({ children }) => {
     authors,
     newReleased,
     topSell,
+    topRated,
+    selectedCourse,
+    getCourse,
+    loadTopRated,
+    categories, 
+    loadCategories,
     loadTopSell,
     loadNewReleased,
     getAuthors,
     searchCourses,
+    getSearchCourses,
     searchAuthor,
     getAuthorCourses,
     getAuthors,

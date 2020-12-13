@@ -59,14 +59,14 @@ const SearchData = (props) => {
         />
         {renderCourses(props.coursesData)}
         {/*<SearchHeader key="pathList" dataLength={paths.length} data="Paths" />
-        {renderPaths(paths)}*/}
+        {renderPaths(paths)}
         <SearchHeader
           key="authorList"
           dataLength={props.authorsData.length}
           data="Authors"
           onPress={onSeeAllAuthors}
         />
-        {renderAuthors(props.authorsData)}
+        {renderAuthors(props.authorsData)}*/}
       </ScrollView>
     </View>
   );

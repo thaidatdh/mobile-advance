@@ -19,6 +19,10 @@ const Browse = ({ navigation }) => {
       id: 2,
       title: ["Top Sell"],
     },
+    {
+      id: 3,
+      title: ["Top Rated"],
+    },
   ];
   const { user, token } = React.useContext(AuthContext);
   const {
@@ -28,11 +32,14 @@ const Browse = ({ navigation }) => {
     newReleased,
     topSell,
     loadTopSell,
+    loadTopRated,
+    topRated,
   } = React.useContext(DataContext);
   const [categoryCourse, setCategoryCourse] = useState([]);
   useEffect(() => {
     loadNewReleased();
     loadTopSell();
+    loadTopRated();
   }, []);
   const onPressNewReleaseButton = () => {
     navigation.navigate("List Courses", {
@@ -44,6 +51,12 @@ const Browse = ({ navigation }) => {
     navigation.navigate("List Courses", {
       title: "Top Sell",
       courses: topSell,
+    });
+  };
+  const onPressRatedButton = () => {
+    navigation.navigate("List Courses", {
+      title: "Top Rated",
+      courses: topRated,
     });
   };
   const onPressCategory = async (categoryName, categoryId) => {
@@ -75,7 +88,6 @@ const Browse = ({ navigation }) => {
     try {
       let res = await fetch(url, requestOptionsUser);
       let response = await res.json();
-      console.log(response.payload.rows);
       if (response.payload !== undefined && response.payload.rows != undefined) {
         await setCategoryCourse(response.payload.rows);
       } else {
@@ -118,6 +130,11 @@ const Browse = ({ navigation }) => {
           key={imageButtonData[1].id}
           title={imageButtonData[1].title}
           onPress={onPressRecommendedButton}
+        />
+        <ImageButton
+          key={imageButtonData[2].id}
+          title={imageButtonData[2].title}
+          onPress={onPressRatedButton}
         />
         <SectionCategories onPress={onPressCategory} />
         {/*<SectionTags title="Popular Skills" onPress={onPressSkills} />

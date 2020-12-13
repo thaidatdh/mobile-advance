@@ -10,13 +10,15 @@ const Search = ({navigation}) => {
   const [searchValue, setSearchValue] = useState("");
   const [inputValue, setInputValue] = useState("");
   const [courseData, setCourseData] = useState([]);
-  const [authorData, setAuthorData] = useState([]);
+  //const [authorData, setAuthorData] = useState([]);
   const {
     searchHistory,
     addSearchHistory,
     removeAllSearchHistory,
   } = React.useContext(AuthContext);
-  const { searchCourses, searchAuthor } = React.useContext(DataContext);
+  const { searchCourses, searchAuthor, getSearchCourses } = React.useContext(
+    DataContext
+  );
   const onPressCourse = (course) => {
     navigation.navigate("Course", { course: course });
   };
@@ -35,7 +37,7 @@ const Search = ({navigation}) => {
       setSearchValue("");
     }
   };
-  const onSearch = (text) => {
+  const onSearch = async (text) => {
     setInputValue(text);
     if (text === undefined || text === "") {
       return;
@@ -44,8 +46,10 @@ const Search = ({navigation}) => {
     if (!searchHistory.includes(text)) {
       addSearchHistory(text);
     }
-    setCourseData(searchCourses(text));
-    setAuthorData(searchAuthor(text));
+    await getSearchCourses(text);
+    console.log(searchCourses);
+    setCourseData(searchCourses);
+    //setAuthorData(searchAuthor(text));
   };
   return (
     <SafeAreaView
@@ -84,11 +88,11 @@ const Search = ({navigation}) => {
         <SearchData
           searchValue={searchValue}
           coursesData={courseData}
-          authorsData={authorData}
+          //authorsData={authorData}
           onPressCourse={onPressCourse}
-          onPressAuthor={onPressAuthor}
+          //onPressAuthor={onPressAuthor}
           onPressSeeAllCourse={onPressSeeAllCourse}
-          onPressSeeAllAuthor={onPressSeeAllAuthor}
+          //onPressSeeAllAuthor={onPressSeeAllAuthor}
         />
       )}
     </SafeAreaView>

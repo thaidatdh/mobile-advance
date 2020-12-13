@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Image,
   View,
@@ -7,24 +7,40 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
-
+import {DataContext} from "../../../../../Contexts/DataContextProvider"
 const { width, height } = Dimensions.get("window");
 const SectionCourseItem = ({onPress, item}) => {
   const star = require("../../../../../../assets/star-rating.png");
+  const [courseData, setCourseData] = useState(item);
+  const { getCourse, selectedCourse } = useContext(DataContext);
+  useEffect(() => {
+    const getData = async(id) => {
+      let data = await getCourse(id);
+      if (data) setCourseData(data);
+    }
+    getData(item.id);
+  }, []);
   return (
-    <TouchableOpacity style={styles.item} onPress={() => onPress(item)}>
+    <TouchableOpacity style={styles.item} onPress={() => onPress(courseData)}>
       <View style={styles.imageView}>
         <Image
-          source={require("../../../../../../assets/bg.png")}
+          source={{
+            uri: courseData.courseImage
+              ? courseData.courseImage
+              : courseData.imageUrl,
+          }}
           style={styles.image}
         />
       </View>
 
       <View style={styles.textArea}>
-        <Text style={styles.text}>{item.title}</Text>
-        <Text style={styles.darkText}>{item.author}</Text>
+        <Text style={styles.text}>
+          {courseData.courseTitle ? courseData.courseTitle : courseData.title}
+        </Text>
         <Text style={styles.darkText}>
-          {item.level} - {item.released} - {item.duration}
+          {courseData.instructorName
+            ? courseData.instructorName
+            : courseData["instructor.user.name"]}
         </Text>
         <View
           style={{
@@ -33,8 +49,23 @@ const SectionCourseItem = ({onPress, item}) => {
             backgroundColor: "#2b2c30",
           }}
         >
-          <Text style={{ color: "#f1c40f" }}>{item.rating}/5 </Text>
-          <Text style={styles.darkText}>({item.ratingCount})</Text>
+          <Text style={{ color: "#f1c40f" }}>
+            {courseData.courseAveragePoint
+              ? courseData.courseAveragePoint
+              : courseData.ratedNumber
+              ? courseData.ratedNumber
+              : 0}
+            /5{" "}
+          </Text>
+          <Text style={styles.darkText}>
+            (
+            {courseData.courseSoldNumber
+              ? courseData.courseSoldNumber
+              : courseData.ratedNumber
+              ? courseData.ratedNumber
+              : 0}
+            )
+          </Text>
         </View>
       </View>
     </TouchableOpacity>

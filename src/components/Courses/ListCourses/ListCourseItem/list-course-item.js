@@ -54,55 +54,75 @@ const ListCourseItem = (props) => {
   const onDownload = () => {
     if (user) {
       addDownloaded(props.item);
+    } else {
+      props.navigation.navigate("Sign In");
     }
-    else {
-      props.navigation.navigate('Sign In');
-    }
-  }
+  };
   const onRemoveDownload = () => {
     removeDownloaded(props.item);
   };
   const onBookmark = () => {
-    addBookmark(props.item);
-  }
+    addBookmark(props.item.id);
+  };
   const onRemoveBookmark = () => {
-    removeBookmark(props.item);
-  }
+    removeBookmark(props.item.id);
+  };
   const onChannel = () => {
-    addChannel(props.item);
-  }
+    if (props.item.price === 0) addChannel(props.item.id);
+  };
   const onRemoveChannel = () => {
-    removeChannel(props.item);
-  }
+    //removeChannel(props.item);
+  };
   return (
     <TouchableOpacity
       style={styles.item}
       onPress={() => props.onPress(props.item)}
     >
-      <Image source={{ uri: props.item.imageUrl }} style={styles.image} />
+      <Image
+        source={{
+          uri: props.item.imageUrl
+            ? props.item.imageUrl
+            : props.item.courseImage,
+        }}
+        style={styles.image}
+      />
       <View style={{ marginLeft: 10, flex: 1 }}>
-        <Text style={styles.title}>{props.item.title}</Text>
+        <Text style={styles.title}>
+          {props.item.title ? props.item.title : props.item.courseTitle}
+        </Text>
         <Text style={styles.darkText}>
           {props.item["instructor.user.name"]
             ? props.item["instructor.user.name"]
             : props.item.name
             ? props.item.name
+            : props.item.instructorName
+            ? props.item.instructorName
             : props.author}
         </Text>
         <Text style={styles.darkText}>
           {props.item.status ? props.item.status + " - " : ""}
           {props.item.createdAt
             ? props.item.createdAt.substring(0, 10) + " - "
-            : props.item.updatedAt ? props.item.updatedAt.substring(0, 10) + " - " : ""}
-          {props.item.totalHours.toFixed(3)} hours
+            : props.item.updatedAt
+            ? props.item.updatedAt.substring(0, 10) + " - "
+            : props.item.latestLearnTime
+            ? "Latest learn time: " + props.item.latestLearnTime
+            : ""}
+          {props.item.totalHours
+            ? props.item.totalHours.toFixed(3) + " hours"
+            : ""}
         </Text>
         <View
           style={{
             flexDirection: "row",
           }}
         >
-          <Text style={{ color: "#f1c40f" }}>{props.item.ratedNumber} </Text>
-          <Text style={styles.darkText}>({props.item.ratedNumber})</Text>
+          <Text style={{ color: "#f1c40f" }}>
+            {props.item.ratedNumber ? props.item.ratedNumber + " " : ""}
+          </Text>
+          <Text style={styles.darkText}>
+            {props.item.ratedNumber ? "(" + props.item.ratedNumber + ")" : ""}
+          </Text>
         </View>
       </View>
 
@@ -129,11 +149,10 @@ const ListCourseItem = (props) => {
         ) : null}
         {user ? (
           !isChanneled(props.item.title) ? (
-            <Menu.Item onPress={onChannel} title="Add Channel" />
-          ) : (
-            <Menu.Item onPress={onRemoveChannel} title="Remove Channel" />
-          )
-        ) : null}
+            <Menu.Item onPress={onChannel} title="Buy Course" />
+          ) : null
+        ) : /*<Menu.Item onPress={onRemoveChannel} title="Remove Channel" />*/
+        null}
         {!isDownloaded(props.item.title) ? (
           <Menu.Item onPress={onDownload} title="Download" />
         ) : (

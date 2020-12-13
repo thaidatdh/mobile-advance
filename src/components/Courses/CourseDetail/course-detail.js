@@ -30,7 +30,11 @@ const CourseDetail = ({ navigation, route }) => {
       <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
       <View style={styles.imageView}>
         <Image
-          source={{ uri: route.params.course.imageUrl }}
+          source={{
+            uri: route.params.course.imageUrl
+              ? route.params.course.imageUrl
+              : route.params.course.courseImage,
+          }}
           style={styles.image}
         />
       </View>

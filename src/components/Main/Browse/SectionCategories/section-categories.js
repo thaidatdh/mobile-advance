@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FlatList, View, Text, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import SmallImageButton from "../../../Common/small-image-button";
-
+import { DataContext} from "../../../../Contexts/DataContextProvider"
 const SectionCategories = (props) => {
   const categoryList = [
     {
@@ -202,26 +202,10 @@ const SectionCategories = (props) => {
       ],
     },
   ];
-  const [categories, setCategories] = useState([]);
+  const { categories, loadCategories } = React.useContext(DataContext);
   useEffect(() => {
     const loadData = async () => {
-      const requestOptions = {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-      try {
-        let res = await fetch(
-          "http://api.dev.letstudy.org/category/all",
-          requestOptions
-        );
-        let response = await res.json();
-        if (response.payload !== undefined) 
-          await setCategories(response.payload);
-      } catch (err) {
-        console.log(err);
-      }
+      await loadCategories();
     };
     loadData();
   },[]);

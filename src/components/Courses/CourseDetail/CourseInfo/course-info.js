@@ -15,6 +15,7 @@ import AuthorTag from "./components/author-tag";
 import SectionContent from "./components/section-content";
 import SectionDescription from "./components/section-description";
 import { AuthContext } from "../../../../Contexts/AuthContextProvider";
+import { DataContext } from "../../../../Contexts/DataContextProvider";
 import { coursesData } from "../../../../data/dataMockup";
 const { width, height } = Dimensions.get("window");
 
@@ -34,7 +35,7 @@ const CourseInfo = (props) => {
     isChanneled,
     isDownloaded,
   } = React.useContext(AuthContext);
-
+ const { getCourse, selectedCourse } = React.useContext(DataContext);
   const [isDownloadedCourse, setIsDownloadedCourse] = useState(
     isDownloaded(props.course.title)
   );
@@ -73,7 +74,15 @@ const CourseInfo = (props) => {
         console.log(err);
       }
     };
+    const getData = async (id) => {
+      let data = await getCourse(id);
+      if (data) setCourseDetail(data);
+    };
+    getData(props.course.id);
     fetchData(props.course.id);
+    if (authors === undefined || authors == null || authors == '') {
+      setAuthors(props.course.instructorName);
+    }
   }, []);
   useEffect(() => {
     //​
@@ -113,10 +122,10 @@ const CourseInfo = (props) => {
       return;
     }
     if (!isBookmarkedCourse) {
-      addBookmark(props.course);
+      addBookmark(props.course.id);
       setIsBookmarkedCourse(true);
     } else {
-      removeBookmark(props.course);
+      removeBookmark(props.course.id);
       setIsBookmarkedCourse(false);
     }
   };
@@ -124,12 +133,12 @@ const CourseInfo = (props) => {
     if (!user) {
       return;
     }
-    if (!isChannelCourse) {
-      addChannel(props.course);
+    if (!isChannelCourse && props.course.price === 0) {
+      addChannel(props.course.id);
       setIsChannelCourse(true);
     } else {
-      removeChannel(props.course);
-      setIsChannelCourse(false);
+      //removeChannel(props.course);
+      //setIsChannelCourse(false);
     }
   };
   const onPressDownload = () => {
@@ -168,13 +177,20 @@ const CourseInfo = (props) => {
   return (
     <View style={styles.container}>
       <View style={styles.infoSection}>
-        <Text style={styles.title}>{courseDetail.title}</Text>
+        <Text style={styles.title}>
+          {courseDetail.title ? courseDetail.title : courseDetail.courseTitle}
+        </Text>
         <View style={styles.authors}>{renderAuthors(authors)}</View>
 
         <View style={{ flexDirection: "row" }}>
           <Text style={{ color: "lightgray", fontSize: 12 }}>
-            {courseDetail.status} - {courseDetail.createdAt.substring(0, 10)} -{" "}
-            {courseDetail.totalHours.toFixed(3)} hours
+            {courseDetail.status ? courseDetail.status + " - " : ""}
+            {courseDetail.createdAt
+              ? courseDetail.createdAt.substring(0, 10) + " - "
+              : ""}
+            {courseDetail.totalHours
+              ? courseDetail.totalHours.toFixed(3) + " hours"
+              : ""}
           </Text>
           <Text
             style={{
@@ -184,10 +200,16 @@ const CourseInfo = (props) => {
               paddingLeft: 10,
             }}
           >
-            {courseDetail.ratedNumber}
+            {courseDetail.ratedNumber
+              ? courseDetail.ratedNumber
+              : courseDetail.courseAveragePoint}
           </Text>
           <Text style={{ color: "lightgray", fontSize: 12 }}>
-            ({courseDetail.ratedNumber})
+            {courseDetail.ratedNumber
+              ? "(" + courseDetail.ratedNumber + ")"
+              : courseDetail.courseSoldNumber
+              ? "(" + courseDetail.courseSoldNumber + ")"
+              : ""}
           </Text>
         </View>
 
@@ -205,7 +227,7 @@ const CourseInfo = (props) => {
             onPress={onPressBookmark}
           />
           <ActionButton
-            title={!isChannelCourse ? "Add to Channel" : "Remove Channel"}
+            title={!isChannelCourse ? "Buy Course" : "Owned"}
             icon="plus"
             onPress={onPressAddToChannel}
           />
@@ -290,11 +312,14 @@ const CourseInfo = (props) => {
         ) : (
           <SectionDescription
             description={
-              courseDetail.subtitle +
-              "\nRequirement:\n - " +
-              courseDetail.requirement.join("\n - ") +
-              "\nLearn:\n - " +
-              courseDetail.learnWhat.join("\n - ")
+              courseDetail && courseDetail.subtitle
+                ? courseDetail.subtitle +
+                  (courseDetail.requirement
+                    ? "\nRequirement:\n - " +
+                      courseDetail.requirement.join("\n - ")
+                    : "") +
+                  (courseDetail.learnWhat ? "\nLearn:\n - " + courseDetail.learnWhat.join("\n - "): "")
+                : ""
             }
           />
         )}

@@ -42,7 +42,7 @@ export default ({ children }) => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: token,
+          Authorization: "Bearer " + responseLogin.token,
         },
       };
       fetch(
@@ -124,31 +124,124 @@ export default ({ children }) => {
     }
     return false;
   };
-  const addBookmark = (course) => {
-    let newBookmark = bookmark.slice().concat(course);
-    setBookmark(newBookmark);
+  const getFavoriteCourses = () => {
+    const requestOptionsUser = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+    };
+    fetch(
+      "http://api.dev.letstudy.org/user/get-favorite-courses",
+      requestOptionsUser
+    )
+      .then((resBookmark) => resBookmark.json())
+      .then((responseBookmark) => {
+        if (responseBookmark.payload !== undefined)
+          setBookmark(responseBookmark.payload);
+        else setBookmark([]);
+      })
+      .catch((err) => console.log(err));
   };
-  const removeBookmark = (course) => {
-    let newBookmark = bookmark.filter((e) => e !== course);
-    setBookmark(newBookmark);
+  const getProcessCourses = () => {
+    const requestOptionsUser = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+    };
+    fetch(
+      "http://api.dev.letstudy.org/user/get-process-courses",
+      requestOptionsUser
+    )
+      .then((resProcess) => resProcess.json())
+      .then((responseProcess) => {
+        if (responseProcess.payload !== undefined)
+          setChannel(responseProcess.payload);
+        else setChannel([]);
+      })
+      .catch((err) => console.log(err));
+  };
+  const addBookmark = async (course_id) => {
+    const requestOptionsUser = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+      body: JSON.stringify({
+        courseId: course_id,
+      }),
+    };
+    try {
+      let res = await fetch(
+        "http://api.dev.letstudy.org/user/like-course",
+        requestOptionsUser
+      );
+    } catch (err) {
+      console.log(err);
+    }
+    await getFavoriteCourses();
+  };
+  const removeBookmark = async (course_id) => {
+    const requestOptionsUser = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+      body: JSON.stringify({
+        courseId: course_id,
+      }),
+    };
+    try {
+      await fetch(
+        "http://api.dev.letstudy.org/user/like-course",
+        requestOptionsUser
+      );
+    } catch (err) {
+      console.log(err);
+    }
+    await getFavoriteCourses();
   };
   const isBookmarked = (courseTitle) => {
-    const bookmarked = bookmark.find((e) => e.title === courseTitle);
+    const bookmarked = bookmark.find((e) => e.courseTitle === courseTitle);
     if (bookmarked) {
       return true;
     }
     return false;
   };
-  const addChannel = (course) => {
-    let newChannel = channel.slice().concat(course);
-    setChannel(newChannel);
+  const addChannel = async (course_id) => {
+    const requestOptionsUser = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+      body: JSON.stringify({
+        courseId: course_id,
+      }),
+    };
+    try {
+      let res = await fetch(
+        "http://api.dev.letstudy.org/payment/get-free-courses",
+        requestOptionsUser
+      );
+      let response = await res.json();
+      console.log(response);
+    } catch (err) {
+      console.log(err);
+    }
+    await getProcessCourses();
   };
   const removeChannel = (course) => {
     let newChannel = channel.filter((e) => e !== course);
     setChannel(newChannel);
   };
   const isChanneled = (courseTitle) => {
-    const channeled = channel.find((e) => e.title === courseTitle);
+    const channeled = channel.find((e) => e.courseTitle === courseTitle);
     if (channeled) {
       return true;
     }
