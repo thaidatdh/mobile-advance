@@ -3,8 +3,17 @@ import { StatusBar } from "expo-status-bar";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import React from "react";
-import { StyleSheet, Text, View, TextInput } from "react-native";
+import React, { useEffect } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Platform,
+  Alert,
+  BackHandler,
+} from "react-native";
+import NetInfo from "@react-native-community/netinfo";
 import Login from "./src/components/Authentication/Login/login";
 import ListCourses from "./src/components/Courses/ListCourses/list-courses";
 import Home from "./src/components/Main/Home/home";
@@ -22,10 +31,49 @@ import DataProvider from "./src/Contexts/DataContextProvider";
 import { Provider } from "react-native-paper";
 import Author from "./src/components/Courses/Author/author";
 import ListAuthors from "./src/components/Courses/Author/list-authors";
+import { AuthContext } from "./src/Contexts/AuthContextProvider";
+import { DataContext } from "./src/Contexts/DataContextProvider";
+
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const BottomTabNavigator = () => {
+  const { loadPersistUserData } = React.useContext(AuthContext);
+  const { getAllNewData } = React.useContext(DataContext);
+  useEffect(() => {
+    const loadData = () => {
+      console.log("Loading data from beginning 2");
+      loadPersistUserData();
+      getAllNewData();
+    };
+    const addNetListener = () => {
+      NetInfo.addEventListener((state) => {});
+    };
+    loadData();
+    addNetListener();
+  }, []);
+  useEffect(() => {
+    const CheckConnectivity = () => {
+      NetInfo.fetch().then((state) => {
+        if (!state.isInternetReachable) {
+          Alert.alert(
+            "Internet",
+            "This application require internet connection. Please connect to internet and try again.",
+            [
+              {
+                text: "OK",
+                onPress: () => {
+                  BackHandler.exitApp();
+                },
+              },
+            ],
+            { cancelable: false }
+          );
+        }
+      });
+    };
+    CheckConnectivity();
+  });
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({

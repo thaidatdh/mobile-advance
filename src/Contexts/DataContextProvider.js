@@ -220,6 +220,12 @@ export default ({ children }) => {
       console.log(err);
     }
   };
+  const getAllNewData = async () => {
+    await loadNewReleased();
+    await loadTopRated();
+    await loadTopSell();
+    await loadCategories();
+  }
   const getCourse = async (course_id) => {
     await loadNewReleased();
     await loadTopRated();
@@ -282,7 +288,7 @@ export default ({ children }) => {
     selectedCourse,
     getCourse,
     loadTopRated,
-    categories, 
+    categories,
     loadCategories,
     loadTopSell,
     loadNewReleased,
@@ -292,6 +298,7 @@ export default ({ children }) => {
     searchAuthor,
     getAuthorCourses,
     getAuthors,
+    getAllNewData,
   };
 
   return <DataContext.Provider value={store}>{children}</DataContext.Provider>;

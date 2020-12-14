@@ -6,6 +6,7 @@ import {
   authorsData,
   defaultSetting,
 } from "../data/dataMockup";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 export const AuthContext = React.createContext(null);
 
 export default ({ children }) => {
@@ -37,7 +38,19 @@ export default ({ children }) => {
       }
       setUser(responseLogin.userInfo);
       setToken("Bearer " + responseLogin.token);
-
+      try {
+        await AsyncStorage.setItem("@token", "Bearer " + responseLogin.token);
+      } catch (e) {
+        // saving error
+      }
+      try {
+        await AsyncStorage.setItem(
+          "@user",
+          JSON.stringify(responseLogin.userInfo)
+        );
+      } catch (e) {
+        // saving error
+      }
       const requestOptionsUser = {
         method: "GET",
         headers: {
@@ -77,6 +90,52 @@ export default ({ children }) => {
     setToken(null);
     setBookmark([]);
     setChannel([]);
+  };
+  const loadPersistUserData = async () => {
+    try {
+      const tokenValue = await AsyncStorage.getItem("@token");
+      if (tokenValue != null) setToken(tokenValue);
+      const userJson = await AsyncStorage.getItem("@user");
+      const userInfo = userJson != null ? JSON.parse(userJson) : null;
+      if (userInfo) {
+        setUser(userInfo);
+        try {
+          const requestOptionsUser = {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: tokenValue,
+            },
+          };
+          fetch(
+            "http://api.dev.letstudy.org/user/get-favorite-courses",
+            requestOptionsUser
+          )
+            .then((resBookmark) => resBookmark.json())
+            .then((responseBookmark) => {
+              if (responseBookmark.payload !== undefined)
+                setBookmark(responseBookmark.payload);
+              else setBookmark([]);
+            })
+            .catch((err) => console.log(err));
+          fetch(
+            "http://api.dev.letstudy.org/user/get-process-courses",
+            requestOptionsUser
+          )
+            .then((resProcess) => resProcess.json())
+            .then((responseProcess) => {
+              if (responseProcess.payload !== undefined)
+                setChannel(responseProcess.payload);
+              else setChannel([]);
+            })
+            .catch((err) => console.log(err));
+        } catch (err) {
+          return err.message;
+        }
+      }
+    } catch (e) {
+      // error reading value
+    }
   };
   const register = async (user) => {
     const requestOptions = {
@@ -295,6 +354,7 @@ export default ({ children }) => {
     isBookmarked,
     isChanneled,
     isDownloaded,
+    loadPersistUserData,
   };
 
   return <AuthContext.Provider value={store}>{children}</AuthContext.Provider>;
