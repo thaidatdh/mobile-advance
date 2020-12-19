@@ -47,7 +47,6 @@ const Search = ({navigation}) => {
       addSearchHistory(text);
     }
     await getSearchCourses(text);
-    console.log(searchCourses);
     setCourseData(searchCourses);
     //setAuthorData(searchAuthor(text));
   };

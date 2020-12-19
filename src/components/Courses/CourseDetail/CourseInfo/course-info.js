@@ -35,7 +35,7 @@ const CourseInfo = (props) => {
     isChanneled,
     isDownloaded,
   } = React.useContext(AuthContext);
- const { getCourse, selectedCourse } = React.useContext(DataContext);
+  const { getCourse, selectedCourse } = React.useContext(DataContext);
   const [isDownloadedCourse, setIsDownloadedCourse] = useState(
     isDownloaded(props.course.title)
   );
@@ -61,8 +61,11 @@ const CourseInfo = (props) => {
       try {
         let res = await fetch(url, requestOptionsUser);
         let response = await res.json();
-        if (response.payload !== undefined) {
+        if (response.payload !== undefined && response.payload !== null) {
           await setCourseDetail(response.payload);
+          if (response.payload.promoVidUrl) {
+            props.onChangeVideo(response.payload.promoVidUrl);
+          }
           if (
             response.payload.instructorName != undefined &&
             response.payload.instructorName != null &&
@@ -80,7 +83,7 @@ const CourseInfo = (props) => {
     };
     getData(props.course.id);
     fetchData(props.course.id);
-    if (authors === undefined || authors == null || authors == '') {
+    if (authors === undefined || authors == null || authors == "") {
       setAuthors(props.course.instructorName);
     }
   }, []);
@@ -231,11 +234,11 @@ const CourseInfo = (props) => {
             icon="plus"
             onPress={onPressAddToChannel}
           />
-          <ActionButton
+          {/*<ActionButton
             title={!isDownloadedCourse ? "Download" : "Downloaded"}
             icon="download"
             onPress={onPressDownload}
-          />
+          />*/}
         </View>
 
         <View>
@@ -318,7 +321,9 @@ const CourseInfo = (props) => {
                     ? "\nRequirement:\n - " +
                       courseDetail.requirement.join("\n - ")
                     : "") +
-                  (courseDetail.learnWhat ? "\nLearn:\n - " + courseDetail.learnWhat.join("\n - "): "")
+                  (courseDetail.learnWhat
+                    ? "\nLearn:\n - " + courseDetail.learnWhat.join("\n - ")
+                    : "")
                 : ""
             }
           />

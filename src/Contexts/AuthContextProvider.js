@@ -289,7 +289,6 @@ export default ({ children }) => {
         requestOptionsUser
       );
       let response = await res.json();
-      console.log(response);
     } catch (err) {
       console.log(err);
     }

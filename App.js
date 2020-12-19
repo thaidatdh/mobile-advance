@@ -42,7 +42,6 @@ const BottomTabNavigator = () => {
   const { getAllNewData } = React.useContext(DataContext);
   useEffect(() => {
     const loadData = () => {
-      console.log("Loading data from beginning 2");
       loadPersistUserData();
       getAllNewData();
     };
@@ -81,7 +80,7 @@ const BottomTabNavigator = () => {
           let iconName;
           if (route.name === "Home") {
             iconName = "home";
-          } else if (route.name === "Download") {
+          } else if (route.name === "My Courses") {
             iconName = "arrow-alt-circle-down";
           } else if (route.name === "Browse") {
             iconName = "keyboard";
@@ -106,7 +105,7 @@ const BottomTabNavigator = () => {
       }}
     >
       <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Download" component={Download} />
+      <Tab.Screen name="My Courses" component={Download} />
       <Tab.Screen name="Browse" component={Browse} />
       <Tab.Screen name="Search" component={Search} />
     </Tab.Navigator>

@@ -106,7 +106,7 @@ const ListCourseItem = (props) => {
             : props.item.updatedAt
             ? props.item.updatedAt.substring(0, 10) + " - "
             : props.item.latestLearnTime
-            ? "Latest learn time: " + props.item.latestLearnTime
+            ? "Latest learn time: " + props.item.latestLearnTime.toFixed(3)
             : ""}
           {props.item.totalHours
             ? props.item.totalHours.toFixed(3) + " hours"
