@@ -13,7 +13,7 @@ export default ({ children }) => {
   const [usersList, setUsersList] = useState(usersData);
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
-  const [searchHistory, setSearchHistory] = useState(searchHistoryData);
+  const [searchHistory, setSearchHistory] = useState([]);
   const [downloaded, setDownloaded] = useState([]);
   const [bookmark, setBookmark] = useState([]);
   const [settings, setSettings] = useState(defaultSetting);
@@ -90,9 +90,21 @@ export default ({ children }) => {
     setToken(null);
     setBookmark([]);
     setChannel([]);
+    try {
+      AsyncStorage.removeItem("@token");
+      AsyncStorage.removeItem("@user");
+    } catch {}
   };
   const loadPersistUserData = async () => {
     try {
+      const oldSettings = await AsyncStorage.getItem("@settings");
+      if (oldSettings) {
+        setSettings(JSON.parse(oldSettings));
+      }
+      const searchHist = await AsyncStorage.getItem("@searchHist");
+      if (searchHist) {
+        setSearchHistory(JSON.parse(searchHist));
+      }
       const tokenValue = await AsyncStorage.getItem("@token");
       if (tokenValue != null) setToken(tokenValue);
       const userJson = await AsyncStorage.getItem("@user");
@@ -115,7 +127,7 @@ export default ({ children }) => {
             .then((responseBookmark) => {
               if (responseBookmark.payload !== undefined)
                 setBookmark(responseBookmark.payload);
-              else setBookmark([]);
+              else logout();
             })
             .catch((err) => console.log(err));
           fetch(
@@ -126,7 +138,7 @@ export default ({ children }) => {
             .then((responseProcess) => {
               if (responseProcess.payload !== undefined)
                 setChannel(responseProcess.payload);
-              else setChannel([]);
+              else logout();
             })
             .catch((err) => console.log(err));
         } catch (err) {
@@ -134,6 +146,7 @@ export default ({ children }) => {
         }
       }
     } catch (e) {
+      logout();
       // error reading value
     }
   };
@@ -308,6 +321,7 @@ export default ({ children }) => {
   const addSearchHistory = (searchValue) => {
     let newSearchHistory = searchHistory.slice().concat(searchValue);
     setSearchHistory(newSearchHistory);
+    AsyncStorage.setItem("@searchHist", JSON.stringify(searchHistory));
   };
   const removeSearchHistory = (searchValue) => {
     let newSearchHistory = searchHistory
@@ -318,7 +332,7 @@ export default ({ children }) => {
   const removeAllSearchHistory = () => {
     setSearchHistory([]);
   };
-  const updateSetting = (title, updateAttribute) => {
+  const updateSetting = async (title, updateAttribute) => {
     var index = settings.findIndex((x) => x.title === title);
     if (index !== -1) {
       setSettings([
@@ -326,6 +340,7 @@ export default ({ children }) => {
         Object.assign({}, settings[index], updateAttribute),
         ...settings.slice(index + 1),
       ]);
+      await AsyncStorage.setItem("@settings", JSON.stringify(settings));
     }
   };
   const store = {

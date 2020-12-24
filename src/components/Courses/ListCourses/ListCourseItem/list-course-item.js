@@ -106,7 +106,8 @@ const ListCourseItem = (props) => {
             : props.item.updatedAt
             ? props.item.updatedAt.substring(0, 10) + " - "
             : props.item.latestLearnTime
-            ? "Latest learn time: " + props.item.latestLearnTime.toFixed(3)
+            ? "Latest learn time: " +
+              props.item.latestLearnTime.substring(0, 10)
             : ""}
           {props.item.totalHours
             ? props.item.totalHours.toFixed(3) + " hours"
@@ -153,11 +154,11 @@ const ListCourseItem = (props) => {
           ) : null
         ) : /*<Menu.Item onPress={onRemoveChannel} title="Remove Channel" />*/
         null}
-        {!isDownloaded(props.item.title) ? (
+        {/*!isDownloaded(props.item.title) ? (
           <Menu.Item onPress={onDownload} title="Download" />
         ) : (
           <Menu.Item onPress={onRemoveDownload} title="Remove Downloaded" />
-        )}
+        )*/}
       </Menu>
     </TouchableOpacity>
   );

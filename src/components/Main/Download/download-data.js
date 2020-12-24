@@ -12,8 +12,15 @@ import ListCourseItem from "../../Courses/ListCourses/ListCourseItem/list-course
 const {width, height} = Dimensions.get("window");
 const DownloadData = (props) => {
   const renderItems = (coursesList) => {
-    return coursesList.map(item => <ListCourseItem key={item.id.toString()} item={item} />);
+    return coursesList.map((item) => (
+      <ListCourseItem
+        key={item.id.toString()}
+        item={item}
+        onPress={props.onPressCourse}
+      />
+    ));
   }
+  
   return (
     <View style={{flex:1, backgroundColor: "#0E0F13"}}>
       <View style={{marginLeft: 10, marginTop: 20, marginBottom: 20, marginRight: 20, color: 'white', flexDirection: 'row', justifyContent: 'space-between'}}>
