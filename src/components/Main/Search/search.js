@@ -10,15 +10,20 @@ const Search = ({navigation}) => {
   const [searchValue, setSearchValue] = useState("");
   const [inputValue, setInputValue] = useState("");
   const [courseData, setCourseData] = useState([]);
+  const [isSearched, setIsSearched] = useState(false);
   //const [authorData, setAuthorData] = useState([]);
   const {
     searchHistory,
     addSearchHistory,
     removeAllSearchHistory,
   } = React.useContext(AuthContext);
-  const { searchCourses, searchAuthor, getSearchCourses } = React.useContext(
-    DataContext
-  );
+  const {
+    searchCourses,
+    searchAuthor,
+    getSearchCourses,
+    categories,
+    loadCategories,
+  } = React.useContext(DataContext);
   const onPressCourse = (course) => {
     navigation.navigate("Course", { course: course });
   };
@@ -35,6 +40,7 @@ const Search = ({navigation}) => {
     setInputValue(text);
     if (text === undefined || text === "") {
       setSearchValue("");
+      setIsSearched(false);
     }
   };
   const onSearch = async (text) => {
@@ -46,9 +52,55 @@ const Search = ({navigation}) => {
     if (!searchHistory.includes(text)) {
       addSearchHistory(text);
     }
-    await getSearchCourses(text);
-    setCourseData(searchCourses);
-    //setAuthorData(searchAuthor(text));
+    if (
+      categories == undefined ||
+      categories == null ||
+      categories.length == 0
+    ) {
+      await loadCategories();
+    }
+    const category_id = categories.map((n) => n.id);
+    const url = "http://api.dev.letstudy.org/course/search";
+    const requestOptionsUser = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        keyword: text,
+        opt: {
+          sort: {
+            attribute: "price",
+            rule: "DESC",
+          },
+          category: category_id,
+          time: [{ min: 0 }],
+          price: [
+            {
+              min: 0,
+            },
+          ],
+        },
+        limit: 10,
+        offset: 1,
+      }),
+    };
+    try {
+      let res = await fetch(url, requestOptionsUser);
+      let response = await res.json();
+
+      if (
+        response.payload !== undefined &&
+        response.payload.rows != undefined
+      ) {
+        await setCourseData(response.payload.rows);
+      } else {
+        setCourseData([]);
+      }
+      setIsSearched(true);
+    } catch (err) {
+      console.log(err);
+    }
   };
   return (
     <SafeAreaView
@@ -77,7 +129,7 @@ const Search = ({navigation}) => {
         }}
         onChangeText={onTextChangeSearchValue}
       ></TextInput>
-      {searchValue === "" ? (
+      {isSearched === "" ? (
         <SearchEmpty
           onSearch={onSearch}
           history={searchHistory}

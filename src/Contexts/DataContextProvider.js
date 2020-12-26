@@ -227,20 +227,25 @@ export default ({ children }) => {
     await loadCategories();
   }
   const getCourse = async (course_id) => {
-    await loadNewReleased();
-    await loadTopRated();
-    await loadTopSell();
-    let data = topRated.concat(topSell);
-    data = data.concat(newReleased);
-    let rs = data.find((n) => n.id == course_id);
-      if (rs) {
-        setSelectedCourse(rs);
-      }
-      else {
-        setSelectedCourse(null);
-      }
-    return rs;
-  }
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    try {
+      let res = await fetch(
+        "http://api.dev.letstudy.org/course/get-course-info?id=" + course_id,
+        requestOptions
+      );
+      let response = await res.json();
+      let rs = response.payload;
+      return rs;
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
+  };
   const searchAuthor = (authorSearch) => {
     const authorsResult = authors
       .slice()

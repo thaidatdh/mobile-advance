@@ -110,7 +110,7 @@ const ListCourseItem = (props) => {
               props.item.latestLearnTime.substring(0, 10)
             : ""}
           {props.item.totalHours
-            ? props.item.totalHours.toFixed(3) + " hours"
+            ? props.item.totalHours.toFixed(2) + " hours"
             : ""}
         </Text>
         <View

@@ -2,7 +2,13 @@ import React, { useEffect, useState } from "react";
 import { FlatList, View, Text, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import SmallImageButton from "../../../Common/small-image-button";
-import { DataContext} from "../../../../Contexts/DataContextProvider"
+import { DataContext } from "../../../../Contexts/DataContextProvider";
+const styles = StyleSheet.create({
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
+});
 const SectionCategories = (props) => {
   const categoryList = [
     {
@@ -208,38 +214,62 @@ const SectionCategories = (props) => {
       await loadCategories();
     };
     loadData();
-  },[]);
+  }, []);
+  const formatColor = (ary) => {
+    return "rgb(" + ary.join(", ") + ",0.5)";
+  };
+  const getColor = () => {
+    for (var i = 0, random = []; i < 3; i++) {
+      random.push(Math.floor(Math.random() * 256));
+    }
+    return formatColor(random);
+  };
   const renderItem = (category) => {
     const keyValue = category[0].id + "key";
     return (
       <View key={keyValue} style={{ margin: 10 }}>
-        <SmallImageButton
-          key={category[0].id}
-          title={category[0].name}
-          onPress={() => props.onPress(category[0].name, category[0].id)}
-        />
-        {category.length > 1 ? (
+        <View>
           <SmallImageButton
-            key={category[1].id}
-            title={category[1].name}
-            onPress={() => props.onPress(category[1].name, category[1].id)}
+            key={category[0].id}
+            title={category[0].name}
+            onPress={() => props.onPress(category[0].name, category[0].id)}
           />
+          <View
+            style={{
+              ...StyleSheet.absoluteFillObject,
+              backgroundColor: getColor(),
+            }}
+          />
+        </View>
+
+        {category.length > 1 ? (
+          <View>
+            <SmallImageButton
+              key={category[1].id}
+              title={category[1].name}
+              onPress={() => props.onPress(category[1].name, category[1].id)}
+            />
+            <View
+              style={{
+                ...StyleSheet.absoluteFillObject,
+                backgroundColor: getColor(),
+              }}
+            />
+          </View>
         ) : null}
       </View>
     );
   };
   const renderListItems = (list) => {
-    return list.map(item => renderItem(item));
-  }
+    return list.map((item) => renderItem(item));
+  };
   let arrays = [];
   let size = 2;
   let temp = categories.slice();
   while (temp.length > 0) arrays.push(temp.splice(0, size));
   return (
     <View>
-      <ScrollView horizontal={true}>
-        {renderListItems(arrays)}
-      </ScrollView>
+      <ScrollView horizontal={true}>{renderListItems(arrays)}</ScrollView>
     </View>
   );
 };

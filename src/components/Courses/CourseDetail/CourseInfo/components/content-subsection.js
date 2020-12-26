@@ -20,7 +20,7 @@ const ContentSubsection = (props) => {
           ></View>
           <Text style={{ color: "white" }}>{item.name}</Text>
         </View>
-        <Text style={{ color: "white" }}>{item.hours.toFixed(3)}</Text>
+        <Text style={{ color: "white" }}>{item.hours.toFixed(2)}</Text>
       </View>
     ));
   }

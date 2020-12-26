@@ -12,12 +12,24 @@ const { width, height } = Dimensions.get("window");
 const SectionCourseItem = ({onPress, item}) => {
   const star = require("../../../../../../assets/star-rating.png");
   const [courseData, setCourseData] = useState(item);
-  const { getCourse, selectedCourse } = useContext(DataContext);
+  const [instructorName, setInstructorName] = useState('');
+  const { getCourse, selectedCourse, authors } = useContext(DataContext);
   useEffect(() => {
     const getData = async(id) => {
       let data = await getCourse(id);
-      if (data) setCourseData(data);
+      if (data) {
+        await setCourseData(data);
+        let author = authors.find((n) => n.id == data.instructorId);
+        if (author) {
+          setInstructorName(author["user.name"]);
+        }
+      }
     }
+    setInstructorName(
+      courseData.instructorName
+        ? courseData.instructorName
+        : courseData["instructor.user.name"]
+    );
     getData(item.id);
   }, []);
   return (
@@ -38,9 +50,7 @@ const SectionCourseItem = ({onPress, item}) => {
           {courseData.courseTitle ? courseData.courseTitle : courseData.title}
         </Text>
         <Text style={styles.darkText}>
-          {courseData.instructorName
-            ? courseData.instructorName
-            : courseData["instructor.user.name"]}
+          {instructorName}
         </Text>
         <View
           style={{
@@ -51,18 +61,17 @@ const SectionCourseItem = ({onPress, item}) => {
         >
           <Text style={{ color: "#f1c40f" }}>
             {courseData.courseAveragePoint
-              ? courseData.courseAveragePoint
+              ? courseData.courseAveragePoint.toFixed(2)
               : courseData.ratedNumber
-              ? courseData.ratedNumber
+              ? courseData.ratedNumber.toFixed(2)
               : 0}
-            /5{" "}
           </Text>
           <Text style={styles.darkText}>
             (
             {courseData.courseSoldNumber
               ? courseData.courseSoldNumber
-              : courseData.ratedNumber
-              ? courseData.ratedNumber
+              : courseData.soldNumber
+              ? courseData.soldNumber
               : 0}
             )
           </Text>

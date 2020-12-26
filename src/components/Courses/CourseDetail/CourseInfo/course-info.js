@@ -192,7 +192,7 @@ const CourseInfo = (props) => {
               ? courseDetail.createdAt.substring(0, 10) + " - "
               : ""}
             {courseDetail.totalHours
-              ? courseDetail.totalHours.toFixed(3) + " hours"
+              ? courseDetail.totalHours.toFixed(2) + " hours"
               : ""}
           </Text>
           <Text
