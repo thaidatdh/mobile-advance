@@ -41,6 +41,7 @@ const Search = ({navigation}) => {
     if (text === undefined || text === "") {
       setSearchValue("");
       setIsSearched(false);
+      setCourseData([]);
     }
   };
   const onSearch = async (text) => {
