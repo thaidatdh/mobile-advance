@@ -5,6 +5,7 @@ import SearchData from "./search-data";
 import SearchEmpty from "./search-empty";
 import { AuthContext } from "../../../Contexts/AuthContextProvider";
 import { DataContext } from "../../../Contexts/DataContextProvider";
+import ApiServices from "../../../services/api-services";
 const { width, height } = Dimensions.get("window");
 const Search = ({navigation}) => {
   const [searchValue, setSearchValue] = useState("");
@@ -19,7 +20,6 @@ const Search = ({navigation}) => {
   } = React.useContext(AuthContext);
   const {
     searchCourses,
-    searchAuthor,
     getSearchCourses,
     categories,
     loadCategories,
@@ -61,33 +61,8 @@ const Search = ({navigation}) => {
       await loadCategories();
     }
     const category_id = categories.map((n) => n.id);
-    const url = "http://api.dev.letstudy.org/course/search";
-    const requestOptionsUser = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        keyword: text,
-        opt: {
-          sort: {
-            attribute: "price",
-            rule: "DESC",
-          },
-          category: category_id,
-          time: [{ min: 0 }],
-          price: [
-            {
-              min: 0,
-            },
-          ],
-        },
-        limit: 10,
-        offset: 1,
-      }),
-    };
     try {
-      let res = await fetch(url, requestOptionsUser);
+      let res = await ApiServices.search(category_id, text, 10, 1);
       let response = await res.json();
 
       if (
@@ -130,7 +105,7 @@ const Search = ({navigation}) => {
         }}
         onChangeText={onTextChangeSearchValue}
       ></TextInput>
-      {isSearched === "" ? (
+      {isSearched === false ? (
         <SearchEmpty
           onSearch={onSearch}
           history={searchHistory}

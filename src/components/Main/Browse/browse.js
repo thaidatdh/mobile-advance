@@ -9,6 +9,7 @@ import SectionPath from "./SectionPaths/section-path";
 import MAppBar from "../app-bar";
 import { AuthContext } from "../../../Contexts/AuthContextProvider";
 import { DataContext } from "../../../Contexts/DataContextProvider";
+import ApiServices from "../../../services/api-services";
 const Browse = ({ navigation }) => {
   const imageButtonData = [
     {
@@ -60,33 +61,9 @@ const Browse = ({ navigation }) => {
     });
   };
   const onPressCategory = async (categoryName, categoryId) => {
-    const url = "http://api.dev.letstudy.org/course/search";
-    const requestOptionsUser = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        keyword: "",
-        opt: {
-          sort: {
-            attribute: "price",
-            rule: "DESC",
-          },
-          category: [categoryId],
-          time: [{ min: 0 }],
-          price: [
-            {
-              min: 0,
-            },
-          ],
-        },
-        limit: 10,
-        offset: 1,
-      }),
-    };
     try {
-      let res = await fetch(url, requestOptionsUser);
+      let categoryList = [categoryId];
+      let res = await ApiServices.search(categoryList, "", 10, 1);
       let response = await res.json();
       if (response.payload !== undefined && response.payload.rows != undefined) {
         await setCategoryCourse(response.payload.rows);

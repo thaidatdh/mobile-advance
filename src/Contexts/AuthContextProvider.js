@@ -6,7 +6,8 @@ import {
   authorsData,
   defaultSetting,
 } from "../data/dataMockup";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import ApiServices from "../services/api-services";
+import PhoneStorage from "../services/phone-storage";
 export const AuthContext = React.createContext(null);
 
 export default ({ children }) => {
@@ -18,68 +19,47 @@ export default ({ children }) => {
   const [bookmark, setBookmark] = useState([]);
   const [settings, setSettings] = useState(defaultSetting);
   const [channel, setChannel] = useState([]);
+  const getFavoriteCourses = () => {
+    ApiServices.getFavoriteCourses(token)
+      .then((resBookmark) => {
+        return resBookmark.json();
+      })
+      .then((responseBookmark) => {
+        if (responseBookmark.payload !== undefined)
+          setBookmark(responseBookmark.payload);
+        else setBookmark([]);
+      })
+      .catch((err) => {
+        console.log("err at load fav");
+        console.log(err);
+      });
+  };
+  const getProcessCourses = () => {
+    ApiServices.getProcessCourses(token)
+      .then((resProcess) => resProcess.json())
+      .then((responseProcess) => {
+        if (responseProcess.payload !== undefined)
+          setChannel(responseProcess.payload);
+        else setChannel([]);
+      })
+      .catch((err) => {
+        console.log("err at load progress");
+        console.log(err);
+      });
+  };
   const login = async (email, password) => {
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: email,
-        password: password,
-      }),
-    };
     try {
-      let resLogin = await fetch(
-        "http://api.dev.letstudy.org/user/login",
-        requestOptions
-      );
+      let resLogin = await ApiServices.login(email, password);
       let responseLogin = await resLogin.json();
       if (responseLogin.error || responseLogin.message != "OK") {
         return responseLogin.message;
       }
-      setUser(responseLogin.userInfo);
-      setToken("Bearer " + responseLogin.token);
-      try {
-        await AsyncStorage.setItem("@token", "Bearer " + responseLogin.token);
-      } catch (e) {
-        // saving error
-      }
-      try {
-        await AsyncStorage.setItem(
-          "@user",
-          JSON.stringify(responseLogin.userInfo)
-        );
-      } catch (e) {
-        // saving error
-      }
-      const requestOptionsUser = {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + responseLogin.token,
-        },
-      };
-      fetch(
-        "http://api.dev.letstudy.org/user/get-favorite-courses",
-        requestOptionsUser
-      )
-        .then((resBookmark) => resBookmark.json())
-        .then((responseBookmark) => {
-          if (responseBookmark.payload !== undefined)
-            setBookmark(responseBookmark.payload);
-          else setBookmark([]);
-        })
-        .catch((err) => console.log(err));
-      fetch(
-        "http://api.dev.letstudy.org/user/get-process-courses",
-        requestOptionsUser
-      )
-        .then((resProcess) => resProcess.json())
-        .then((responseProcess) => {
-          if (responseProcess.payload !== undefined)
-            setChannel(responseProcess.payload);
-          else setChannel([]);
-        })
-        .catch((err) => console.log(err));
+      await setUser(responseLogin.userInfo);
+      await setToken("Bearer " + responseLogin.token);
+      await PhoneStorage.save("@token", "Bearer " + responseLogin.token);
+      await PhoneStorage.save("@user", JSON.stringify(responseLogin.userInfo));
+      getFavoriteCourses();
+      getProcessCourses();
     } catch (err) {
       return err.message;
     }
@@ -91,38 +71,27 @@ export default ({ children }) => {
     setBookmark([]);
     setChannel([]);
     try {
-      AsyncStorage.removeItem("@token");
-      AsyncStorage.removeItem("@user");
+      PhoneStorage.remove("@token");
+      PhoneStorage.remove("@user");
     } catch {}
   };
   const loadPersistUserData = async () => {
     try {
-      const oldSettings = await AsyncStorage.getItem("@settings");
+      const oldSettings = await PhoneStorage.load("@settings", "json");
       if (oldSettings) {
-        setSettings(JSON.parse(oldSettings));
+        await setSettings(oldSettings);
       }
-      const searchHist = await AsyncStorage.getItem("@searchHist");
+      const searchHist = await PhoneStorage.load("@searchHist", "json");
       if (searchHist) {
-        setSearchHistory(JSON.parse(searchHist));
+        await setSearchHistory(searchHist);
       }
-      const tokenValue = await AsyncStorage.getItem("@token");
-      if (tokenValue != null) setToken(tokenValue);
-      const userJson = await AsyncStorage.getItem("@user");
-      const userInfo = userJson != null ? JSON.parse(userJson) : null;
+      const tokenValue = await PhoneStorage.load("@token", "string");
+      if (tokenValue != null) await setToken(tokenValue);
+      const userInfo = await PhoneStorage.load("@user", "json");
       if (userInfo) {
-        setUser(userInfo);
+        await setUser(userInfo);
         try {
-          const requestOptionsUser = {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: tokenValue,
-            },
-          };
-          fetch(
-            "http://api.dev.letstudy.org/user/get-favorite-courses",
-            requestOptionsUser
-          )
+          ApiServices.getFavoriteCourses(tokenValue)
             .then((resBookmark) => resBookmark.json())
             .then((responseBookmark) => {
               if (responseBookmark.payload !== undefined)
@@ -130,10 +99,7 @@ export default ({ children }) => {
               else logout();
             })
             .catch((err) => console.log(err));
-          fetch(
-            "http://api.dev.letstudy.org/user/get-process-courses",
-            requestOptionsUser
-          )
+          ApiServices.getProcessCourses(tokenValue)
             .then((resProcess) => resProcess.json())
             .then((responseProcess) => {
               if (responseProcess.payload !== undefined)
@@ -142,30 +108,21 @@ export default ({ children }) => {
             })
             .catch((err) => console.log(err));
         } catch (err) {
+          console.log("err at load");
+          console.log(err);
           return err.message;
         }
       }
     } catch (e) {
+      console.log("error at load 2");
+      console.log(e);
       logout();
       // error reading value
     }
   };
   const register = async (user) => {
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: user.email,
-        password: user.password,
-        username: user.username,
-        phone: user.phone,
-      }),
-    };
     try {
-      let res = await fetch(
-        "http://api.dev.letstudy.org/user/register",
-        requestOptions
-      );
+      let res = await ApiServices.register(user);
       let response = await res.json();
 
       if (response.message != "OK") {
@@ -196,86 +153,12 @@ export default ({ children }) => {
     }
     return false;
   };
-  const getFavoriteCourses = () => {
-    const requestOptionsUser = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-    };
-    fetch(
-      "http://api.dev.letstudy.org/user/get-favorite-courses",
-      requestOptionsUser
-    )
-      .then((resBookmark) => resBookmark.json())
-      .then((responseBookmark) => {
-        if (responseBookmark.payload !== undefined)
-          setBookmark(responseBookmark.payload);
-        else setBookmark([]);
-      })
-      .catch((err) => console.log(err));
-  };
-  const getProcessCourses = () => {
-    const requestOptionsUser = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-    };
-    fetch(
-      "http://api.dev.letstudy.org/user/get-process-courses",
-      requestOptionsUser
-    )
-      .then((resProcess) => resProcess.json())
-      .then((responseProcess) => {
-        if (responseProcess.payload !== undefined)
-          setChannel(responseProcess.payload);
-        else setChannel([]);
-      })
-      .catch((err) => console.log(err));
-  };
   const addBookmark = async (course_id) => {
-    const requestOptionsUser = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-      body: JSON.stringify({
-        courseId: course_id,
-      }),
-    };
-    try {
-      let res = await fetch(
-        "http://api.dev.letstudy.org/user/like-course",
-        requestOptionsUser
-      );
-    } catch (err) {
-      console.log(err);
-    }
+    await ApiServices.changeLikeCourse(course_id, token);
     await getFavoriteCourses();
   };
   const removeBookmark = async (course_id) => {
-    const requestOptionsUser = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-      body: JSON.stringify({
-        courseId: course_id,
-      }),
-    };
-    try {
-      await fetch(
-        "http://api.dev.letstudy.org/user/like-course",
-        requestOptionsUser
-      );
-    } catch (err) {
-      console.log(err);
-    }
+    await ApiServices.changeLikeCourse(course_id, token);
     await getFavoriteCourses();
   };
   const isBookmarked = (courseTitle) => {
@@ -286,25 +169,7 @@ export default ({ children }) => {
     return false;
   };
   const addChannel = async (course_id) => {
-    const requestOptionsUser = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-      body: JSON.stringify({
-        courseId: course_id,
-      }),
-    };
-    try {
-      let res = await fetch(
-        "http://api.dev.letstudy.org/payment/get-free-courses",
-        requestOptionsUser
-      );
-      let response = await res.json();
-    } catch (err) {
-      console.log(err);
-    }
+    await ApiServices.getFreeCourses(course_id, token);
     await getProcessCourses();
   };
   const removeChannel = (course) => {
@@ -318,10 +183,10 @@ export default ({ children }) => {
     }
     return false;
   };
-  const addSearchHistory = (searchValue) => {
+  const addSearchHistory = async (searchValue) => {
     let newSearchHistory = searchHistory.slice().concat(searchValue);
-    setSearchHistory(newSearchHistory);
-    AsyncStorage.setItem("@searchHist", JSON.stringify(searchHistory));
+    await setSearchHistory(newSearchHistory);
+    PhoneStorage.save("@searchHist", JSON.stringify(searchHistory));
   };
   const removeSearchHistory = (searchValue) => {
     let newSearchHistory = searchHistory
@@ -340,7 +205,7 @@ export default ({ children }) => {
         Object.assign({}, settings[index], updateAttribute),
         ...settings.slice(index + 1),
       ]);
-      await AsyncStorage.setItem("@settings", JSON.stringify(settings));
+      await PhoneStorage.save("@settings", JSON.stringify(settings));
     }
   };
   const store = {

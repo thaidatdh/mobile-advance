@@ -57,12 +57,12 @@ const BottomTabNavigator = () => {
         if (!state.isInternetReachable) {
           Alert.alert(
             "Internet",
-            "This application require internet connection. Please connect to internet and try again.",
+            "This application require internet connection.\nYou may not use all feature with offline mode.",
             [
               {
                 text: "OK",
                 onPress: () => {
-                  BackHandler.exitApp();
+                  
                 },
               },
             ],
@@ -72,7 +72,7 @@ const BottomTabNavigator = () => {
       });
     };
     CheckConnectivity();
-  });
+  }, []);
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({

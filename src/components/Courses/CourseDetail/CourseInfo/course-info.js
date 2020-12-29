@@ -17,6 +17,7 @@ import SectionDescription from "./components/section-description";
 import { AuthContext } from "../../../../Contexts/AuthContextProvider";
 import { DataContext } from "../../../../Contexts/DataContextProvider";
 import { coursesData } from "../../../../data/dataMockup";
+import ApiServices from "../../../../services/api-services";
 const { width, height } = Dimensions.get("window");
 
 const CourseInfo = (props) => {
@@ -49,17 +50,8 @@ const CourseInfo = (props) => {
   useEffect(() => {
     //​
     const fetchData = async (id) => {
-      const url =
-        "http://api.dev.letstudy.org/course​/detail-with-lesson​/" + id;
-      const requestOptionsUser = {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-      };
       try {
-        let res = await fetch(url, requestOptionsUser);
+        let res = await ApiServices.getCourseDetailWithLesson(id);
         let response = await res.json();
         if (response.payload !== undefined && response.payload !== null) {
           await setCourseDetail(response.payload);
@@ -90,15 +82,8 @@ const CourseInfo = (props) => {
   useEffect(() => {
     //​
     const fetchDataAuth = async (id) => {
-      const url = "http://api.dev.letstudy.org​/instructor​/detail​/" + id;
-      const requestOptionsUser = {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
       try {
-        let res = await fetch(url, requestOptionsUser);
+        let res = await ApiServices.getInstructorDetail(id);
         let response = await res.json();
         if (response.payload !== undefined) {
           await setAuthors(response.payload.name);
