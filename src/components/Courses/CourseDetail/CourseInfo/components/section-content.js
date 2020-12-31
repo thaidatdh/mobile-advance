@@ -79,17 +79,25 @@ const SectionDescription = (props) => {
       ],
     },
   ];
-  const [data] = useState(props.content);
   const renderSubSections = (sections) => {
-    if (sections === undefined) return null;
+    if (sections === undefined) return (
+      <View key="NULLVALUE" style={{flex: 1, justifyContent: 'center'}}>
+        <Text style={{textAlign: 'center', color:'white'}}>Buy course to see</Text>
+      </View>
+    );
     return sections.map((item) => (
-      <ContentSubsection key={item.id} item={item} />
+      <ContentSubsection
+        key={"SECTION" + item.id}
+        item={item}
+        onChangeVideo={props.onChangeVideo}
+        onChangeTranscript={props.onChangeTranscript}
+      />
     ));
   };
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollViewContainer} nestedScrollEnabled={true}>
-        {renderSubSections(data)}
+        {renderSubSections(props.content)}
       </ScrollView>
     </View>
   );

@@ -23,6 +23,7 @@ const Author = ({ navigation, route }) => {
     getAuthorCourses(route.params.author.id).then(res => setCourses(res));
   }, []);
   const onPressCourse = (course) => {
+    navigation.popToTop();
     navigation.navigate("Course", { course: course });
   };
   const renderItems = (coursesList) => {

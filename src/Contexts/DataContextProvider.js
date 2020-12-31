@@ -11,6 +11,7 @@ export default ({ children }) => {
   const [newReleased, setNewReleased] = React.useState([]);
   const [topSell, setTopSell] = React.useState([]);
   const [topRated, setTopRated] = React.useState([]);
+  const [recommended, setRecommended] = React.useState([]);
   const [authors, setAuthors] = React.useState([]);
   const [searchCourses, setSearchCourses] = React.useState([]);
   const [categories, setCategories] = React.useState([]);
@@ -47,6 +48,18 @@ export default ({ children }) => {
       let res = await ApiServices.getTopRated(10, 1);
       let response = await res.json();
       setTopRated(response.payload);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const loadRecommended = async (token, user_id) => {
+    if (recommended !== undefined && recommended.length > 0) {
+      return;
+    }
+    try {
+      let res = await ApiServices.loadRecommended(token, user_id, 10, 1);
+      let response = await res.json();
+      setRecommended(response.payload);
     } catch (err) {
       console.log(err);
     }
@@ -146,6 +159,8 @@ export default ({ children }) => {
     getAuthorCourses,
     getAuthors,
     getAllNewData,
+    recommended,
+    loadRecommended,
   };
 
   return <DataContext.Provider value={store}>{children}</DataContext.Provider>;

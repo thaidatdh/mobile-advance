@@ -10,6 +10,7 @@ import {
   StatusBar,
 } from "react-native";
 import { Video } from "expo-av";
+import { WebView } from "react-native-webview";
 import CourseInfo from "./CourseInfo/course-info";
 import { DataContext } from "../../../Contexts/DataContextProvider";
 const { width, height } = Dimensions.get("window");
@@ -34,7 +35,7 @@ const CourseDetail = ({ navigation, route }) => {
     };
     fetchData(route.params.course.title);
   }, []);
-  const onChangeVideo = (url) => {
+  const onChangeVideo = (url, lession_id) => {
     setVideoUrl(url);
   }
   const onPressAuthor = (authorName) => {
@@ -48,19 +49,23 @@ const CourseDetail = ({ navigation, route }) => {
       <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
       <View style={styles.imageView}>
         {videoUrl && videoUrl != null ? (
-          <Video
-            source={{
-              uri: videoUrl,
-            }}
-            rate={1.0}
-            volume={1.0}
-            isMuted={false}
-            resizeMode="contain"
-            shouldPlay
-            isLooping={false}
-            useNativeControls
-            style={styles.image}
-          />
+          videoUrl.includes("youtube.com") ? (
+            <WebView source={{ uri: videoUrl }} />
+          ) : (
+            <Video
+              source={{
+                uri: videoUrl,
+              }}
+              rate={1.0}
+              volume={1.0}
+              isMuted={false}
+              resizeMode="contain"
+              shouldPlay
+              isLooping={false}
+              useNativeControls
+              style={styles.image}
+            />
+          )
         ) : (
           <Image
             source={{

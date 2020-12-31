@@ -24,6 +24,10 @@ const Browse = ({ navigation }) => {
       id: 3,
       title: ["Top Rated"],
     },
+    {
+      id: 4,
+      title: ["Recommended"],
+    },
   ];
   const { user, token } = React.useContext(AuthContext);
   const {
@@ -35,12 +39,15 @@ const Browse = ({ navigation }) => {
     loadTopSell,
     loadTopRated,
     topRated,
+    recommended,
+    loadRecommended,
   } = React.useContext(DataContext);
   const [categoryCourse, setCategoryCourse] = useState([]);
   useEffect(() => {
     loadNewReleased();
     loadTopSell();
     loadTopRated();
+    loadRecommended(token, user.id);
   }, []);
   const onPressNewReleaseButton = () => {
     navigation.navigate("List Courses", {
@@ -50,14 +57,20 @@ const Browse = ({ navigation }) => {
   };
   const onPressRecommendedButton = () => {
     navigation.navigate("List Courses", {
-      title: "Top Sell",
-      courses: topSell,
+      title: "Recommended",
+      courses: recommended,
     });
   };
   const onPressRatedButton = () => {
     navigation.navigate("List Courses", {
       title: "Top Rated",
       courses: topRated,
+    });
+  };
+  const onPressSellButton = () => {
+    navigation.navigate("List Courses", {
+      title: "Top Sell",
+      courses: topSell,
     });
   };
   const onPressCategory = async (categoryName, categoryId) => {
@@ -104,9 +117,14 @@ const Browse = ({ navigation }) => {
           onPress={onPressNewReleaseButton}
         />
         <ImageButton
+          key={imageButtonData[3].id}
+          title={imageButtonData[3].title}
+          onPress={onPressRecommendedButton}
+        />
+        <ImageButton
           key={imageButtonData[1].id}
           title={imageButtonData[1].title}
-          onPress={onPressRecommendedButton}
+          onPress={onPressSellButton}
         />
         <ImageButton
           key={imageButtonData[2].id}

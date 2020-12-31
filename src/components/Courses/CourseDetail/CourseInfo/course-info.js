@@ -37,6 +37,7 @@ const CourseInfo = (props) => {
     isDownloaded,
   } = React.useContext(AuthContext);
   const { getCourse, selectedCourse } = React.useContext(DataContext);
+  const [transcript, setTranscript] = useState("");
   const [isDownloadedCourse, setIsDownloadedCourse] = useState(
     isDownloaded(props.course.title)
   );
@@ -51,12 +52,12 @@ const CourseInfo = (props) => {
     //​
     const fetchData = async (id) => {
       try {
-        let res = await ApiServices.getCourseDetailWithLesson(id);
+        let res = await ApiServices.getCourseDetailWithLesson(id, token);
         let response = await res.json();
         if (response.payload !== undefined && response.payload !== null) {
           await setCourseDetail(response.payload);
           if (response.payload.promoVidUrl) {
-            props.onChangeVideo(response.payload.promoVidUrl);
+            props.onChangeVideo(response.payload.promoVidUrl, "");
           }
           if (
             response.payload.instructorName != undefined &&
@@ -105,6 +106,9 @@ const CourseInfo = (props) => {
   const onPressDescription = () => {
     setIsInContent(0);
   };
+  const onChangeTranscript = (text) => {
+    setTranscript(text);
+  }
   const onPressBookmark = () => {
     if (!user) {
       return;
@@ -294,14 +298,11 @@ const CourseInfo = (props) => {
 
       <View style={styles.contentView}>
         {isInContent == 0 ? (
-          <SectionDescription description={courseDetail.description} />
-        ) : isInContent == 1 ? (
-          <SectionContent content={courseDetail.section} />
-        ) : (
           <SectionDescription
             description={
-              courseDetail && courseDetail.subtitle
-                ? courseDetail.subtitle +
+              courseDetail
+                ? courseDetail.description +
+                  (courseDetail.subtitle ? "\n" + courseDetail.subtitle : "") +
                   (courseDetail.requirement
                     ? "\nRequirement:\n - " +
                       courseDetail.requirement.join("\n - ")
@@ -312,6 +313,14 @@ const CourseInfo = (props) => {
                 : ""
             }
           />
+        ) : isInContent == 1 ? (
+          <SectionContent
+            content={courseDetail.section}
+            onChangeVideo={props.onChangeVideo}
+            onChangeTranscript={onChangeTranscript}
+          />
+        ) : (
+          <SectionDescription description={transcript} />
         )}
       </View>
     </View>

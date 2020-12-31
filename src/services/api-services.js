@@ -10,6 +10,7 @@ const login = (email, password) => {
   return fetch("http://api.dev.letstudy.org/user/login", requestOptions);
 };
 const getFavoriteCourses = (token) => {
+  if (!token) token = "";
   const requestOptionsUser = {
     method: "GET",
     headers: {
@@ -23,6 +24,7 @@ const getFavoriteCourses = (token) => {
   );
 };
 const getProcessCourses = (token) => {
+  if (!token) token = "";
   const requestOptionsUser = {
     method: "GET",
     headers: {
@@ -137,6 +139,18 @@ const getTopRated = (limit, page) => {
   };
   return fetch("http://api.dev.letstudy.org/course/top-rate", requestOptions);
 };
+const loadRecommended = (token, user_id, limit, page) => {
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      accept: "application/json",
+      Authorization: token,
+    },
+  };
+  const url = `http://api.dev.letstudy.org/user/recommend-course/${user_id}/${limit}/${page}`;
+  return fetch(url, requestOptions);
+};
 const getAllCategory = () => {
   const requestOptions = {
     method: "GET",
@@ -145,6 +159,21 @@ const getAllCategory = () => {
     },
   };
   return fetch("http://api.dev.letstudy.org/category/all", requestOptions);
+};
+const getLessonSubtitle = (token, course_id, lesson_id) => {
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
+  };
+  const url = `http://api.dev.letstudy.org/lesson/subtitle/${course_id}/${lesson_id}`;
+  console.log(url);
+  return fetch(
+    url,
+    requestOptions
+  );
 };
 const getAllInstructor = () => {
   const requestOptions = {
@@ -196,7 +225,8 @@ const getCourseInfo = (id) => {
   );
 };
 const getCourseDetailWithLesson = (id, token) => {
-  const url = "http://api.dev.letstudy.org/course​/detail-with-lesson​/" + id;
+  const url = "http://api.dev.letstudy.org/course/detail-with-lesson/" + id;
+  console.log(url);
   const requestOptionsUser = {
     method: "GET",
     headers: {
@@ -217,10 +247,12 @@ const ApiServices = {
   getTopNew,
   getTopSell,
   getTopRated,
+  loadRecommended,
   getAllCategory,
   getAllInstructor,
   search,
   getCourseInfo,
   getCourseDetailWithLesson,
+  getLessonSubtitle,
 };
 export default ApiServices;

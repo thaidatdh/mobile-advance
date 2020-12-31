@@ -1,13 +1,46 @@
-import React, { useState } from "react";
-import {View, Dimensions, StyleSheet, Text, ScrollView } from 'react-native'
+import React, { useContext, useState } from "react";
+import {
+  View,
+  Dimensions,
+  StyleSheet,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-
-const {width, height} = Dimensions.get("window");
+import { AuthContext } from "../../../../../Contexts/AuthContextProvider";
+import ApiServices from "../../../../../services/api-services";
+const { width, height } = Dimensions.get("window");
 
 const ContentSubsection = (props) => {
+  const { token } = useContext(AuthContext);
+  const onClickLesson = async (item) => {
+    if (item.videoUrl) props.onChangeVideo(item.videoUrl, item.id);
+    let content = item.name;
+    if (item.content) {
+      content = content ? content + "\n" + item.captionName : item.captionName;
+    }
+    if (item.captionName) {
+      content = content ? content + "\n" + item.captionName : item.captionName;
+    }
+    const subtitle = await ApiServices.getLessonSubtitle(
+      token,
+      item.courseId,
+      item.id
+    );
+    if (subtitle && subtitle.payload) {
+      let contentSub = "Subtitle:\n" + subtitle.payload;
+      content = content ? content + "\n\n" + contentSub : contentSub;
+    }
+    props.onChangeTranscript(content);
+  };
   const renderListContent = (contents) => {
     return contents.map((item) => (
-      <View key={item.title} style={styles.item}>
+      <TouchableOpacity
+        key={item.title + item.id}
+        style={styles.item}
+        onPress={() => onClickLesson(item)}
+      >
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <View
             style={{
@@ -21,9 +54,9 @@ const ContentSubsection = (props) => {
           <Text style={{ color: "white" }}>{item.name}</Text>
         </View>
         <Text style={{ color: "white" }}>{item.hours.toFixed(2)}</Text>
-      </View>
+      </TouchableOpacity>
     ));
-  }
+  };
   return (
     <View style={{ width: width, marginBottom: 20, alignItems: "center" }}>
       <View
@@ -54,7 +87,7 @@ const ContentSubsection = (props) => {
           <Text
             style={{
               color: "white",
-              width: width * 0.9,
+              width: width * 0.7,
               paddingLeft: 20,
               alignSelf: "center",
             }}
@@ -75,12 +108,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#0E0F13",
   },
   item: {
-    flexDirection: 'row',
-    alignItems:'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingTop: 10,
     paddingBottom: 10,
-  }
+  },
 });
 
 export default ContentSubsection;

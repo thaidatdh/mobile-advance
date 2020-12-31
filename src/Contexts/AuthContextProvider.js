@@ -49,7 +49,7 @@ export default ({ children }) => {
   };
   const login = async (email, password) => {
     try {
-      let resLogin = await ApiServices.login(email, password);
+      let resLogin = await ApiServices.login(email, password).then();
       let responseLogin = await resLogin.json();
       if (responseLogin.error || responseLogin.message != "OK") {
         return responseLogin.message;
@@ -58,8 +58,20 @@ export default ({ children }) => {
       await setToken("Bearer " + responseLogin.token);
       await PhoneStorage.save("@token", "Bearer " + responseLogin.token);
       await PhoneStorage.save("@user", JSON.stringify(responseLogin.userInfo));
-      getFavoriteCourses();
-      getProcessCourses();
+      ApiServices.getFavoriteCourses("Bearer " + responseLogin.token)
+        .then((resBookmark) => resBookmark.json())
+        .then((responseBookmark) => {
+          if (responseBookmark.payload !== undefined)
+            setBookmark(responseBookmark.payload);
+        })
+        .catch((err) => console.log(err));
+      ApiServices.getProcessCourses("Bearer " + responseLogin.token)
+        .then((resProcess) => resProcess.json())
+        .then((responseProcess) => {
+          if (responseProcess.payload !== undefined)
+            setChannel(responseProcess.payload);
+        })
+        .catch((err) => console.log(err));
     } catch (err) {
       return err.message;
     }
@@ -96,7 +108,10 @@ export default ({ children }) => {
             .then((responseBookmark) => {
               if (responseBookmark.payload !== undefined)
                 setBookmark(responseBookmark.payload);
-              else logout();
+              else {
+                console.log("error load fav");
+                logout();
+              }
             })
             .catch((err) => console.log(err));
           ApiServices.getProcessCourses(tokenValue)
@@ -104,7 +119,10 @@ export default ({ children }) => {
             .then((responseProcess) => {
               if (responseProcess.payload !== undefined)
                 setChannel(responseProcess.payload);
-              else logout();
+              else {
+                console.log("error load pro");
+                logout();
+              }
             })
             .catch((err) => console.log(err));
         } catch (err) {

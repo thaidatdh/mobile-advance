@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Image,
   View,
@@ -15,6 +15,7 @@ import { AuthContext } from "../../../../Contexts/AuthContextProvider";
 const { width, height } = Dimensions.get("window");
 const ListCourseItem = (props) => {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
+  const [authors, setAuthors] = useState(props.author);
   const {
     user,
     addBookmark,
@@ -73,6 +74,25 @@ const ListCourseItem = (props) => {
   const onRemoveChannel = () => {
     //removeChannel(props.item);
   };
+  useEffect(() => {
+    //​
+    const fetchDataAuth = async (id) => {
+      try {
+        let res = await ApiServices.getInstructorDetail(id);
+        let response = await res.json();
+        if (response.payload !== undefined) {
+          await setAuthors(response.payload.name);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    if (
+      (authors === null || authors === undefined || authors === "") &&
+      props.item.instructorId
+    )
+      fetchDataAuth(props.item.instructorId);
+  }, []);
   return (
     <TouchableOpacity
       style={styles.item}
@@ -97,7 +117,7 @@ const ListCourseItem = (props) => {
             ? props.item.name
             : props.item.instructorName
             ? props.item.instructorName
-            : props.author}
+            : authors}
         </Text>
         <Text style={styles.darkText}>
           {props.item.status ? props.item.status + " - " : ""}

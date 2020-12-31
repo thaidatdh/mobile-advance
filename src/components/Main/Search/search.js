@@ -31,7 +31,7 @@ const Search = ({navigation}) => {
     navigation.navigate("Author", { author: author });
   }
   const onPressSeeAllCourse = (courses) => {
-    navigation.navigate("List Courses", { courses: courses, title: "Search" });
+    navigation.navigate("List Courses", { courses: courses, title: searchValue });
   }
   const onPressSeeAllAuthor = (authors) => {
     navigation.navigate("List Authors", { authors: authors, title: "Search" });
