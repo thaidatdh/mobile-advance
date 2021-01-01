@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import {
   Dimensions,
   Image,
+  Platform,
   SafeAreaView,
   StatusBar,
   StyleSheet,
@@ -10,11 +11,14 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { ScrollView } from "react-native-gesture-handler";
 import { Button, TextInput } from "react-native-paper";
 import { AuthContext } from "../../../Contexts/AuthContextProvider";
 import ApiServices from "../../../services/api-services";
 import ProfileContentSecion from "./profile-content-section";
+import ImagePickerService from "../../../services/image-picker-service";
+import ImgurApiService from "../../../services/imgur-api-service";
 const { width, height } = Dimensions.get("window");
 
 const Profile = ({ navigation }) => {
@@ -44,7 +48,7 @@ const Profile = ({ navigation }) => {
   ];
   const { user, token, setUser } = React.useContext(AuthContext);
   const [username, setUsername] = useState(user.username);
-   const [type, setType] = useState(user.type);
+  const [type, setType] = useState(user.type);
   const [avatar, setAvatar] = useState(user.avatar);
   const [email, setEmail] = useState(user.email);
   const [name, setName] = useState(user.name);
@@ -52,6 +56,7 @@ const Profile = ({ navigation }) => {
   const [errorCode, setErrorCode] = useState("");
   const [errorCodeEmail, setErrorCodeEmail] = useState("");
   const [errorCodePwd, setErrorCodePwd] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [isEditEmail, setIsEditEmail] = useState(false);
   const [isEditPwd, setIsEditPwd] = useState(false);
   const [password, setPassword] = useState("");
@@ -61,21 +66,23 @@ const Profile = ({ navigation }) => {
   const [isUpdated, setIsUpdated] = useState(false);
   const onUpdate = () => {
     setIsUpdated(!isUpdated);
-  }
+  };
   useEffect(() => {
     onUpdate();
   }, []);
   useEffect(() => {
-    ApiServices.getUserInfo(token).then(res => res.json()).then(response => {
-      if (response.payload) {
-        setUser(response.payload);
-        setAvatar(response.payload.avatar);
-        setEmail(response.payload.email);
-        setName(response.payload.name);
-        setPhone(response.payload.phone);
-        setType(response.payload.type);
-      }
-    })
+    ApiServices.getUserInfo(token)
+      .then((res) => res.json())
+      .then((response) => {
+        if (response.payload) {
+          setUser(response.payload);
+          setAvatar(response.payload.avatar);
+          setEmail(response.payload.email);
+          setName(response.payload.name);
+          setPhone(response.payload.phone);
+          setType(response.payload.type);
+        }
+      });
   }, [isUpdated]);
   const validateEmail = (email) => {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -104,21 +111,29 @@ const Profile = ({ navigation }) => {
           setUser(response.payload);
           setErrorCode("");
           onUpdate();
+          setSuccessMessage("Updated user info successfully");
         } else {
           setErrorCode("Update failed");
+          setSuccessMessage("");
         }
       })
-      .catch((err) => setErrorCode(err.message));
+      .catch((err) => {
+        setErrorCode(err.message);
+        setSuccessMessage("");
+      });
   };
   const onEmailChange = async () => {
     if (email.length == 0) {
       setErrorCodeEmail(errorValue[0]);
+      setSuccessMessage("");
       return;
     } else if (!validateEmail(email)) {
       setErrorCodeEmail(errorValue[1]);
+      setSuccessMessage("");
       return;
     } else if (email == user.email) {
       setErrorCodeEmail("Please enter different email to change email");
+      setSuccessMessage("");
       return;
     }
     let data = {
@@ -131,18 +146,25 @@ const Profile = ({ navigation }) => {
           setUser(newUser);
           setErrorCodeEmail("");
           onUpdate();
+          setSuccessMessage("Updated email successfully");
         } else {
           setErrorCodeEmail("Email đã tồn tại");
+          setSuccessMessage("");
         }
       })
-      .catch((err) => setErrorCodeEmail(err.message));
+      .catch((err) => {
+        setErrorCodeEmail(err.message);
+        setSuccessMessage("");
+      });
   };
   const onPasswordChange = async () => {
     if (password.length == 0 || password.length == 0) {
       setErrorCodePwd(errorValue[0]);
+      setSuccessMessage("");
       return;
     } else if (password == newPassword) {
       setErrorCodePwd("Please enter different password");
+      setSuccessMessage("");
       return;
     }
     let data = {
@@ -156,13 +178,50 @@ const Profile = ({ navigation }) => {
           setErrorCodePwd(
             "Mật khẩu cũ không đúng\nhoặc không giống mật khẩu mới"
           );
-        }
-        else {
+          setSuccessMessage("");
+        } else {
           setErrorCodePwd("");
           onUpdate();
+          setSuccessMessage("Updated password successfully");
         }
       })
-      .catch((err) => setErrorCodePwd(err.message));
+      .catch((err) => {
+        setErrorCodePwd(err.message);
+        setSuccessMessage("");
+      });
+  };
+  const onSelectImage = async () => {
+    try {
+      if (Platform.OS !== "web") {
+        const { status } = await ImagePickerService.requestPermission();
+        if (status !== "granted") {
+          alert("Sorry, we need permissions to make this work!");
+          return;
+        }
+      }
+      const result = await ImagePickerService.loadImage();
+      if (!result.cancelled) {
+        //selected
+        const base64Image = result.base64;
+        const uploadRes = await ImgurApiService.uploadImage(base64Image);
+        const uploadResult = await uploadRes.json();
+        if (
+          uploadResult.success &&
+          uploadResult.data &&
+          uploadResult.data.link
+        ) {
+          setAvatar(uploadResult.data.link);
+          setErrorCode("");
+        } else {
+          setErrorCode("Upload Image failed!");
+          setSuccessMessage("");
+        }
+      }
+    } catch (err) {
+      setErrorCode(err.message);
+      setSuccessMessage("");
+      console.log(err);
+    }
   };
   const themeTextInput = {
     colors: {
@@ -187,7 +246,7 @@ const Profile = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
       <View style={styles.headerContainer}>
-        <Image source={{ uri: user.avatar }} style={styles.image} />
+        <Image source={{ uri: avatar }} style={styles.image} />
         <View style={styles.nameView}>
           <Text style={styles.name}>{user.name}</Text>
           <Text style={styles.userType}>{user.type}</Text>
@@ -205,6 +264,22 @@ const Profile = ({ navigation }) => {
         contentContainerStyle={{ justifyContent: "center" }}
       >
         <View style={{ margin: 20 }} />
+        {successMessage != "" ? (
+          <Text
+            style={{ color: "green", textAlign: "center", marginBottom: 10 }}
+          >
+            {successMessage}
+          </Text>
+        ) : null}
+        <TouchableOpacity
+          style={{ ...styles.signOnSSOBtn, flexDirection: "row", padding: 5 }}
+          onPress={onSelectImage}
+        >
+          <FontAwesome5Icon name="upload" color="white" />
+          <Text style={{ ...styles.buttonText, marginLeft: 10 }}>
+            Select Avatar
+          </Text>
+        </TouchableOpacity>
         <TextInput
           style={styles.input}
           label="Full Name"
@@ -220,7 +295,7 @@ const Profile = ({ navigation }) => {
           onChangeText={(text) => setPhone(text)}
         />
         {errorCode != "" ? (
-          <Text style={{ color: "red" }}>{errorCode}</Text>
+          <Text style={{ color: "red", textAlign: "center" }}>{errorCode}</Text>
         ) : null}
         <TouchableOpacity style={styles.signInBtn} onPress={onUpdateProfile}>
           <Text style={styles.buttonText}>Update</Text>
@@ -242,7 +317,9 @@ const Profile = ({ navigation }) => {
               onChangeText={(text) => setEmail(text)}
             />
             {errorCodeEmail != "" ? (
-              <Text style={{ color: "red" }}>{errorCodeEmail}</Text>
+              <Text style={{ color: "red", textAlign: "center" }}>
+                {errorCodeEmail}
+              </Text>
             ) : null}
             <TouchableOpacity style={styles.signInBtn} onPress={onEmailChange}>
               <Text style={styles.buttonText}>Update Email</Text>
@@ -319,7 +396,9 @@ const Profile = ({ navigation }) => {
               }
             />
             {errorCodePwd != "" ? (
-              <Text style={{ color: "red" }}>{errorCodePwd}</Text>
+              <Text style={{ color: "red", textAlign: "center" }}>
+                {errorCodePwd}
+              </Text>
             ) : null}
             <TouchableOpacity
               style={styles.signInBtn}
