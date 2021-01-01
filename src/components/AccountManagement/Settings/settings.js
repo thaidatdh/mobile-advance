@@ -81,6 +81,7 @@ const Setting = ({ navigation }) => {
           <Image source={{ uri: user.avatar }} style={styles.image} />
           <View style={styles.nameView}>
             <Text style={styles.name}>{user.name}</Text>
+            <Text style={styles.username}>{user.type}</Text>
             <Text style={styles.username}>{user.email}</Text>
           </View>
         </View>

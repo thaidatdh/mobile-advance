@@ -1,18 +1,23 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
+import { useEffect } from "react";
 import {
-  Text,
-  View,
-  StyleSheet,
-  Image,
   Dimensions,
+  Image,
   SafeAreaView,
-  StatusBar
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import ProfileContentSecion from "./profile-content-section";
+import { ScrollView } from "react-native-gesture-handler";
+import { Button, TextInput } from "react-native-paper";
 import { AuthContext } from "../../../Contexts/AuthContextProvider";
+import ApiServices from "../../../services/api-services";
+import ProfileContentSecion from "./profile-content-section";
 const { width, height } = Dimensions.get("window");
 
-const Profile = ({navigation}) => {
+const Profile = ({ navigation }) => {
   const sections = [
     {
       title: "total active days",
@@ -30,8 +35,144 @@ const Profile = ({navigation}) => {
       subValue: "",
     },
   ];
-  const { user } = React.useContext(AuthContext);
-
+  const errorValue = [
+    "Please enter required fields (*)",
+    "Email is not valid",
+    "Password should include atleast 8 characters",
+    "Repeat Password is incorrect",
+    "Username already exists",
+  ];
+  const { user, token, setUser } = React.useContext(AuthContext);
+  const [username, setUsername] = useState(user.username);
+   const [type, setType] = useState(user.type);
+  const [avatar, setAvatar] = useState(user.avatar);
+  const [email, setEmail] = useState(user.email);
+  const [name, setName] = useState(user.name);
+  const [phone, setPhone] = useState(user.phone);
+  const [errorCode, setErrorCode] = useState("");
+  const [errorCodeEmail, setErrorCodeEmail] = useState("");
+  const [errorCodePwd, setErrorCodePwd] = useState("");
+  const [isEditEmail, setIsEditEmail] = useState(false);
+  const [isEditPwd, setIsEditPwd] = useState(false);
+  const [password, setPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [secureTextEntry, setSecureTextEntry] = useState(true);
+  const [secureTextEntryNew, setSecureTextEntryNew] = useState(true);
+  const [isUpdated, setIsUpdated] = useState(false);
+  const onUpdate = () => {
+    setIsUpdated(!isUpdated);
+  }
+  useEffect(() => {
+    onUpdate();
+  }, []);
+  useEffect(() => {
+    ApiServices.getUserInfo(token).then(res => res.json()).then(response => {
+      if (response.payload) {
+        setUser(response.payload);
+        setAvatar(response.payload.avatar);
+        setEmail(response.payload.email);
+        setName(response.payload.name);
+        setPhone(response.payload.phone);
+        setType(response.payload.type);
+      }
+    })
+  }, [isUpdated]);
+  const validateEmail = (email) => {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+  };
+  const updateSecureTextEntry = () => {
+    setSecureTextEntry(!secureTextEntry);
+  };
+  const updateSecureTextEntryRepeat = () => {
+    setSecureTextEntryNew(!secureTextEntryNew);
+  };
+  const onUpdateProfile = async () => {
+    if (phone.length == 0) {
+      setErrorCode(errorValue[0]);
+      return;
+    }
+    let data = {
+      avatar: avatar,
+      phone: phone,
+      name: name,
+    };
+    ApiServices.updateProfile(token, data)
+      .then((res) => res.json())
+      .then((response) => {
+        if (response.payload) {
+          setUser(response.payload);
+          setErrorCode("");
+          onUpdate();
+        } else {
+          setErrorCode("Update failed");
+        }
+      })
+      .catch((err) => setErrorCode(err.message));
+  };
+  const onEmailChange = async () => {
+    if (email.length == 0) {
+      setErrorCodeEmail(errorValue[0]);
+      return;
+    } else if (!validateEmail(email)) {
+      setErrorCodeEmail(errorValue[1]);
+      return;
+    } else if (email == user.email) {
+      setErrorCodeEmail("Please enter different email to change email");
+      return;
+    }
+    let data = {
+      newEmail: email,
+    };
+    ApiServices.updateEmail(token, data)
+      .then((res) => {
+        if (res.ok) {
+          const newUser = Object.assign(user, { email: email });
+          setUser(newUser);
+          setErrorCodeEmail("");
+          onUpdate();
+        } else {
+          setErrorCodeEmail("Email đã tồn tại");
+        }
+      })
+      .catch((err) => setErrorCodeEmail(err.message));
+  };
+  const onPasswordChange = async () => {
+    if (password.length == 0 || password.length == 0) {
+      setErrorCodePwd(errorValue[0]);
+      return;
+    } else if (password == newPassword) {
+      setErrorCodePwd("Please enter different password");
+      return;
+    }
+    let data = {
+      id: user.id,
+      oldPass: password,
+      newPass: newPassword,
+    };
+    ApiServices.changePassword(token, data)
+      .then((res) => {
+        if (!res.ok) {
+          setErrorCodePwd(
+            "Mật khẩu cũ không đúng\nhoặc không giống mật khẩu mới"
+          );
+        }
+        else {
+          setErrorCodePwd("");
+          onUpdate();
+        }
+      })
+      .catch((err) => setErrorCodePwd(err.message));
+  };
+  const themeTextInput = {
+    colors: {
+      placeholder: "#b4b5ba",
+      text: "white",
+      primary: "#2384ae",
+      underlineColor: "#2384ae",
+      background: "#1f242a",
+    },
+  };
   const createSections = () => {
     return sections.map((item) => (
       <ProfileContentSecion
@@ -48,15 +189,148 @@ const Profile = ({navigation}) => {
       <View style={styles.headerContainer}>
         <Image source={{ uri: user.avatar }} style={styles.image} />
         <View style={styles.nameView}>
-          <Text style={styles.name}>{user.email}</Text>
+          <Text style={styles.name}>{user.name}</Text>
+          <Text style={styles.userType}>{user.type}</Text>
+          <Text style={styles.email}>{user.email}</Text>
         </View>
       </View>
-      <View style={{ margin: 20 }}>
+      {/*<View style={{ margin: 20 }}>
         <Text style={styles.recentActivity}>
           Activity insights (last 30 days)
         </Text>
         {createSections()}
-      </View>
+  </View>*/}
+      <ScrollView
+        horizontal={false}
+        contentContainerStyle={{ justifyContent: "center" }}
+      >
+        <View style={{ margin: 20 }} />
+        <TextInput
+          style={styles.input}
+          label="Full Name"
+          theme={themeTextInput}
+          value={name}
+          onChangeText={(text) => setName(text)}
+        />
+        <TextInput
+          style={styles.input}
+          label="Phone *"
+          theme={themeTextInput}
+          value={phone}
+          onChangeText={(text) => setPhone(text)}
+        />
+        {errorCode != "" ? (
+          <Text style={{ color: "red" }}>{errorCode}</Text>
+        ) : null}
+        <TouchableOpacity style={styles.signInBtn} onPress={onUpdateProfile}>
+          <Text style={styles.buttonText}>Update</Text>
+        </TouchableOpacity>
+        {!isEditEmail ? (
+          <Button
+            style={styles.signOnSSOBtn}
+            onPress={() => setIsEditEmail(true)}
+          >
+            <Text style={styles.buttonTextBlue}>Update Email</Text>
+          </Button>
+        ) : (
+          <View>
+            <TextInput
+              style={styles.input}
+              label="Email *"
+              theme={themeTextInput}
+              value={email}
+              onChangeText={(text) => setEmail(text)}
+            />
+            {errorCodeEmail != "" ? (
+              <Text style={{ color: "red" }}>{errorCodeEmail}</Text>
+            ) : null}
+            <TouchableOpacity style={styles.signInBtn} onPress={onEmailChange}>
+              <Text style={styles.buttonText}>Update Email</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+        {!isEditPwd ? (
+          <Button
+            style={styles.signOnSSOBtn}
+            onPress={() => setIsEditPwd(true)}
+          >
+            <Text style={styles.buttonTextBlue}>Update Password</Text>
+          </Button>
+        ) : (
+          <View>
+            <TextInput
+              style={styles.input}
+              label="Current Password"
+              theme={themeTextInput}
+              secureTextEntry={secureTextEntry}
+              value={password}
+              onChangeText={(text) => setPassword(text)}
+              right={
+                secureTextEntry ? (
+                  <TextInput.Icon
+                    style={{ alignSelf: "center", flexDirection: "column" }}
+                    onPress={updateSecureTextEntry}
+                    name="eye-off"
+                    color="grey"
+                    centered={true}
+                    size={20}
+                    solid
+                  />
+                ) : (
+                  <TextInput.Icon
+                    style={{ flexDirection: "column", alignSelf: "center" }}
+                    onPress={updateSecureTextEntry}
+                    name="eye"
+                    color="grey"
+                    size={20}
+                    solid
+                  />
+                )
+              }
+            />
+            <TextInput
+              style={styles.input}
+              label="New Password"
+              theme={themeTextInput}
+              secureTextEntry={secureTextEntryNew}
+              value={newPassword}
+              onChangeText={(text) => setNewPassword(text)}
+              right={
+                secureTextEntryNew ? (
+                  <TextInput.Icon
+                    style={{ alignSelf: "center", flexDirection: "column" }}
+                    onPress={updateSecureTextEntryRepeat}
+                    name="eye-off"
+                    color="grey"
+                    centered={true}
+                    size={20}
+                    solid
+                  />
+                ) : (
+                  <TextInput.Icon
+                    style={{ flexDirection: "column", alignSelf: "center" }}
+                    onPress={updateSecureTextEntryRepeat}
+                    name="eye"
+                    color="grey"
+                    size={20}
+                    solid
+                  />
+                )
+              }
+            />
+            {errorCodePwd != "" ? (
+              <Text style={{ color: "red" }}>{errorCodePwd}</Text>
+            ) : null}
+            <TouchableOpacity
+              style={styles.signInBtn}
+              onPress={onPasswordChange}
+            >
+              <Text style={styles.buttonText}>Update Password</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+        <View style={{ margin: 20 }} />
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -64,6 +338,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#0E0F13",
+    justifyContent: "center",
+    alignItems: "center",
+    alignContent: "center",
   },
   headerContainer: {
     flexDirection: "row",
@@ -76,7 +353,50 @@ const styles = StyleSheet.create({
     height: width * 0.15,
     alignSelf: "center",
   },
+  buttonText: {
+    color: "white",
+    fontSize: 11,
+    textTransform: "uppercase",
+    fontWeight: "bold",
+  },
+  buttonTextBlue: {
+    color: "white",
+    fontSize: 11,
+    textTransform: "uppercase",
+    color: "#2384ae",
+    fontWeight: "bold",
+  },
+  signInBtn: {
+    borderRadius: 5,
+    width: width * 0.8,
+    height: height * 0.05,
+    backgroundColor: "#2384ae",
+    color: "#818286",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  signOnSSOBtn: {
+    width: width * 0.8,
+    backgroundColor: "#0E0F13",
+    borderRadius: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    borderColor: "#2384ae",
+    borderWidth: 2,
+    marginBottom: 10,
+  },
+  input: {
+    flex: 1,
+    width: width * 0.8,
+    color: "white",
+    backgroundColor: "#1f242a",
+    margin: width * 0.01,
+  },
   name: { color: "white", fontSize: width * 0.05 },
+  email: { color: "gray", fontSize: width * 0.03 },
+  userType: { color: "gray", fontSize: width * 0.03 },
   image: {
     height: width * 0.15,
     width: width * 0.15,

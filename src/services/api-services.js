@@ -226,7 +226,6 @@ const getCourseInfo = (id) => {
 };
 const getCourseDetailWithLesson = (id, token) => {
   const url = "http://api.dev.letstudy.org/course/detail-with-lesson/" + id;
-  console.log(url);
   const requestOptionsUser = {
     method: "GET",
     headers: {
@@ -235,6 +234,58 @@ const getCourseDetailWithLesson = (id, token) => {
     },
   };
   return fetch(url, requestOptionsUser);
+};
+const getUserInfo = (token) => {
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
+  };
+  return fetch(
+    "http://api.dev.letstudy.org/user/me",
+    requestOptions
+  );
+};
+const changePassword = (token, data) => {
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
+    body: JSON.stringify(data)
+  };
+  return fetch("http://api.dev.letstudy.org/user/change-password", requestOptions);
+};
+const updateProfile = (token, data) => {
+  const requestOptions = {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
+    body: JSON.stringify(data),
+  };
+  return fetch(
+    "http://api.dev.letstudy.org/user/update-profile",
+    requestOptions
+  );
+};
+const updateEmail = (token, data) => {
+  const requestOptions = {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
+    body: JSON.stringify(data),
+  };
+  return fetch(
+    "http://api.dev.letstudy.org/user/change-user-email",
+    requestOptions
+  );
 };
 const ApiServices = {
   login,
@@ -254,5 +305,9 @@ const ApiServices = {
   getCourseInfo,
   getCourseDetailWithLesson,
   getLessonSubtitle,
+  getUserInfo,
+  changePassword,
+  updateProfile,
+  updateEmail,
 };
 export default ApiServices;

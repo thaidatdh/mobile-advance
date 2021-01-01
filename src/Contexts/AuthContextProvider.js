@@ -252,6 +252,7 @@ export default ({ children }) => {
     isChanneled,
     isDownloaded,
     loadPersistUserData,
+    setUser,
   };
 
   return <AuthContext.Provider value={store}>{children}</AuthContext.Provider>;
