@@ -13,6 +13,7 @@ import { Video } from "expo-av";
 import { WebView } from "react-native-webview";
 import CourseInfo from "./CourseInfo/course-info";
 import { DataContext } from "../../../Contexts/DataContextProvider";
+import ApiServices from "../../../services/api-services";
 const { width, height } = Dimensions.get("window");
 
 const CourseDetail = ({ navigation, route }) => {
@@ -25,15 +26,23 @@ const CourseDetail = ({ navigation, route }) => {
     navigation.setOptions({ title: route.params.course.title });
   }, []);
   useEffect(() => {
-    setVideoUrl(route.params.course.promoVidUrl);
-    setCourseDetail(route.params.course);
-    const fetchData = async (title) => {
-      await getSearchCourses(title);
-      if (searchCourses.length > 0) {
-        setCourseDetail(searchCourses[0]);
+    const fetchData = async (id) => {
+      try {
+        let res = await ApiServices.getCourseDetails(id);
+        let response = await res.json();
+        if (response.payload !== undefined && response.payload !== null) {
+          await setCourseDetail(response.payload);
+          if (response.payload.promoVidUrl) {
+            setVideoUrl(response.payload.promoVidUrl, "");
+          }
+        }
+      } catch (err) {
+        console.log(err);
       }
     };
-    fetchData(route.params.course.title);
+    setVideoUrl(route.params.course.promoVidUrl);
+    setCourseDetail(route.params.course);
+    fetchData(route.params.course.id);
   }, []);
   const onChangeVideo = (url, lession_id) => {
     setVideoUrl(url);

@@ -168,7 +168,7 @@ const Profile = ({ navigation }) => {
       return;
     }
     let data = {
-      id: user.id,
+      id: user ? user.id : "",
       oldPass: password,
       newPass: newPassword,
     };

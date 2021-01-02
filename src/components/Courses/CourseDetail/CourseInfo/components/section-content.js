@@ -1,10 +1,11 @@
 import React, { useState } from "react";
+import { useEffect } from "react";
 import { View, Dimensions, StyleSheet, Text, ScrollView } from "react-native";
 import ContentSubsection from "./content-subsection";
 
 const { width, height } = Dimensions.get("window");
 
-const SectionDescription = (props) => {
+const SectionContent = (props) => {
   const data_mock = [
     {
       id: 1,
@@ -115,4 +116,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SectionDescription;
+export default SectionContent;

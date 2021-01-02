@@ -6,15 +6,49 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import { AuthContext } from "../../../../../Contexts/AuthContextProvider";
 import ApiServices from "../../../../../services/api-services";
+import NetInfo from "@react-native-community/netinfo";
 const { width, height } = Dimensions.get("window");
 
 const ContentSubsection = (props) => {
   const { token } = useContext(AuthContext);
   const onClickLesson = async (item) => {
+    const internetState = await NetInfo.fetch();
+    if (
+      !internetState.isInternetReachable &&
+      item.videoUrl.includes("youtube.com")
+    ) {
+      Alert.alert(
+        "Internet",
+        "Cannot see this video because it's a online section.",
+        [
+          {
+            text: "OK",
+            onPress: () => {},
+          },
+        ],
+        { cancelable: true }
+      );
+      return;
+    }
+    if (!item.videoUrl) {
+      Alert.alert(
+        "Video not found",
+        "Video link is null",
+        [
+          {
+            text: "OK",
+            onPress: () => {},
+          },
+        ],
+        { cancelable: true }
+      );
+      return;
+    }
     if (item.videoUrl) props.onChangeVideo(item.videoUrl, item.id);
     let content = item.name;
     if (item.content) {
@@ -53,7 +87,7 @@ const ContentSubsection = (props) => {
           ></View>
           <Text style={{ color: "white" }}>{item.name}</Text>
         </View>
-        <Text style={{ color: "white" }}>{item.hours.toFixed(2)}</Text>
+        <Text style={{ color: "white" }}>{item.hours.toFixed(3)}</Text>
       </TouchableOpacity>
     ));
   };

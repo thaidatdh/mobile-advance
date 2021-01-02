@@ -235,6 +235,16 @@ const getCourseDetailWithLesson = (id, token) => {
   };
   return fetch(url, requestOptionsUser);
 };
+const getCourseDetails = (id) => {
+  const url = `http://api.dev.letstudy.org/course/get-course-detail/${id}/${id}`;
+  const requestOptionsUser = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  return fetch(url, requestOptionsUser);
+};
 const getUserInfo = (token) => {
   const requestOptions = {
     method: "GET",
@@ -304,6 +314,7 @@ const ApiServices = {
   search,
   getCourseInfo,
   getCourseDetailWithLesson,
+  getCourseDetails,
   getLessonSubtitle,
   getUserInfo,
   changePassword,

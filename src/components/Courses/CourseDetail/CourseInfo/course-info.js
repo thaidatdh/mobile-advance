@@ -13,6 +13,7 @@ import { Button } from "react-native-paper";
 import ActionButton from "./components/action-button";
 import AuthorTag from "./components/author-tag";
 import SectionContent from "./components/section-content";
+import SectionRating from "./components/section-rating";
 import SectionDescription from "./components/section-description";
 import { AuthContext } from "../../../../Contexts/AuthContextProvider";
 import { DataContext } from "../../../../Contexts/DataContextProvider";
@@ -49,35 +50,8 @@ const CourseInfo = (props) => {
   );
   const [courseDetail, setCourseDetail] = useState(props.course);
   useEffect(() => {
-    //​
-    const fetchData = async (id) => {
-      try {
-        let res = await ApiServices.getCourseDetailWithLesson(id, token);
-        let response = await res.json();
-        if (response.payload !== undefined && response.payload !== null) {
-          await setCourseDetail(response.payload);
-          if (response.payload.promoVidUrl) {
-            props.onChangeVideo(response.payload.promoVidUrl, "");
-          }
-          if (
-            response.payload.instructorName != undefined &&
-            response.payload.instructorName != null &&
-            response.payload.instructorName != ""
-          )
-            await setAuthors(response.payload.instructorName);
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    const getData = async (id) => {
-      let data = await getCourse(id);
-      if (data) setCourseDetail(data);
-    };
-    getData(props.course.id);
-    fetchData(props.course.id);
     if (authors === undefined || authors == null || authors == "") {
-      setAuthors(props.course.instructorName);
+      if (props.course.instructor) setAuthors(props.course.instructor.name);
     }
   }, []);
   useEffect(() => {
@@ -94,6 +68,9 @@ const CourseInfo = (props) => {
       }
     };
     setAuthors(props.course["instructor.user.name"]);
+    if (props.course.instructor) {
+      setAuthors(props.course.instructor.name);
+    }
     if (authors === null || authors === undefined || authors === "")
       fetchDataAuth(props.course.instructorId);
   }, []);
@@ -106,9 +83,12 @@ const CourseInfo = (props) => {
   const onPressDescription = () => {
     setIsInContent(0);
   };
+  const onPressRating = () => {
+    setIsInContent(3);
+  };
   const onChangeTranscript = (text) => {
     setTranscript(text);
-  }
+  };
   const onPressBookmark = () => {
     if (!user) {
       return;
@@ -192,15 +172,13 @@ const CourseInfo = (props) => {
               paddingLeft: 10,
             }}
           >
-            {courseDetail.ratedNumber
-              ? courseDetail.ratedNumber
-              : courseDetail.courseAveragePoint}
+            {courseDetail.averagePoint
+              ? courseDetail.averagePoint
+              : courseDetail.contentPoint}
           </Text>
           <Text style={{ color: "lightgray", fontSize: 12 }}>
-            {courseDetail.ratedNumber
+            {courseDetail.ratedNumber != undefined
               ? "(" + courseDetail.ratedNumber + ")"
-              : courseDetail.courseSoldNumber
-              ? "(" + courseDetail.courseSoldNumber + ")"
               : ""}
           </Text>
         </View>
@@ -244,8 +222,9 @@ const CourseInfo = (props) => {
         </View>
       </View>
 
-      <View
-        style={{
+      <ScrollView
+        horizontal={true}
+        contentContainerStyle={{
           height: height * 0.05,
           backgroundColor: "#1f242a",
           flexDirection: "row",
@@ -253,6 +232,7 @@ const CourseInfo = (props) => {
         }}
       >
         <TouchableOpacity
+          key="course_description"
           style={
             isInContent != 0 ? styles.buttonSwitch : styles.buttonSwitchSelected
           }
@@ -267,6 +247,22 @@ const CourseInfo = (props) => {
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
+          key="course_rating"
+          style={
+            isInContent != 3 ? styles.buttonSwitch : styles.buttonSwitchSelected
+          }
+          onPress={onPressRating}
+        >
+          <Text
+            style={
+              isInContent != 3 ? styles.buttonText : styles.buttonTextSelect
+            }
+          >
+            Ratings
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          key="course_section"
           style={
             isInContent != 1 ? styles.buttonSwitch : styles.buttonSwitchSelected
           }
@@ -281,6 +277,7 @@ const CourseInfo = (props) => {
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
+          key="course_transcript"
           style={
             isInContent != 2 ? styles.buttonSwitch : styles.buttonSwitchSelected
           }
@@ -294,7 +291,7 @@ const CourseInfo = (props) => {
             Transcript
           </Text>
         </TouchableOpacity>
-      </View>
+      </ScrollView>
 
       <View style={styles.contentView}>
         {isInContent == 0 ? (
@@ -315,12 +312,14 @@ const CourseInfo = (props) => {
           />
         ) : isInContent == 1 ? (
           <SectionContent
-            content={courseDetail.section}
+            content={props.course.section}
             onChangeVideo={props.onChangeVideo}
             onChangeTranscript={onChangeTranscript}
           />
-        ) : (
+        ) : isInContent == 2 ? (
           <SectionDescription description={transcript} />
+        ) : (
+          <SectionRating content={props.course.ratings} />
         )}
       </View>
     </View>

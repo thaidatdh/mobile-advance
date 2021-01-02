@@ -7,30 +7,31 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
-import {DataContext} from "../../../../../Contexts/DataContextProvider"
+import { DataContext } from "../../../../../Contexts/DataContextProvider";
+import ApiServices from "../../../../../services/api-services";
 const { width, height } = Dimensions.get("window");
-const SectionCourseItem = ({onPress, item}) => {
+const SectionCourseItem = ({ onPress, item }) => {
   const star = require("../../../../../../assets/star-rating.png");
   const [courseData, setCourseData] = useState(item);
-  const [instructorName, setInstructorName] = useState('');
+  const [instructorName, setInstructorName] = useState("");
   const { getCourse, selectedCourse, authors } = useContext(DataContext);
   useEffect(() => {
-    const getData = async(id) => {
-      let data = await getCourse(id);
-      if (data) {
-        await setCourseData(data);
-        let author = authors.find((n) => n.id == data.instructorId);
-        if (author) {
-          setInstructorName(author["user.name"]);
+    const fetchData = async (id) => {
+      try {
+        let res = await ApiServices.getCourseDetails(id);
+        let response = await res.json();
+        if (response.payload !== undefined && response.payload !== null) {
+          await setCourseData(response.payload);
+          if (response.payload.instructor) {
+            await setInstructorName(response.payload.instructor.name);
+          }
         }
+      } catch (err) {
+        console.log(err);
       }
-    }
-    setInstructorName(
-      courseData.instructorName
-        ? courseData.instructorName
-        : courseData["instructor.user.name"]
-    );
-    getData(item.id);
+    };
+    setCourseData(item);
+    fetchData(item.id);
   }, []);
   return (
     <TouchableOpacity style={styles.item} onPress={() => onPress(courseData)}>
@@ -49,8 +50,12 @@ const SectionCourseItem = ({onPress, item}) => {
         <Text style={styles.text}>
           {courseData.courseTitle ? courseData.courseTitle : courseData.title}
         </Text>
+        <Text style={styles.darkText}>{instructorName}</Text>
         <Text style={styles.darkText}>
-          {instructorName}
+          {(courseData.createdAt
+            ? courseData.createdAt.substring(0, 10) + " | "
+            : "") +
+            (courseData.totalHours ? courseData.totalHours.toFixed(3) + "h" : "")}
         </Text>
         <View
           style={{
@@ -59,21 +64,16 @@ const SectionCourseItem = ({onPress, item}) => {
             backgroundColor: "#2b2c30",
           }}
         >
+          <Text style={styles.darkText}>Rating: </Text>
           <Text style={{ color: "#f1c40f" }}>
-            {courseData.courseAveragePoint
+            {courseData.averagePoint
+              ? courseData.averagePoint
+              : courseData.courseAveragePoint
               ? courseData.courseAveragePoint.toFixed(2)
-              : courseData.ratedNumber
-              ? courseData.ratedNumber.toFixed(2)
               : 0}
           </Text>
           <Text style={styles.darkText}>
-            (
-            {courseData.courseSoldNumber
-              ? courseData.courseSoldNumber
-              : courseData.soldNumber
-              ? courseData.soldNumber
-              : 0}
-            )
+            {courseData.ratedNumber ? " (" + courseData.ratedNumber + ")" : 0}
           </Text>
         </View>
       </View>

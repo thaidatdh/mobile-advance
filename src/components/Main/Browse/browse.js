@@ -47,7 +47,8 @@ const Browse = ({ navigation }) => {
     loadNewReleased();
     loadTopSell();
     loadTopRated();
-    loadRecommended(token, user.id);
+    if (user) loadRecommended(token, user.id);
+    if (token) console.log(token);
   }, []);
   const onPressNewReleaseButton = () => {
     navigation.navigate("List Courses", {
@@ -78,7 +79,10 @@ const Browse = ({ navigation }) => {
       let categoryList = [categoryId];
       let res = await ApiServices.search(categoryList, "", 10, 1);
       let response = await res.json();
-      if (response.payload !== undefined && response.payload.rows != undefined) {
+      if (
+        response.payload !== undefined &&
+        response.payload.rows != undefined
+      ) {
         await setCategoryCourse(response.payload.rows);
       } else {
         setCategoryCourse([]);
@@ -116,11 +120,13 @@ const Browse = ({ navigation }) => {
           title={imageButtonData[0].title}
           onPress={onPressNewReleaseButton}
         />
-        <ImageButton
-          key={imageButtonData[3].id}
-          title={imageButtonData[3].title}
-          onPress={onPressRecommendedButton}
-        />
+        {user ? (
+          <ImageButton
+            key={imageButtonData[3].id}
+            title={imageButtonData[3].title}
+            onPress={onPressRecommendedButton}
+          />
+        ) : null}
         <ImageButton
           key={imageButtonData[1].id}
           title={imageButtonData[1].title}

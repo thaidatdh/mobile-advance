@@ -17,6 +17,7 @@ const { width, height } = Dimensions.get("window");
 const ListCourseItem = (props) => {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const [authors, setAuthors] = useState(props.author);
+  const [course, setCourse] = useState(props.item);
   const {
     user,
     addBookmark,
@@ -29,6 +30,24 @@ const ListCourseItem = (props) => {
     removeBookmark,
     removeDownloaded,
   } = React.useContext(AuthContext);
+  useEffect(() => {
+    const fetchData = async (id) => {
+      try {
+        let res = await ApiServices.getCourseDetails(id);
+        let response = await res.json();
+        if (response.payload !== undefined && response.payload !== null) {
+          await setCourse(response.payload);
+          if (response.payload.instructor) {
+            await setAuthors(response.payload.instructor.name);
+          }
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    setCourse(props.item);
+    fetchData(props.item.id);
+  }, []);
   const onMenuOpen = () => {
     setIsMenuVisible(true);
   };
@@ -38,7 +57,7 @@ const ListCourseItem = (props) => {
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message: "Share " + props.item.title,
+        message: "Share " + course.title,
       });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
@@ -64,13 +83,13 @@ const ListCourseItem = (props) => {
     removeDownloaded(props.item);
   };
   const onBookmark = () => {
-    addBookmark(props.item.id);
+    addBookmark(course.id);
   };
   const onRemoveBookmark = () => {
-    removeBookmark(props.item.id);
+    removeBookmark(course.id);
   };
   const onChannel = () => {
-    if (props.item.price === 0) addChannel(props.item.id);
+    if (course.price === 0) addChannel(course.id);
   };
   const onRemoveChannel = () => {
     //removeChannel(props.item);
@@ -90,9 +109,9 @@ const ListCourseItem = (props) => {
     };
     if (
       (authors === null || authors === undefined || authors === "") &&
-      props.item.instructorId
+      course.instructorId
     )
-      fetchDataAuth(props.item.instructorId);
+      fetchDataAuth(course.instructorId);
   }, []);
   return (
     <TouchableOpacity
@@ -101,49 +120,37 @@ const ListCourseItem = (props) => {
     >
       <Image
         source={{
-          uri: props.item.imageUrl
-            ? props.item.imageUrl
-            : props.item.courseImage,
+          uri: course.imageUrl ? course.imageUrl : course.courseImage,
         }}
         style={styles.image}
       />
       <View style={{ marginLeft: 10, flex: 1 }}>
         <Text style={styles.title}>
-          {props.item.title ? props.item.title : props.item.courseTitle}
+          {course.title ? course.title : course.courseTitle}
         </Text>
+        <Text style={styles.darkText}>{authors}</Text>
         <Text style={styles.darkText}>
-          {props.item["instructor.user.name"]
-            ? props.item["instructor.user.name"]
-            : props.item.name
-            ? props.item.name
-            : props.item.instructorName
-            ? props.item.instructorName
-            : authors}
-        </Text>
-        <Text style={styles.darkText}>
-          {props.item.status ? props.item.status + " - " : ""}
-          {props.item.createdAt
-            ? props.item.createdAt.substring(0, 10) + " - "
-            : props.item.updatedAt
-            ? props.item.updatedAt.substring(0, 10) + " - "
-            : props.item.latestLearnTime
-            ? "Latest learn time: " +
-              props.item.latestLearnTime.substring(0, 10)
+          {course.status ? course.status + " | " : ""}
+          {course.createdAt
+            ? course.createdAt.substring(0, 10) + " | "
+            : course.updatedAt
+            ? course.updatedAt.substring(0, 10) + " | "
+            : course.latestLearnTime
+            ? "Latest learn time: " + course.latestLearnTime.substring(0, 10)
             : ""}
-          {props.item.totalHours
-            ? props.item.totalHours.toFixed(2) + " hours"
-            : ""}
+          {course.totalHours ? course.totalHours.toFixed(2) + " hours" : ""}
         </Text>
         <View
           style={{
             flexDirection: "row",
           }}
         >
+          <Text style={styles.darkText}>Rating: </Text>
           <Text style={{ color: "#f1c40f" }}>
-            {props.item.ratedNumber ? props.item.ratedNumber + " " : ""}
+            {course.averagePoint ? course.averagePoint + " " : ""}
           </Text>
           <Text style={styles.darkText}>
-            {props.item.ratedNumber ? "(" + props.item.ratedNumber + ")" : ""}
+            {course.ratedNumber ? "(" + course.ratedNumber + ")" : ""}
           </Text>
         </View>
       </View>
@@ -156,26 +163,26 @@ const ListCourseItem = (props) => {
             <FontAwesome5
               style={{ color: "lightgray", alignSelf: "flex-end" }}
               name="ellipsis-v"
-              size={15}
+              size={20}
             />
           </TouchableOpacity>
         }
       >
         <Menu.Item onPress={onShare} title="Share" />
         {user ? (
-          !isBookmarked(props.item.title) ? (
+          !isBookmarked(course.title) ? (
             <Menu.Item onPress={onBookmark} title="Add Bookmark" />
           ) : (
             <Menu.Item onPress={onRemoveBookmark} title="Remove Bookmark" />
           )
         ) : null}
         {user ? (
-          !isChanneled(props.item.title) ? (
+          !isChanneled(course.title) ? (
             <Menu.Item onPress={onChannel} title="Buy Course" />
           ) : null
         ) : /*<Menu.Item onPress={onRemoveChannel} title="Remove Channel" />*/
         null}
-        {/*!isDownloaded(props.item.title) ? (
+        {/*!isDownloaded(course.title) ? (
           <Menu.Item onPress={onDownload} title="Download" />
         ) : (
           <Menu.Item onPress={onRemoveDownload} title="Remove Downloaded" />
@@ -209,6 +216,8 @@ const styles = StyleSheet.create({
   },
   options: {
     alignSelf: "center",
+    width: width * 0.05,
+    height: "80%",
   },
 });
 export default ListCourseItem;
