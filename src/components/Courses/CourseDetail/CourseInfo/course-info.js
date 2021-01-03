@@ -8,6 +8,8 @@ import {
   FlatList,
   ScrollView,
   TouchableOpacity,
+  Alert,
+  Share,
 } from "react-native";
 import { Button } from "react-native-paper";
 import ActionButton from "./components/action-button";
@@ -107,6 +109,10 @@ const CourseInfo = (props) => {
   };
   const onPressBookmark = () => {
     if (!user) {
+      Alert.alert(
+        props.course.title ? props.course.title : props.course.courseTitle,
+        "Login to Bookmark!"
+      );
       return;
     }
     if (!isBookmarkedCourse) {
@@ -119,26 +125,66 @@ const CourseInfo = (props) => {
   };
   const onPressAddToChannel = () => {
     if (!user) {
+      Alert.alert(
+        props.course.title ? props.course.title : props.course.courseTitle,
+        "Login to buy!"
+      );
       return;
     }
     if (!isChannelCourse && props.course.price === 0) {
       addChannel(props.course.id);
       setIsChannelCourse(true);
     } else {
-      //removeChannel(props.course);
-      //setIsChannelCourse(false);
+      Alert.alert(
+        props.course.title ? props.course.title : props.course.courseTitle,
+        "Can not buy selected course. It's not free!"
+      );
     }
   };
   const onPressDownload = () => {
     if (!user) {
+      Alert.alert(
+        props.course.title ? props.course.title : props.course.courseTitle,
+        "Login to Download!"
+      );
       return;
     }
+    return;
     if (!isDownloadedCourse) {
       addDownloaded(props.course);
       setIsDownloadedCourse(true);
     } else {
       removeDownloaded(props.course);
       setIsDownloadedCourse(false);
+    }
+  };
+  const onPressComment = () => {
+    if (!user) {
+      Alert.alert(
+        props.course.title ? props.course.title : props.course.courseTitle,
+        "Login to Rate this course!");
+      return;
+    }
+    return;
+  };
+  const onPressShare = async () => {
+    try {
+      const message = (props.course.title ? props.course.title : props.course.courseTitle) 
+      + "\nAverage Point: " + props.course.averagePoint;
+      const result = await Share.share({
+        message: message,
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
     }
   };
   const renderAuthors = (authors) => {
@@ -199,30 +245,47 @@ const CourseInfo = (props) => {
           </Text>
         </View>
 
-        <View
-          style={{
+        <ScrollView
+          contentContainerStyle={{
             flexDirection: "row",
             justifyContent: "space-around",
             marginTop: 20,
             marginBottom: 20,
           }}
+          horizontal={true}
         >
           <ActionButton
+            key="likebtn"
             title={!isBookmarkedCourse ? "Bookmark" : "Bookmarked"}
             icon="bookmark"
+            solid={isBookmarkedCourse}
             onPress={onPressBookmark}
           />
           <ActionButton
+            key="buybtn"
             title={!isChannelCourse ? "Buy Course" : "Owned"}
-            icon="plus"
+            icon={!isChannelCourse ? "plus" : "check"}
             onPress={onPressAddToChannel}
           />
-          {/*<ActionButton
+          <ActionButton
+            key="downloadbtn"
             title={!isDownloadedCourse ? "Download" : "Downloaded"}
             icon="download"
             onPress={onPressDownload}
-          />*/}
-        </View>
+          />
+          <ActionButton
+            key="sharebtn"
+            title="Share"
+            icon="share"
+            onPress={onPressShare}
+          />
+          <ActionButton
+            key="ratebtn"
+            title="Rate"
+            icon="comment-alt"
+            onPress={onPressComment}
+          />
+        </ScrollView>
 
         <View>
           <Button style={styles.buttons}>

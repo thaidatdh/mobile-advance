@@ -12,55 +12,37 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import { Button, TextInput } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
 import { AuthContext } from "../../../Contexts/AuthContextProvider";
+import ApiServices from "../../../services/api-services";
 const { width, height } = Dimensions.get("window");
 
-const Login = ({navigation}) => {
+const ForgetPassword = ({ navigation }) => {
   const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [isReadyToLogin, setIsReadyToLogin] = useState(false);
-  const [error, setError] = useState('');
-  const { login } = React.useContext(AuthContext);
+  const [error, setError] = useState("");
   const validateEmail = (email) => {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
   };
   const onUsernameChange = (text) => {
     setUsername(text);
-    if (username.length > 0 && password.length > 0 && validateEmail(username)) {
+    if (username.length > 0 && validateEmail(username)) {
       setIsReadyToLogin(true);
     } else {
       setIsReadyToLogin(false);
     }
   };
-  const onPasswordChange = (text) => {
-    setPassword(text);
-    if (username.length > 0 && password.length > 0 && validateEmail(username)) {
-      setIsReadyToLogin(true);
-    } else {
-      setIsReadyToLogin(false);
-    }
-  };
-  const onLogin = async () => {
+  
+  const onForget = async () => {
     if (!isReadyToLogin) {
       return;
     }
-    let result = await login(username, password);
-    if (result === '') {
-      navigation.navigate('Main');
+    try {
+      let result = await ApiServices.forgetPassword(username);
+      setError(result.message);
     }
-    else {
-      setError(result);
+    catch(err) {
+       setError(err.message);
     }
-  };
-  const onSignUp = () => {
-    navigation.navigate('Sign Up');
-  }
-  const onForgetPassword = () => {
-    navigation.navigate("Forget Password");
-  }
-  const updateSecureTextEntry = () => {
-    setSecureTextEntry(!secureTextEntry);
   };
   const themeTextInput = {
     colors: {
@@ -84,55 +66,15 @@ const Login = ({navigation}) => {
           value={username}
           onChangeText={(text) => onUsernameChange(text)}
         />
-        <TextInput
-          name="password"
-          style={styles.input}
-          label="Password"
-          theme={themeTextInput}
-          secureTextEntry={secureTextEntry}
-          value={password}
-          onChangeText={(text) => onPasswordChange(text)}
-          right={
-            secureTextEntry ? (
-              <TextInput.Icon
-                style={{ alignSelf: "center", flexDirection: "column" }}
-                onPress={updateSecureTextEntry}
-                name="eye-off"
-                color="grey"
-                centered={true}
-                size={20}
-                solid
-              />
-            ) : (
-              <TextInput.Icon
-                style={{ flexDirection: "column", alignSelf: "center" }}
-                onPress={updateSecureTextEntry}
-                name="eye"
-                color="grey"
-                size={20}
-                solid
-              />
-            )
-          }
-        />
-        {error === "" ? null : (
+        {!error ? null : (
           <Text style={{ color: "red", alignSelf: "center" }}>{error}</Text>
         )}
         <TouchableOpacity
           style={isReadyToLogin ? styles.signInBtn : styles.signInBtnDisabled}
           disabled={!isReadyToLogin}
-          onPress={onLogin}
+          onPress={onForget}
         >
-          <Text style={styles.buttonText}>SIGN IN</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.linkBtn} onPress={onForgetPassword}>
-          <Text style={styles.buttonTextBlue}>Forgot Password?</Text>
-        </TouchableOpacity>
-        {/*<Button style={styles.signOnSSOBtn}>
-          <Text style={styles.buttonTextBlue}>Use Single Sign-On (SSO)</Text>
-        </Button>*/}
-        <TouchableOpacity style={styles.linkBtn} onPress={onSignUp}>
-          <Text style={styles.buttonTextBlue}>Sign up FREE</Text>
+          <Text style={styles.buttonText}>Forget Password</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
@@ -207,4 +149,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+export default ForgetPassword;

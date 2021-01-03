@@ -25,28 +25,14 @@ const ContentSubsection = (props) => {
     ) {
       Alert.alert(
         "Internet",
-        "Cannot see this video because it's a online section.",
-        [
-          {
-            text: "OK",
-            onPress: () => {},
-          },
-        ],
-        { cancelable: true }
+        "Cannot see this video because it's a online section."
       );
       return;
     }
     if (!item.videoUrl) {
       Alert.alert(
         "Video not found",
-        "Video link is null",
-        [
-          {
-            text: "OK",
-            onPress: () => {},
-          },
-        ],
-        { cancelable: true }
+        "Video link is null"
       );
       return;
     }

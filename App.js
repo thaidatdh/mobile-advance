@@ -33,6 +33,7 @@ import Author from "./src/components/Courses/Author/author";
 import ListAuthors from "./src/components/Courses/Author/list-authors";
 import { AuthContext } from "./src/Contexts/AuthContextProvider";
 import { DataContext } from "./src/Contexts/DataContextProvider";
+import ForgetPassword from "./src/components/Authentication/ForgetPassword/forget-password";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -136,6 +137,7 @@ const MainNavigator = () => {
         <Stack.Screen name="Sign In" component={Login} />
         <Stack.Screen name="Sign Up" component={Register} />
         <Stack.Screen name="Profile" component={Profile} />
+        <Stack.Screen name="Forget Password" component={ForgetPassword} />
         <Stack.Screen name="Settings" component={Setting} />
       </Stack.Navigator>
     </NavigationContainer>

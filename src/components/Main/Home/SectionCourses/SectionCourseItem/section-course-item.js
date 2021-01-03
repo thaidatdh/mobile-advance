@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { DataContext } from "../../../../../Contexts/DataContextProvider";
+import { AuthContext } from "../../../../../Contexts/AuthContextProvider";
 import ApiServices from "../../../../../services/api-services";
 import PhoneStorage from "../../../../../services/phone-storage";
 const { width, height } = Dimensions.get("window");
@@ -16,10 +17,11 @@ const SectionCourseItem = ({ onPress, item }) => {
   const [courseData, setCourseData] = useState(item);
   const [instructorName, setInstructorName] = useState("");
   const { getCourse, selectedCourse, authors, isInternetReachable } = useContext(DataContext);
+  const { user } = useContext(AuthContext);
   useEffect(() => {
     const fetchData = async (id) => {
       try {
-        let res = await ApiServices.getCourseDetails(id);
+        let res = await ApiServices.getCourseDetails(id, user ? user.id : id);
         let response = await res.json();
         if (response.payload !== undefined && response.payload !== null) {
           await setCourseData(response.payload);

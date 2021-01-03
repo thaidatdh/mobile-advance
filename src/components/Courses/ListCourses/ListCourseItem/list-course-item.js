@@ -36,7 +36,7 @@ const ListCourseItem = (props) => {
   useEffect(() => {
     const fetchData = async (id) => {
       try {
-        let res = await ApiServices.getCourseDetails(id);
+        let res = await ApiServices.getCourseDetails(id, user ? user.id : id);
         let response = await res.json();
         if (response.payload !== undefined && response.payload !== null) {
           await setCourse(response.payload);
@@ -75,8 +75,12 @@ const ListCourseItem = (props) => {
   };
   const onShare = async () => {
     try {
+      const message =
+        (course.title ? course.title : course.courseTitle) +
+        "\nAverage Point: " +
+        course.averagePoint;
       const result = await Share.share({
-        message: "Share " + course.title,
+        message: message,
       });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {

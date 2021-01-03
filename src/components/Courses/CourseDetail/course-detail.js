@@ -13,6 +13,7 @@ import { Video } from "expo-av";
 import { WebView } from "react-native-webview";
 import CourseInfo from "./CourseInfo/course-info";
 import { DataContext } from "../../../Contexts/DataContextProvider";
+import { AuthContext } from "../../../Contexts/AuthContextProvider";
 import ApiServices from "../../../services/api-services";
 import PhoneStorage from "../../../services/phone-storage";
 const { width, height } = Dimensions.get("window");
@@ -26,13 +27,14 @@ const CourseDetail = ({ navigation, route }) => {
     getSearchCourses,
     isInternetReachable,
   } = React.useContext(DataContext);
+  const { user } = React.useContext(AuthContext);
   useEffect(() => {
     navigation.setOptions({ title: route.params.course.title });
   }, []);
   useEffect(() => {
     const fetchData = async (id) => {
       try {
-        let res = await ApiServices.getCourseDetails(id);
+        let res = await ApiServices.getCourseDetails(id, user ? user.id : id);
         let response = await res.json();
         if (response.payload !== undefined && response.payload !== null) {
           await setCourseDetail(response.payload);
@@ -41,7 +43,7 @@ const CourseDetail = ({ navigation, route }) => {
             JSON.stringify(response.payload)
           );
           if (response.payload.promoVidUrl) {
-            setVideoUrl(response.payload.promoVidUrl, "");
+            setVideoUrl(response.payload.promoVidUrl);
           }
         }
       } catch (err) {
@@ -77,7 +79,7 @@ const CourseDetail = ({ navigation, route }) => {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
       <View style={styles.imageView}>
-        {videoUrl && videoUrl != null ? (
+        {videoUrl && videoUrl != null && videoUrl != undefined ? (
           videoUrl.includes("youtube.com") ? (
             <WebView source={{ uri: videoUrl }} />
           ) : (

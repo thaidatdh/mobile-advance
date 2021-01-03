@@ -235,8 +235,8 @@ const getCourseDetailWithLesson = (id, token) => {
   };
   return fetch(url, requestOptionsUser);
 };
-const getCourseDetails = (id) => {
-  const url = `http://api.dev.letstudy.org/course/get-course-detail/${id}/${id}`;
+const getCourseDetails = (id, userid) => {
+  const url = `http://api.dev.letstudy.org/course/get-course-detail/${id}/${userid}`;
   const requestOptionsUser = {
     method: "GET",
     headers: {
@@ -297,6 +297,21 @@ const updateEmail = (token, data) => {
     requestOptions
   );
 };
+const forgetPassword = (email) => {
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email: email,
+    }),
+  };
+  return fetch(
+    "http://api.dev.letstudy.org/user/forget-pass/send-email",
+    requestOptions
+  );
+};
 const ApiServices = {
   login,
   register,
@@ -320,5 +335,6 @@ const ApiServices = {
   changePassword,
   updateProfile,
   updateEmail,
+  forgetPassword,
 };
 export default ApiServices;
