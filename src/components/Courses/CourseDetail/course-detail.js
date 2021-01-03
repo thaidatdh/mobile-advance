@@ -31,41 +31,44 @@ const CourseDetail = ({ navigation, route }) => {
   useEffect(() => {
     navigation.setOptions({ title: route.params.course.title });
   }, []);
-  useEffect(() => {
-    const fetchData = async (id) => {
-      try {
-        let res = await ApiServices.getCourseDetails(id, user ? user.id : id);
-        let response = await res.json();
-        if (response.payload !== undefined && response.payload !== null) {
-          await setCourseDetail(response.payload);
-          PhoneStorage.save(
-            "@course_detail_info_" + id,
-            JSON.stringify(response.payload)
-          );
-          if (response.payload.promoVidUrl) {
-            setVideoUrl(response.payload.promoVidUrl);
-          }
-        }
-      } catch (err) {
-        console.log(err);
-        if (!isInternetReachable) {
-          PhoneStorage.load("@course_detail_info_" + id, "json").then(
-            (persistData) => {
-              if (persistData) {
-                setCourseDetail(persistData);
-                if (persistData.promoVidUrl) {
-                  setVideoUrl(persistData.promoVidUrl);
-                }
-              }
-            }
-          );
+  const fetchData = async (id) => {
+    try {
+      let res = await ApiServices.getCourseDetails(id, user ? user.id : id);
+      let response = await res.json();
+      if (response.payload !== undefined && response.payload !== null) {
+        await setCourseDetail(response.payload);
+        PhoneStorage.save(
+          "@course_detail_info_" + id,
+          JSON.stringify(response.payload)
+        );
+        if (response.payload.promoVidUrl) {
+          setVideoUrl(response.payload.promoVidUrl);
         }
       }
-    };
+    } catch (err) {
+      console.log(err);
+      if (!isInternetReachable) {
+        PhoneStorage.load("@course_detail_info_" + id, "json").then(
+          (persistData) => {
+            if (persistData) {
+              setCourseDetail(persistData);
+              if (persistData.promoVidUrl) {
+                setVideoUrl(persistData.promoVidUrl);
+              }
+            }
+          }
+        );
+      }
+    }
+  };
+  useEffect(() => {
     setVideoUrl(route.params.course.promoVidUrl);
     setCourseDetail(route.params.course);
     fetchData(route.params.course.id);
   }, []);
+  const ReloadData = () => {
+    fetchData(route.params.course.id);
+  }
   const onChangeVideo = (url, lession_id) => {
     setVideoUrl(url);
   };
@@ -113,6 +116,7 @@ const CourseDetail = ({ navigation, route }) => {
           course={courseDetail}
           onPressAuthor={onPressAuthor}
           onChangeVideo={onChangeVideo}
+          onReload={ReloadData}
         />
       </ScrollView>
     </SafeAreaView>

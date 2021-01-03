@@ -312,6 +312,33 @@ const forgetPassword = (email) => {
     requestOptions
   );
 };
+const ratingCourse = (
+  token,
+  course_id,
+  formalityPoint,
+  presentationPoint,
+  contentPoint,
+  content
+) => {
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
+    body: JSON.stringify({
+      courseId: course_id,
+      formalityPoint: formalityPoint,
+      contentPoint: presentationPoint,
+      presentationPoint: contentPoint,
+      content: content,
+    }),
+  };
+  return fetch(
+    "http://api.dev.letstudy.org/course/rating-course",
+    requestOptions
+  );
+};
 const ApiServices = {
   login,
   register,
@@ -336,5 +363,6 @@ const ApiServices = {
   updateProfile,
   updateEmail,
   forgetPassword,
+  ratingCourse,
 };
 export default ApiServices;

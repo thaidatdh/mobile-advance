@@ -22,11 +22,14 @@ import { DataContext } from "../../../../Contexts/DataContextProvider";
 import { coursesData } from "../../../../data/dataMockup";
 import ApiServices from "../../../../services/api-services";
 import PhoneStorage from "../../../../services/phone-storage";
+import RatingDialog from "./components/rating-dialog";
 const { width, height } = Dimensions.get("window");
 
 const CourseInfo = (props) => {
   const [isInContent, setIsInContent] = useState(0);
   const [authors, setAuthors] = useState(null);
+  const [visible, setVisible] = React.useState(false);
+
   const {
     user,
     token,
@@ -107,6 +110,8 @@ const CourseInfo = (props) => {
   const onChangeTranscript = (text) => {
     setTranscript(text);
   };
+  const showDialog = () => setVisible(true);
+  const hideDialog = () => setVisible(false);
   const onPressBookmark = () => {
     if (!user) {
       Alert.alert(
@@ -162,15 +167,40 @@ const CourseInfo = (props) => {
     if (!user) {
       Alert.alert(
         props.course.title ? props.course.title : props.course.courseTitle,
-        "Login to Rate this course!");
+        "Login to Rate this course!"
+      );
       return;
     }
-    return;
+    if (!isChannelCourse) {
+      Alert.alert(
+        props.course.title ? props.course.title : props.course.courseTitle,
+        "You have to own course to rate!"
+      );
+      return;
+    }
+    showDialog();
+  };
+  const handleSaveRating = (
+    formalityPoint,
+    presentationPoint,
+    contentPoint,
+    content
+  ) => {
+    ApiServices.ratingCourse(token, props.course.id, formalityPoint,
+    presentationPoint,
+    contentPoint,
+    content).then(res => res.json()).then(response => {
+      if (response.message == "OK") {
+        props.onReload();
+      }
+    }).catch(err => console.log(err));
   };
   const onPressShare = async () => {
     try {
-      const message = (props.course.title ? props.course.title : props.course.courseTitle) 
-      + "\nAverage Point: " + props.course.averagePoint;
+      const message =
+        (props.course.title ? props.course.title : props.course.courseTitle) +
+        "\nAverage Point: " +
+        props.course.averagePoint;
       const result = await Share.share({
         message: message,
       });
@@ -401,6 +431,7 @@ const CourseInfo = (props) => {
           <SectionRating content={props.course.ratings} />
         )}
       </View>
+      <RatingDialog visible={visible} hideDialog={hideDialog} onSave={handleSaveRating}/>
     </View>
   );
 };
