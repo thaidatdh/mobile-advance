@@ -10,16 +10,17 @@ import {
 } from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import { AuthContext } from "../../../../../Contexts/AuthContextProvider";
+import { DataContext } from "../../../../../Contexts/DataContextProvider";
 import ApiServices from "../../../../../services/api-services";
-import NetInfo from "@react-native-community/netinfo";
+import PhoneStorage from "../../../../../services/phone-storage";
 const { width, height } = Dimensions.get("window");
 
 const ContentSubsection = (props) => {
   const { token } = useContext(AuthContext);
+  const { isInternetReachable } = useContext(DataContext);
   const onClickLesson = async (item) => {
-    const internetState = await NetInfo.fetch();
     if (
-      !internetState.isInternetReachable &&
+      !isInternetReachable &&
       item.videoUrl.includes("youtube.com")
     ) {
       Alert.alert(
@@ -65,6 +66,21 @@ const ContentSubsection = (props) => {
     if (subtitle && subtitle.payload) {
       let contentSub = "Subtitle:\n" + subtitle.payload;
       content = content ? content + "\n\n" + contentSub : contentSub;
+      PhoneStorage.save(
+        "@subtitle_" + item.courseId + item.id,
+        JSON.stringify(subtitle.payload)
+      );
+    } else {
+      if (!isInternetReachable) {
+        const persistData = await PhoneStorage.load(
+          "@subtitle_" + item.courseId + item.id,
+          "json"
+        );
+        if (persistData) {
+          let contentSub = "Subtitle:\n" + subtitle.payload;
+          content = content ? content + "\n\n" + contentSub : contentSub;
+        }
+      }
     }
     props.onChangeTranscript(content);
   };

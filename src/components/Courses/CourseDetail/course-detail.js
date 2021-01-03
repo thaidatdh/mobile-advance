@@ -14,14 +14,18 @@ import { WebView } from "react-native-webview";
 import CourseInfo from "./CourseInfo/course-info";
 import { DataContext } from "../../../Contexts/DataContextProvider";
 import ApiServices from "../../../services/api-services";
+import PhoneStorage from "../../../services/phone-storage";
 const { width, height } = Dimensions.get("window");
 
 const CourseDetail = ({ navigation, route }) => {
   const [courseDetail, setCourseDetail] = useState(route.params.course);
-  const [videoUrl, setVideoUrl] = useState(
-    route.params.course.promoVidUrl
-  );
-  const { authors,searchCourses, getSearchCourses} = React.useContext(DataContext);
+  const [videoUrl, setVideoUrl] = useState(route.params.course.promoVidUrl);
+  const {
+    authors,
+    searchCourses,
+    getSearchCourses,
+    isInternetReachable,
+  } = React.useContext(DataContext);
   useEffect(() => {
     navigation.setOptions({ title: route.params.course.title });
   }, []);
@@ -32,12 +36,28 @@ const CourseDetail = ({ navigation, route }) => {
         let response = await res.json();
         if (response.payload !== undefined && response.payload !== null) {
           await setCourseDetail(response.payload);
+          PhoneStorage.save(
+            "@course_detail_info_" + id,
+            JSON.stringify(response.payload)
+          );
           if (response.payload.promoVidUrl) {
             setVideoUrl(response.payload.promoVidUrl, "");
           }
         }
       } catch (err) {
         console.log(err);
+        if (!isInternetReachable) {
+          PhoneStorage.load("@course_detail_info_" + id, "json").then(
+            (persistData) => {
+              if (persistData) {
+                setCourseDetail(persistData);
+                if (persistData.promoVidUrl) {
+                  setVideoUrl(persistData.promoVidUrl);
+                }
+              }
+            }
+          );
+        }
       }
     };
     setVideoUrl(route.params.course.promoVidUrl);
@@ -46,7 +66,7 @@ const CourseDetail = ({ navigation, route }) => {
   }, []);
   const onChangeVideo = (url, lession_id) => {
     setVideoUrl(url);
-  }
+  };
   const onPressAuthor = (authorName) => {
     const author = authors.find((n) => n["user.name"] === authorName);
     if (author) {

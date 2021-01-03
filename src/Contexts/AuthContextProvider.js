@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import NetInfo from "@react-native-community/netinfo";
 import {
   usersData,
   searchHistoryData,
@@ -25,26 +26,52 @@ export default ({ children }) => {
         return resBookmark.json();
       })
       .then((responseBookmark) => {
-        if (responseBookmark.payload !== undefined)
+        if (responseBookmark.payload !== undefined) {
           setBookmark(responseBookmark.payload);
-        else setBookmark([]);
+          PhoneStorage.save(
+            "@bookmark",
+            JSON.stringify(responseBookmark.payload)
+          );
+        } else {
+          setBookmark([]);
+        }
       })
       .catch((err) => {
         console.log("err at load fav");
         console.log(err);
+        PhoneStorage.load("@bookmark", "json").then((persistBookmark) => {
+          if (persistBookmark) {
+            setBookmark(persistBookmark);
+          } else {
+            setBookmark([]);
+          }
+        });
       });
   };
   const getProcessCourses = () => {
     ApiServices.getProcessCourses(token)
       .then((resProcess) => resProcess.json())
       .then((responseProcess) => {
-        if (responseProcess.payload !== undefined)
+        if (responseProcess.payload !== undefined) {
+          PhoneStorage.save(
+            "@processCourses",
+            JSON.stringify(responseProcess.payload)
+          );
           setChannel(responseProcess.payload);
-        else setChannel([]);
+        } else {
+          setChannel([]);
+        }
       })
       .catch((err) => {
         console.log("err at load progress");
         console.log(err);
+        PhoneStorage.load("@processCourses", "json").then((persistProcess) => {
+          if (persistProcess) {
+            setChannel(persistProcess);
+          } else {
+            setChannel([]);
+          }
+        });
       });
   };
   const login = async (email, password) => {
@@ -61,17 +88,32 @@ export default ({ children }) => {
       ApiServices.getFavoriteCourses("Bearer " + responseLogin.token)
         .then((resBookmark) => resBookmark.json())
         .then((responseBookmark) => {
-          if (responseBookmark.payload !== undefined)
+          if (responseBookmark.payload !== undefined) {
             setBookmark(responseBookmark.payload);
+            PhoneStorage.save(
+              "@bookmark",
+              JSON.stringify(responseBookmark.payload)
+            );
+          }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log(err);
+        });
       ApiServices.getProcessCourses("Bearer " + responseLogin.token)
         .then((resProcess) => resProcess.json())
         .then((responseProcess) => {
-          if (responseProcess.payload !== undefined)
+          if (responseProcess.payload !== undefined) {
             setChannel(responseProcess.payload);
+            PhoneStorage.save(
+              "@processCourses",
+              JSON.stringify(responseProcess.payload)
+            );
+            setChannel(responseProcess.payload);
+          }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log(err);
+        });
     } catch (err) {
       return err.message;
     }
@@ -80,8 +122,6 @@ export default ({ children }) => {
   const logout = () => {
     setUser(null);
     setToken(null);
-    setBookmark([]);
-    setChannel([]);
     try {
       PhoneStorage.remove("@token");
       PhoneStorage.remove("@user");
@@ -110,7 +150,22 @@ export default ({ children }) => {
                 setBookmark(responseBookmark.payload);
               else {
                 console.log("error load fav");
-                logout();
+                NetInfo.fetch().then((state) => {
+                  if (!state.isInternetReachable) {
+                    PhoneStorage.load("@bookmark", "json").then(
+                      (persistBookmark) => {
+                        console.log(persistBookmark);
+                        if (persistBookmark) {
+                          setBookmark(persistBookmark);
+                        } else {
+                          setBookmark([]);
+                        }
+                      }
+                    );
+                  } else {
+                    logout();
+                  }
+                });
               }
             })
             .catch((err) => console.log(err));
@@ -121,7 +176,22 @@ export default ({ children }) => {
                 setChannel(responseProcess.payload);
               else {
                 console.log("error load pro");
-                logout();
+                NetInfo.fetch().then((state) => {
+                  if (!state.isInternetReachable) {
+                    PhoneStorage.load("@processCourses", "json").then(
+                      (persistProcess) => {
+                        console.log(persistProcess);
+                        if (persistProcess) {
+                          setChannel(persistProcess);
+                        } else {
+                          setChannel([]);
+                        }
+                      }
+                    );
+                  } else {
+                    logout();
+                  }
+                });
               }
             })
             .catch((err) => console.log(err));
@@ -206,14 +276,16 @@ export default ({ children }) => {
     await setSearchHistory(newSearchHistory);
     PhoneStorage.save("@searchHist", JSON.stringify(searchHistory));
   };
-  const removeSearchHistory = (searchValue) => {
+  const removeSearchHistory = async (searchValue) => {
     let newSearchHistory = searchHistory
       .slice()
       .filter((e) => e !== searchValue);
-    setSearchHistory(newSearchHistory);
+    await setSearchHistory(newSearchHistory);
+    PhoneStorage.save("@searchHist", JSON.stringify(searchHistory));
   };
-  const removeAllSearchHistory = () => {
-    setSearchHistory([]);
+  const removeAllSearchHistory = async () => {
+    await setSearchHistory([]);
+    PhoneStorage.save("@searchHist", JSON.stringify(searchHistory));
   };
   const updateSetting = async (title, updateAttribute) => {
     var index = settings.findIndex((x) => x.title === title);

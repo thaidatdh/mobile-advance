@@ -10,6 +10,7 @@ import MAppBar from "../app-bar";
 import { AuthContext } from "../../../Contexts/AuthContextProvider";
 import { DataContext } from "../../../Contexts/DataContextProvider";
 import ApiServices from "../../../services/api-services";
+import PhoneStorage from "../../../services/phone-storage";
 const Browse = ({ navigation }) => {
   const imageButtonData = [
     {
@@ -41,6 +42,7 @@ const Browse = ({ navigation }) => {
     topRated,
     recommended,
     loadRecommended,
+    isInternetReachable,
   } = React.useContext(DataContext);
   const [categoryCourse, setCategoryCourse] = useState([]);
   useEffect(() => {
@@ -84,11 +86,26 @@ const Browse = ({ navigation }) => {
         response.payload.rows != undefined
       ) {
         await setCategoryCourse(response.payload.rows);
+        PhoneStorage.save(
+          "@category_course_" + categoryId,
+          JSON.stringify(response.payload.rows)
+        );
       } else {
         setCategoryCourse([]);
       }
     } catch (err) {
       console.log(err);
+      if (!isInternetReachable) {
+        PhoneStorage.load("@category_course_" + categoryId, "json").then(
+          (persistData) => {
+            if (persistData) {
+              setCategoryCourse(persistData);
+            } else {
+              setCategoryCourse([]);
+            }
+          }
+        );
+      }
     }
     navigation.navigate("List Courses", {
       title: categoryName,

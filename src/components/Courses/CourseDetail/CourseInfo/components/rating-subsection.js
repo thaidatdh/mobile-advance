@@ -12,7 +12,6 @@ import {
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import { AuthContext } from "../../../../../Contexts/AuthContextProvider";
 import ApiServices from "../../../../../services/api-services";
-import NetInfo from "@react-native-community/netinfo";
 const { width, height } = Dimensions.get("window");
 
 const RatingSubsection = (props) => {

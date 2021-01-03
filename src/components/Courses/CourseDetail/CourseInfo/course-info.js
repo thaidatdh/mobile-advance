@@ -19,6 +19,7 @@ import { AuthContext } from "../../../../Contexts/AuthContextProvider";
 import { DataContext } from "../../../../Contexts/DataContextProvider";
 import { coursesData } from "../../../../data/dataMockup";
 import ApiServices from "../../../../services/api-services";
+import PhoneStorage from "../../../../services/phone-storage";
 const { width, height } = Dimensions.get("window");
 
 const CourseInfo = (props) => {
@@ -37,7 +38,9 @@ const CourseInfo = (props) => {
     isChanneled,
     isDownloaded,
   } = React.useContext(AuthContext);
-  const { getCourse, selectedCourse } = React.useContext(DataContext);
+  const { getCourse, selectedCourse, isInternetReachable } = React.useContext(
+    DataContext
+  );
   const [transcript, setTranscript] = useState("");
   const [isDownloadedCourse, setIsDownloadedCourse] = useState(
     isDownloaded(props.course.title)
@@ -62,9 +65,22 @@ const CourseInfo = (props) => {
         let response = await res.json();
         if (response.payload !== undefined) {
           await setAuthors(response.payload.name);
+          PhoneStorage.save(
+            "@instructor_name_" + id,
+            JSON.stringify(response.payload.name)
+          );
         }
       } catch (err) {
         console.log(err);
+        if (!isInternetReachable) {
+          PhoneStorage.load("@instructor_name_" + id, "json").then(
+            (persistData) => {
+              if (persistData) {
+                setAuthors(persistData);
+              }
+            }
+          );
+        }
       }
     };
     setAuthors(props.course["instructor.user.name"]);

@@ -38,41 +38,6 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const BottomTabNavigator = () => {
-  const { loadPersistUserData } = React.useContext(AuthContext);
-  const { getAllNewData } = React.useContext(DataContext);
-  useEffect(() => {
-    const loadData = () => {
-      loadPersistUserData();
-      getAllNewData();
-    };
-    const addNetListener = () => {
-      NetInfo.addEventListener((state) => {});
-    };
-    loadData();
-    addNetListener();
-  }, []);
-  useEffect(() => {
-    const CheckConnectivity = () => {
-      NetInfo.fetch().then((state) => {
-        if (!state.isInternetReachable) {
-          Alert.alert(
-            "Internet",
-            "This application require internet connection.\nYou may not use all feature with offline mode.",
-            [
-              {
-                text: "OK",
-                onPress: () => {
-                  
-                },
-              },
-            ],
-            { cancelable: false }
-          );
-        }
-      });
-    };
-    CheckConnectivity();
-  }, []);
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -111,30 +76,77 @@ const BottomTabNavigator = () => {
     </Tab.Navigator>
   );
 };
+const MainNavigator = () => {
+  const { loadPersistUserData } = React.useContext(AuthContext);
+  const { getAllNewData, setIsInternetReachable } = React.useContext(
+    DataContext
+  );
+  useEffect(() => {
+    const loadData = () => {
+      loadPersistUserData();
+      getAllNewData();
+    };
+    const addNetListener = () => {
+      NetInfo.addEventListener((state) => {});
+    };
+    loadData();
+    addNetListener();
+  }, []);
+  useEffect(() => {
+    const CheckConnectivity = () => {
+      NetInfo.fetch().then((state) => {
+        if (!state.isInternetReachable) {
+          Alert.alert(
+            "Internet",
+            "This application require internet connection.\nYou may not use all feature with offline mode.",
+            [
+              {
+                text: "OK",
+                onPress: () => {},
+              },
+            ],
+            { cancelable: false }
+          );
+        }
+      });
+    };
+    CheckConnectivity();
+  }, []);
+  useEffect(() => {
+    const CheckConnectivity2 = async () => {
+      const state = await NetInfo.fetch();
+      await setIsInternetReachable(state.isInternetReachable);
+    };
+    CheckConnectivity2();
+  });
+  return (
+    <NavigationContainer
+      theme={{ colors: { background: "#1f242a", text: "white" } }}
+    >
+      <Stack.Navigator>
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Main"
+          component={BottomTabNavigator}
+        />
+        <Stack.Screen name="List Courses" component={ListCourses} />
+        <Stack.Screen name="Author" component={Author} />
+        <Stack.Screen name="List Authors" component={ListAuthors} />
+        <Stack.Screen name="Course" component={CourseDetail} />
+        <Stack.Screen name="Sign In" component={Login} />
+        <Stack.Screen name="Sign Up" component={Register} />
+        <Stack.Screen name="Profile" component={Profile} />
+        <Stack.Screen name="Settings" component={Setting} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
 export default function App() {
   return (
     <Provider>
       <AuthProvider>
         <DataProvider>
-          <NavigationContainer
-            theme={{ colors: { background: "#1f242a", text: "white" } }}
-          >
-            <Stack.Navigator>
-              <Stack.Screen
-                options={{ headerShown: false }}
-                name="Main"
-                component={BottomTabNavigator}
-              />
-              <Stack.Screen name="List Courses" component={ListCourses} />
-              <Stack.Screen name="Author" component={Author} />
-              <Stack.Screen name="List Authors" component={ListAuthors} />
-              <Stack.Screen name="Course" component={CourseDetail} />
-              <Stack.Screen name="Sign In" component={Login} />
-              <Stack.Screen name="Sign Up" component={Register} />
-              <Stack.Screen name="Profile" component={Profile} />
-              <Stack.Screen name="Settings" component={Setting} />
-            </Stack.Navigator>
-          </NavigationContainer>
+          <MainNavigator />
         </DataProvider>
       </AuthProvider>
     </Provider>

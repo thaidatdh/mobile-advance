@@ -19,6 +19,7 @@ import ApiServices from "../../../services/api-services";
 import ProfileContentSecion from "./profile-content-section";
 import ImagePickerService from "../../../services/image-picker-service";
 import ImgurApiService from "../../../services/imgur-api-service";
+import PhoneStorage from "../../../services/phone-storage";
 const { width, height } = Dimensions.get("window");
 
 const Profile = ({ navigation }) => {
@@ -81,6 +82,7 @@ const Profile = ({ navigation }) => {
           setName(response.payload.name);
           setPhone(response.payload.phone);
           setType(response.payload.type);
+          PhoneStorage.save("@user", JSON.stringify(response.payload));
         }
       });
   }, [isUpdated]);

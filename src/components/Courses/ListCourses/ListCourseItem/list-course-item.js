@@ -12,7 +12,9 @@ import {
 import { Menu } from "react-native-paper";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import { AuthContext } from "../../../../Contexts/AuthContextProvider";
+import { DataContext } from "../../../../Contexts/DataContextProvider";
 import ApiServices from "../../../../services/api-services";
+import PhoneStorage from "../../../../services/phone-storage";
 const { width, height } = Dimensions.get("window");
 const ListCourseItem = (props) => {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
@@ -30,6 +32,7 @@ const ListCourseItem = (props) => {
     removeBookmark,
     removeDownloaded,
   } = React.useContext(AuthContext);
+  const {isInternetReachable} = React.useContext(DataContext);
   useEffect(() => {
     const fetchData = async (id) => {
       try {
@@ -37,12 +40,28 @@ const ListCourseItem = (props) => {
         let response = await res.json();
         if (response.payload !== undefined && response.payload !== null) {
           await setCourse(response.payload);
+          PhoneStorage.save(
+            "@course_detail_info_" + id,
+            JSON.stringify(response.payload)
+          );
           if (response.payload.instructor) {
             await setAuthors(response.payload.instructor.name);
           }
         }
       } catch (err) {
         console.log(err);
+        if (!isInternetReachable) {
+          PhoneStorage.load("@course_detail_info_" + id, "json").then(
+            (persistData) => {
+              if (persistData) {
+                setCourse(persistData);
+                if (persistData.instructor) {
+                  setAuthors(persistData.instructor.name);
+                }
+              }
+            }
+          );
+        }
       }
     };
     setCourse(props.item);
@@ -102,9 +121,22 @@ const ListCourseItem = (props) => {
         let response = await res.json();
         if (response.payload !== undefined) {
           await setAuthors(response.payload.name);
+          PhoneStorage.save(
+            "@instructor_name_" + id,
+            JSON.stringify(response.payload.name)
+          );
         }
       } catch (err) {
         console.log(err);
+        if (!isInternetReachable) {
+          PhoneStorage.load("@instructor_name_" + id, "json").then(
+            (persistData) => {
+              if (persistData) {
+                setAuthors(persistData);
+              }
+            }
+          );
+        }
       }
     };
     if (

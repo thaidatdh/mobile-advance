@@ -9,12 +9,13 @@ import {
 } from "react-native";
 import { DataContext } from "../../../../../Contexts/DataContextProvider";
 import ApiServices from "../../../../../services/api-services";
+import PhoneStorage from "../../../../../services/phone-storage";
 const { width, height } = Dimensions.get("window");
 const SectionCourseItem = ({ onPress, item }) => {
   const star = require("../../../../../../assets/star-rating.png");
   const [courseData, setCourseData] = useState(item);
   const [instructorName, setInstructorName] = useState("");
-  const { getCourse, selectedCourse, authors } = useContext(DataContext);
+  const { getCourse, selectedCourse, authors, isInternetReachable } = useContext(DataContext);
   useEffect(() => {
     const fetchData = async (id) => {
       try {
@@ -22,12 +23,28 @@ const SectionCourseItem = ({ onPress, item }) => {
         let response = await res.json();
         if (response.payload !== undefined && response.payload !== null) {
           await setCourseData(response.payload);
+          PhoneStorage.save(
+            "@course_detail_info_" + id,
+            JSON.stringify(response.payload)
+          );
           if (response.payload.instructor) {
             await setInstructorName(response.payload.instructor.name);
           }
         }
       } catch (err) {
         console.log(err);
+        if (!isInternetReachable) {
+          PhoneStorage.load("@course_detail_info_" + id, "json").then(
+            (persistData) => {
+              if (persistData) {
+                setCourseData(persistData);
+                if (persistData.instructor) {
+                  setInstructorName(persistData.instructor.name);
+                }
+              }
+            }
+          );
+        }
       }
     };
     setCourseData(item);
@@ -55,7 +72,9 @@ const SectionCourseItem = ({ onPress, item }) => {
           {(courseData.createdAt
             ? courseData.createdAt.substring(0, 10) + " | "
             : "") +
-            (courseData.totalHours ? courseData.totalHours.toFixed(3) + "h" : "")}
+            (courseData.totalHours
+              ? courseData.totalHours.toFixed(3) + "h"
+              : "")}
         </Text>
         <View
           style={{
