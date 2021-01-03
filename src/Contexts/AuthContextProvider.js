@@ -298,6 +298,13 @@ export default ({ children }) => {
       await PhoneStorage.save("@settings", JSON.stringify(settings));
     }
   };
+  const getLastLearnTime = (course_id) => {
+    const course = channel.find(n => n.id == course_id);
+    if (course) {
+      return course.latestLearnTime;
+    }
+    return "";
+  }
   const store = {
     user,
     token,
@@ -325,6 +332,7 @@ export default ({ children }) => {
     isDownloaded,
     loadPersistUserData,
     setUser,
+    getLastLearnTime,
   };
 
   return <AuthContext.Provider value={store}>{children}</AuthContext.Provider>;

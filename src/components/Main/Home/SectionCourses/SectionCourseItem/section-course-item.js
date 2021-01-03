@@ -16,7 +16,13 @@ const SectionCourseItem = ({ onPress, item }) => {
   const star = require("../../../../../../assets/star-rating.png");
   const [courseData, setCourseData] = useState(item);
   const [instructorName, setInstructorName] = useState("");
-  const { getCourse, selectedCourse, authors, isInternetReachable } = useContext(DataContext);
+  const [learnedTime, setLearnedTime] = useState("");
+  const {
+    getCourse,
+    selectedCourse,
+    authors,
+    isInternetReachable,
+  } = useContext(DataContext);
   const { user } = useContext(AuthContext);
   useEffect(() => {
     const fetchData = async (id) => {
@@ -49,6 +55,16 @@ const SectionCourseItem = ({ onPress, item }) => {
         }
       }
     };
+    if (item.latestLearnTime) {
+      setLearnedTime(item.latestLearnTime);
+      PhoneStorage.save("@LAST_LEARN_" + item.id, item.latestLearnTime);
+    }
+    else {
+      const lastestLearnTime = PhoneStorage.load("@LAST_LEARN_" + item.id);
+      if (lastestLearnTime) {
+        setLearnedTime(lastestLearnTime);
+      }
+    }
     setCourseData(item);
     fetchData(item.id);
   }, []);
@@ -97,6 +113,22 @@ const SectionCourseItem = ({ onPress, item }) => {
             {courseData.ratedNumber ? " (" + courseData.ratedNumber + ")" : 0}
           </Text>
         </View>
+        {learnedTime && learnedTime != "" ? (
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "row",
+              backgroundColor: "#2b2c30",
+            }}
+          >
+            <Text style={styles.darkText}>Last Learn: </Text>
+            <Text style={styles.darkText}>
+              {learnedTime.substring(0, 10) +
+                " " +
+                learnedTime.substring(11, 16)}
+            </Text>
+          </View>
+        ) : null}
       </View>
     </TouchableOpacity>
   );

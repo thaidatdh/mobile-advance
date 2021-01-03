@@ -323,11 +323,18 @@ const CourseInfo = (props) => {
               Price: {courseDetail.price}
             </Text>
           </Button>
-          <Button style={styles.buttons}>
-            <Text style={{ color: "white", textTransform: "none" }}>
-              {courseDetail.videoNumber}
-            </Text>
-          </Button>
+          {props.learnedTime && props.learnedTime != "" ? (
+            <Button style={styles.buttons}>
+              <Text style={{ color: "white", textTransform: "none" }}>
+                {"Last Learn: " +
+                  props.learnedTime.substring(0, 10) +
+                  " " +
+                  props.learnedTime.substring(11, 16)}
+              </Text>
+            </Button>
+          ) : (
+            null
+          )}
         </View>
       </View>
 
@@ -431,7 +438,11 @@ const CourseInfo = (props) => {
           <SectionRating content={props.course.ratings} />
         )}
       </View>
-      <RatingDialog visible={visible} hideDialog={hideDialog} onSave={handleSaveRating}/>
+      <RatingDialog
+        visible={visible}
+        hideDialog={hideDialog}
+        onSave={handleSaveRating}
+      />
     </View>
   );
 };

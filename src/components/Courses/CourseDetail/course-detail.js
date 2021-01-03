@@ -21,17 +21,38 @@ const { width, height } = Dimensions.get("window");
 const CourseDetail = ({ navigation, route }) => {
   const [courseDetail, setCourseDetail] = useState(route.params.course);
   const [videoUrl, setVideoUrl] = useState(route.params.course.promoVidUrl);
+  const [learnedTime, setLearnedTime] = useState("");
   const {
     authors,
     searchCourses,
     getSearchCourses,
     isInternetReachable,
   } = React.useContext(DataContext);
-  const { user } = React.useContext(AuthContext);
+  const { user, getLastLearnTime } = React.useContext(AuthContext);
   useEffect(() => {
     navigation.setOptions({ title: route.params.course.title });
   }, []);
   const fetchData = async (id) => {
+    if (route.params.course.latestLearnTime) {
+      setLearnedTime(route.params.course.latestLearnTime);
+      PhoneStorage.save(
+        "@LAST_LEARN_" + route.params.course.id,
+        route.params.latestLearnTime
+      );
+    } else {
+      const learnTime = getLastLearnTime(route.params.course.id);
+      if (learnTime) {
+        setLearnedTime(learnTime);
+        PhoneStorage.save("@LAST_LEARN_" + route.params.course.id, learnTime);
+      } else {
+        const lastestLearnTime = PhoneStorage.load(
+          "@LAST_LEARN_" + route.params.course.id
+        );
+        if (lastestLearnTime) {
+          setLearnedTime(lastestLearnTime);
+        }
+      }
+    }
     try {
       let res = await ApiServices.getCourseDetails(id, user ? user.id : id);
       let response = await res.json();
@@ -113,6 +134,7 @@ const CourseDetail = ({ navigation, route }) => {
       </View>
       <ScrollView style={{ height: height * 0.7 }}>
         <CourseInfo
+          learnedTime={learnedTime}
           course={courseDetail}
           onPressAuthor={onPressAuthor}
           onChangeVideo={onChangeVideo}
