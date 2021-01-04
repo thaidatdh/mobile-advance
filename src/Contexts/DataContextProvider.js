@@ -4,6 +4,7 @@ import NetInfo from "@react-native-community/netinfo";
 import { coursesData, authorsData } from "../data/dataMockup";
 import ApiServices from "../services/api-services";
 import PhoneStorage from "../services/phone-storage";
+import FileSystemApi from "../services/file-system-api";
 export const DataContext = React.createContext(null);
 function onlyUnique(value, index, self) {
   return self.indexOf(value) === index;
@@ -28,6 +29,15 @@ export default ({ children }) => {
       let response = await res.json();
       setNewReleased(response.payload);
       PhoneStorage.save("@newreleased", JSON.stringify(response.payload));
+      Promise.all(
+        response.payload.map((course) =>
+          course.imageUrl
+            ? FileSystemApi.downloadCourseImage(course.id, course.imageUrl)
+            : course.courseImage
+            ? FileSystemApi.downloadCourseImage(course.id, course.courseImage)
+            : null
+        )
+      );
     } catch (err) {
       console.log(err);
       if (!isInternetReachable) {
@@ -50,6 +60,7 @@ export default ({ children }) => {
       let response = await res.json();
       setTopSell(response.payload);
       PhoneStorage.save("@topsell", JSON.stringify(response.payload));
+      FileSystemApi.downloadImageCouseList(JSON.stringify(response.payload));
     } catch (err) {
       console.log(err);
       if (!isInternetReachable) {
@@ -72,6 +83,7 @@ export default ({ children }) => {
       let response = await res.json();
       setTopRated(response.payload);
       PhoneStorage.save("@toprated", JSON.stringify(response.payload));
+      FileSystemApi.downloadImageCouseList(JSON.stringify(response.payload));
     } catch (err) {
       console.log(err);
       if (!isInternetReachable) {
@@ -93,8 +105,19 @@ export default ({ children }) => {
       let res = await ApiServices.loadRecommended(token, user_id, 10, 1);
       let response = await res.json();
       setRecommended(response.payload);
+      PhoneStorage.save("@recommended", JSON.stringify(response.payload));
+      FileSystemApi.downloadImageCouseList(JSON.stringify(response.payload));
     } catch (err) {
       console.log(err);
+      if (!isInternetReachable) {
+        PhoneStorage.load("@recommended", "json").then((persistData) => {
+          if (persistData) {
+            setRecommended(persistData);
+          } else {
+            setRecommended([]);
+          }
+        });
+      }
     }
   };
   const getAuthors = async () => {
@@ -129,6 +152,16 @@ export default ({ children }) => {
       let response = await res.json();
       setAuthors(response.payload);
       PhoneStorage.save("@instructorList", JSON.stringify(response.payload));
+      Promise.all(
+        response.payload.map((instructor) =>
+          instructor["user.avatar"]
+            ? FileSystemApi.downloadInstructorImage(
+                instructor.id,
+                instructor["user.avatar"]
+              )
+            : null
+        )
+      );
     } catch (err) {
       console.log(err);
       if (!isInternetReachable) {

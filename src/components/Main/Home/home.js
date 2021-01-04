@@ -41,7 +41,7 @@ const Home = ({ navigation }) => {
             onPressCourse={handleViewCourse}
           />*/}
           <SectionCourses
-            title="Channel"
+            title="Progress"
             onSeeAll={handleSeeAll}
             onPressCourse={handleViewCourse}
             coursesList={channel}

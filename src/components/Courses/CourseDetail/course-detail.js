@@ -16,6 +16,7 @@ import { DataContext } from "../../../Contexts/DataContextProvider";
 import { AuthContext } from "../../../Contexts/AuthContextProvider";
 import ApiServices from "../../../services/api-services";
 import PhoneStorage from "../../../services/phone-storage";
+import FileSystemApi from "../../../services/file-system-api";
 const { width, height } = Dimensions.get("window");
 
 const CourseDetail = ({ navigation, route }) => {
@@ -73,8 +74,18 @@ const CourseDetail = ({ navigation, route }) => {
           (persistData) => {
             if (persistData) {
               setCourseDetail(persistData);
-              if (persistData.promoVidUrl) {
-                setVideoUrl(persistData.promoVidUrl);
+              if (
+                persistData.promoVidUrl &&
+                !persistData.promoVidUrl.includes("youtube.com")
+              ) {
+                FileSystemApi.getCourseVideo(
+                  persistData.id,
+                  persistData.promoVidUrl
+                ).then((promoVidUrl) => {
+                  if (promoVidUrl && promoVidUrl != "") {
+                    setVideoUrl(promoVidUrl);
+                  }
+                });
               }
             }
           }
@@ -84,12 +95,20 @@ const CourseDetail = ({ navigation, route }) => {
   };
   useEffect(() => {
     setVideoUrl(route.params.course.promoVidUrl);
+    console.log(route.params.course.promoVidUrl);
+    if (!isInternetReachable) {
+      setVideoUrl(null);
+      console.log("null video");
+    }
     setCourseDetail(route.params.course);
     fetchData(route.params.course.id);
   }, []);
+  useEffect(() => {
+    console.log(videoUrl);
+  })
   const ReloadData = () => {
     fetchData(route.params.course.id);
-  }
+  };
   const onChangeVideo = (url, lession_id) => {
     setVideoUrl(url);
   };
@@ -103,7 +122,7 @@ const CourseDetail = ({ navigation, route }) => {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
       <View style={styles.imageView}>
-        {videoUrl && videoUrl != null && videoUrl != undefined ? (
+        {videoUrl ? (
           videoUrl.includes("youtube.com") ? (
             <WebView source={{ uri: videoUrl }} />
           ) : (

@@ -9,6 +9,7 @@ import {
 } from "../data/dataMockup";
 import ApiServices from "../services/api-services";
 import PhoneStorage from "../services/phone-storage";
+import FileSystemApi from "../services/file-system-api";
 export const AuthContext = React.createContext(null);
 
 export default ({ children }) => {
@@ -32,6 +33,9 @@ export default ({ children }) => {
             "@bookmark",
             JSON.stringify(responseBookmark.payload)
           );
+          FileSystemApi.downloadImageCouseList(
+            JSON.stringify(responseBookmark.payload)
+          );
         } else {
           setBookmark([]);
         }
@@ -53,11 +57,14 @@ export default ({ children }) => {
       .then((resProcess) => resProcess.json())
       .then((responseProcess) => {
         if (responseProcess.payload !== undefined) {
+          setChannel(responseProcess.payload);
           PhoneStorage.save(
             "@processCourses",
             JSON.stringify(responseProcess.payload)
           );
-          setChannel(responseProcess.payload);
+          FileSystemApi.downloadImageCouseList(
+            JSON.stringify(responseProcess.payload)
+          );
         } else {
           setChannel([]);
         }
@@ -137,6 +144,7 @@ export default ({ children }) => {
       if (searchHist) {
         await setSearchHistory(searchHist);
       }
+      await loadDownloaded();
       const tokenValue = await PhoneStorage.load("@token", "string");
       if (tokenValue != null) await setToken(tokenValue);
       const userInfo = await PhoneStorage.load("@user", "json");
@@ -223,19 +231,62 @@ export default ({ children }) => {
       return err.message;
     }
   };
+  const getListDownload = (course) => {
+    let listDownload = [];
+    if (
+      course.promoVidUrl &&
+      !course.promoVidUrl.toLowerCase().includes("youtube.com")
+    ) {
+      listDownload = listDownload.concat({
+        type: "course",
+        path: course.promoVidUrl,
+        id: course.id,
+      });
+    }
+    if (course.section) {
+      listDownload = listDownload.concat(
+        course.section.map((aSection) => {
+          aSection.lesson.map((aLesson) => {
+            aLesson.videoUrl &&
+            !aLesson.videoUrl.toLowerCase().includes("youtube.com")
+              ? {
+                  type: "lesson",
+                  path: aLesson.videoUrl,
+                  id: aLesson.id,
+                }
+              : null;
+          });
+        })
+      );
+    }
+    listDownload = listDownload.filter((n) => n != null && n != undefined);
+    return listDownload;
+  };
+  const loadDownloaded = async () => {
+    const downloadedCourses = await PhoneStorage.load("@download", "json");
+    if (downloadedCourses) setDownloaded(downloadedCourses);
+    else setDownloaded([]);
+  };
   const addDownloaded = (course) => {
     let newDownloaded = downloaded.slice().concat(course);
+    const listDownload = getListDownload(course);
+    FileSystemApi.downloadCourse(listDownload, course.id);
     setDownloaded(newDownloaded);
+    PhoneStorage.save("@download", JSON.stringify(newDownloaded));
   };
   const removeDownloaded = (course) => {
-    let newDownloaded = downloaded.filter((e) => e !== course);
+    let newDownloaded = downloaded.filter((e) => e.id !== course.id);
     setDownloaded(newDownloaded);
+    PhoneStorage.save("@download", JSON.stringify(newDownloaded));
+    FileSystemApi.deleteCourse(course.id);
   };
   const removeAllDownloaded = () => {
     setDownloaded([]);
+    PhoneStorage.save("@download", JSON.stringify([]));
+    FileSystemApi.deleteAllCourse();
   };
-  const isDownloaded = (courseTitle) => {
-    const course = downloaded.find((e) => e.title === courseTitle);
+  const isDownloaded = (id) => {
+    const course = downloaded ? downloaded.find((e) => e.id === id) : null;
     if (course) {
       return true;
     }
@@ -249,8 +300,8 @@ export default ({ children }) => {
     await ApiServices.changeLikeCourse(course_id, token);
     await getFavoriteCourses();
   };
-  const isBookmarked = (courseTitle) => {
-    const bookmarked = bookmark.find((e) => e.courseTitle === courseTitle);
+  const isBookmarked = (id) => {
+    const bookmarked = bookmark.find((e) => e.id === id);
     if (bookmarked) {
       return true;
     }
@@ -264,8 +315,8 @@ export default ({ children }) => {
     let newChannel = channel.filter((e) => e !== course);
     setChannel(newChannel);
   };
-  const isChanneled = (courseTitle) => {
-    const channeled = channel.find((e) => e.courseTitle === courseTitle);
+  const isChanneled = (id) => {
+    const channeled = channel.find((e) => e.id === id);
     if (channeled) {
       return true;
     }
@@ -299,12 +350,12 @@ export default ({ children }) => {
     }
   };
   const getLastLearnTime = (course_id) => {
-    const course = channel.find(n => n.id == course_id);
+    const course = channel.find((n) => n.id == course_id);
     if (course) {
       return course.latestLearnTime;
     }
     return "";
-  }
+  };
   const store = {
     user,
     token,
@@ -333,6 +384,7 @@ export default ({ children }) => {
     loadPersistUserData,
     setUser,
     getLastLearnTime,
+    loadDownloaded,
   };
 
   return <AuthContext.Provider value={store}>{children}</AuthContext.Provider>;

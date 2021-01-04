@@ -6,14 +6,23 @@ import DownloadEmpty from "./download-empty";
 import MAppBar from "../app-bar";
 import { AuthContext } from "../../../Contexts/AuthContextProvider";
 import { DataContext } from "../../../Contexts/DataContextProvider";
+import { useEffect } from "react/cjs/react.development";
 const { width, height } = Dimensions.get("window");
 const Download = ({ navigation }) => {
-  const { channel, removeAllDownloaded } = React.useContext(AuthContext);
-  const { topSell } = React.useContext(DataContext);
+  const { downloaded, removeAllDownloaded, user, token } = React.useContext(AuthContext);
+  const { topSell, recommended, loadRecommended } = React.useContext(
+    DataContext
+  );
+  useEffect(() => {
+    const load = async () => {
+      loadRecommended(token, user.id);
+    }
+    load();
+  }, []);
   const findCourse = () => {
     navigation.navigate("List Courses", {
-      title: "Courses",
-      courses: topSell,
+      title: user ? "Recommended" : "Top Sell",
+      courses: user ? recommended : topSell,
     });
   };
   const onPressCourse = (course) => {
@@ -22,10 +31,10 @@ const Download = ({ navigation }) => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#0E0F13" }}>
       <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
-      <MAppBar navigation={navigation} title="My Courses" />
-      {channel && channel.length > 0 ? (
+      <MAppBar navigation={navigation} title="Download" />
+      {downloaded && downloaded.length > 0 ? (
         <DownloadData
-          courses={channel}
+          courses={downloaded}
           onCheckEmpty={removeAllDownloaded}
           onPressCourse={onPressCourse}
         />

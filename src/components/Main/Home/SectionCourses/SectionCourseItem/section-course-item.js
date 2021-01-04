@@ -113,7 +113,7 @@ const SectionCourseItem = ({ onPress, item }) => {
             {courseData.ratedNumber ? " (" + courseData.ratedNumber + ")" : 0}
           </Text>
         </View>
-        {learnedTime && learnedTime != "" ? (
+        {learnedTime && learnedTime != "" && learnedTime.length > 16 ? (
           <View
             style={{
               flex: 1,

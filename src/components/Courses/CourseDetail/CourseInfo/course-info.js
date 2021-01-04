@@ -48,13 +48,13 @@ const CourseInfo = (props) => {
   );
   const [transcript, setTranscript] = useState("");
   const [isDownloadedCourse, setIsDownloadedCourse] = useState(
-    isDownloaded(props.course.title)
+    isDownloaded(props.course.id)
   );
   const [isChannelCourse, setIsChannelCourse] = useState(
-    isChanneled(props.course.title)
+    isChanneled(props.course.id)
   );
   const [isBookmarkedCourse, setIsBookmarkedCourse] = useState(
-    isBookmarked(props.course.title)
+    isBookmarked(props.course.id)
   );
   const [courseDetail, setCourseDetail] = useState(props.course);
   useEffect(() => {
@@ -154,7 +154,13 @@ const CourseInfo = (props) => {
       );
       return;
     }
-    return;
+    if (!isChannelCourse) {
+      Alert.alert(
+        props.course.title ? props.course.title : props.course.courseTitle,
+        "You have to own course to download!"
+      );
+      return;
+    }
     if (!isDownloadedCourse) {
       addDownloaded(props.course);
       setIsDownloadedCourse(true);
@@ -323,7 +329,7 @@ const CourseInfo = (props) => {
               Price: {courseDetail.price}
             </Text>
           </Button>
-          {props.learnedTime && props.learnedTime != "" ? (
+          {props.learnedTime && props.learnedTime != "" && props.learnedTime.length > 16 ? (
             <Button style={styles.buttons}>
               <Text style={{ color: "white", textTransform: "none" }}>
                 {"Last Learn: " +

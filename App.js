@@ -46,7 +46,7 @@ const BottomTabNavigator = () => {
           let iconName;
           if (route.name === "Home") {
             iconName = "home";
-          } else if (route.name === "My Courses") {
+          } else if (route.name === "Download") {
             iconName = "arrow-alt-circle-down";
           } else if (route.name === "Browse") {
             iconName = "keyboard";
@@ -71,7 +71,7 @@ const BottomTabNavigator = () => {
       }}
     >
       <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="My Courses" component={Download} />
+      <Tab.Screen name="Download" component={Download} />
       <Tab.Screen name="Browse" component={Browse} />
       <Tab.Screen name="Search" component={Search} />
     </Tab.Navigator>

@@ -95,13 +95,6 @@ const ListCourseItem = (props) => {
       alert(error.message);
     }
   };
-  const onDownload = () => {
-    if (user) {
-      addDownloaded(props.item);
-    } else {
-      props.navigation.navigate("Sign In");
-    }
-  };
   const onRemoveDownload = () => {
     removeDownloaded(props.item);
   };
@@ -206,23 +199,23 @@ const ListCourseItem = (props) => {
       >
         <Menu.Item onPress={onShare} title="Share" />
         {user ? (
-          !isBookmarked(course.title) ? (
+          !isBookmarked(course.id) ? (
             <Menu.Item onPress={onBookmark} title="Add Bookmark" />
           ) : (
             <Menu.Item onPress={onRemoveBookmark} title="Remove Bookmark" />
           )
         ) : null}
         {user ? (
-          !isChanneled(course.title) ? (
+          !isChanneled(course.id) ? (
             <Menu.Item onPress={onChannel} title="Buy Course" />
           ) : null
         ) : /*<Menu.Item onPress={onRemoveChannel} title="Remove Channel" />*/
         null}
-        {/*!isDownloaded(course.title) ? (
-          <Menu.Item onPress={onDownload} title="Download" />
-        ) : (
+        {isDownloaded(course.id) ? (
           <Menu.Item onPress={onRemoveDownload} title="Remove Downloaded" />
-        )*/}
+        ) : (
+          null
+        )}
       </Menu>
     </TouchableOpacity>
   );
