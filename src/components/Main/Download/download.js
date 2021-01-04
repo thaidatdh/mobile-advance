@@ -10,21 +10,13 @@ import { useEffect } from "react/cjs/react.development";
 const { width, height } = Dimensions.get("window");
 const Download = ({ navigation }) => {
   const { downloaded, removeAllDownloaded, user, token } = React.useContext(AuthContext);
-  const { topSell, recommended, loadRecommended } = React.useContext(
-    DataContext
-  );
-  useEffect(() => {
-    const load = async () => {
-      if (user) {
-        loadRecommended(token, user.id);
-      }
-    }
-    load();
-  }, []);
+  const {
+    topSell,
+  } = React.useContext(DataContext);
   const findCourse = () => {
     navigation.navigate("List Courses", {
-      title: user ? "Recommended" : "Top Sell",
-      courses: user ? recommended : topSell,
+      title: "Top Sell",
+      courses: topSell,
     });
   };
   const onPressCourse = (course) => {

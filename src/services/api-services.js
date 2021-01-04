@@ -183,7 +183,7 @@ const getAllInstructor = () => {
   };
   return fetch("http://api.dev.letstudy.org/instructor", requestOptions);
 };
-const search = (categories, keyword, limit, page) => {
+const search = (categories, keyword, limit, offset) => {
   const url = "http://api.dev.letstudy.org/course/search";
   const requestOptionsUser = {
     method: "POST",
@@ -198,15 +198,11 @@ const search = (categories, keyword, limit, page) => {
           rule: "ASC",
         },
         category: categories,
-        time: [{ min: 0 }],
-        price: [
-          {
-            min: 0,
-          },
-        ],
+        time: [],
+        price: [],
       },
       limit: limit,
-      offset: page,
+      offset: offset,
     }),
   };
   return fetch(url, requestOptionsUser);
@@ -338,6 +334,25 @@ const ratingCourse = (
     requestOptions
   );
 };
+const searchV2 = (keyword, limit, offset) => {
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      keyword: keyword,
+      limit: limit,
+      offset: offset,
+      opt: {
+        category: [],
+        time: [],
+        price: [],
+      },
+    }),
+  };
+  return fetch("http://api.dev.letstudy.org/course/searchV2", requestOptions);
+};
 const ApiServices = {
   login,
   register,
@@ -363,5 +378,6 @@ const ApiServices = {
   updateEmail,
   forgetPassword,
   ratingCourse,
+  searchV2,
 };
 export default ApiServices;

@@ -35,7 +35,7 @@ const ListCourseItem = (props) => {
     removeBookmark,
     removeDownloaded,
   } = React.useContext(AuthContext);
-  const {isInternetReachable} = React.useContext(DataContext);
+  const { isInternetReachable } = React.useContext(DataContext);
   useEffect(() => {
     const fetchData = async (id) => {
       try {
@@ -81,10 +81,14 @@ const ListCourseItem = (props) => {
           await setImageUrl(courseImage);
         }
       }
-    }
-    getImage();
+    };
     setCourse(props.item);
-    fetchData(props.item.id);
+    try {
+      getImage();
+    } catch (err) {}
+    try {
+      fetchData(props.item.id);
+    } catch (err) {}
   }, []);
   const onMenuOpen = () => {
     setIsMenuVisible(true);
@@ -232,9 +236,7 @@ const ListCourseItem = (props) => {
         null}
         {isDownloaded(course.id) ? (
           <Menu.Item onPress={onRemoveDownload} title="Remove Downloaded" />
-        ) : (
-          null
-        )}
+        ) : null}
       </Menu>
     </TouchableOpacity>
   );

@@ -8,8 +8,10 @@ import {
   SafeAreaView,
   ScrollView,
   StatusBar,
+  Alert,
 } from "react-native";
 import { Video } from "expo-av";
+import NetInfo from "@react-native-community/netinfo";
 import { WebView } from "react-native-webview";
 import CourseInfo from "./CourseInfo/course-info";
 import { DataContext } from "../../../Contexts/DataContextProvider";
@@ -21,9 +23,10 @@ const { width, height } = Dimensions.get("window");
 
 const CourseDetail = ({ navigation, route }) => {
   const [courseDetail, setCourseDetail] = useState(route.params.course);
-  const [videoUrl, setVideoUrl] = useState(route.params.course.promoVidUrl);
+  const [videoUrl, setVideoUrl] = useState("");
   const [learnedTime, setLearnedTime] = useState("");
   const [isLesson, setIsLesson] = useState(false);
+  const [isGetUrlOffline, setIsGetUrlOffline] = useState(true);
   const [imageUrl, setImageUrl] = useState(
     route.params.course.courseImage
       ? route.params.course.courseImage
@@ -75,55 +78,97 @@ const CourseDetail = ({ navigation, route }) => {
       }
     } catch (err) {
       console.log(err);
-      if (!isInternetReachable) {
-        PhoneStorage.load("@course_detail_info_" + id, "json").then(
-          (persistData) => {
-            if (persistData) {
-              setCourseDetail(persistData);
-              if (
-                persistData.promoVidUrl &&
-                !persistData.promoVidUrl.includes("youtube.com")
-              ) {
-                FileSystemApi.getCourseVideo(
-                  persistData.id,
-                  persistData.promoVidUrl
-                ).then((promoVidUrl) => {
-                  if (promoVidUrl && promoVidUrl != "") {
+      PhoneStorage.load("@course_detail_info_" + id, "json").then(
+        (persistData) => {
+          if (persistData) {
+            setCourseDetail(persistData);
+            if (
+              persistData.promoVidUrl &&
+              !persistData.promoVidUrl.includes("youtube.com")
+            ) {
+              FileSystemApi.getCourseVideo(
+                persistData.id,
+                persistData.promoVidUrl
+              )
+                .then((promoVidUrl) => {
+                  if (promoVidUrl && promoVidUrl != "" && promoVidUrl != null) {
                     setVideoUrl(promoVidUrl);
                   }
-                });
-              }
+                })
+                .catch((err) => {});
             }
           }
-        );
-      }
+        }
+      );
     }
   };
   useEffect(() => {
-    setVideoUrl(route.params.course.promoVidUrl);
-    if (!isInternetReachable) {
-      setVideoUrl(null);
-      console.log("null video");
-    }
-    const getImage = async () => {
+    //setVideoUrl(route.params.course.promoVidUrl);
+    const getImage = () => {
       const url = route.params.course.courseImage
         ? route.params.course.courseImage
         : route.params.course.imageUrl;
       setImageUrl(url);
       if (!isInternetReachable) {
-        const courseImage = await FileSystemApi.getCourseImage(
-          route.params.course.id,
-          url
-        );
-        if (courseImage) {
-          await setImageUrl(courseImage);
-        }
+        FileSystemApi.getCourseImage(route.params.course.id, url)
+          .then((courseImage) => {
+            if (courseImage) {
+              setImageUrl(courseImage);
+            }
+          })
+          .catch((e) => {});
       }
     };
-    getImage();
+    try {
+      getImage();
+    } catch (err) {}
     setCourseDetail(route.params.course);
-    fetchData(route.params.course.id);
+    try {
+      fetchData(route.params.course.id);
+    } catch (err) {}
+    NetInfo.addEventListener((state) => {});
+    NetInfo.fetch()
+      .then((state) => {
+        if (!state.isInternetReachable) {
+          setVideoUrl(null);
+          FileSystemApi.getCourseVideo(
+            route.params.course.id,
+            route.params.course.promoVidUrl
+          )
+            .then((promoVidUrl) => {
+              if (promoVidUrl) {
+                setVideoUrl(promoVidUrl);
+                setIsGetUrlOffline(false);
+              }
+            })
+            .catch((err) => {});
+        }
+      })
+      .catch((err) => {});
   }, []);
+
+  useEffect(() => {
+    NetInfo.addEventListener((state) => {});
+    NetInfo.fetch()
+      .then((state) => {
+        if (!state.isInternetReachable && isGetUrlOffline) {
+          setVideoUrl(null);
+          FileSystemApi.getCourseVideo(
+            route.params.course.id,
+            route.params.course.promoVidUrl
+          )
+            .then((promoVidUrl) => {
+              if (promoVidUrl) {
+                setVideoUrl(promoVidUrl);
+                alert(promoVidUrl);
+                setIsGetUrlOffline(false);
+              }
+            })
+            .catch((err) => {});
+        }
+      })
+      .catch((err) => {});
+  });
   const ReloadData = () => {
     fetchData(route.params.course.id);
   };
@@ -137,6 +182,9 @@ const CourseDetail = ({ navigation, route }) => {
       navigation.navigate("Author", { author: author });
     }
   };
+  const onErrorVideo = (e) => {
+    alert(e);
+  }
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
@@ -148,24 +196,22 @@ const CourseDetail = ({ navigation, route }) => {
             <Video
               source={{
                 uri: videoUrl,
-                overrideFileExtensionAndroid: 'mp4'
               }}
               rate={1.0}
               volume={1.0}
               isMuted={false}
               resizeMode="contain"
-              shouldPlay
+              shouldPlay={true}
               isLooping={!isLesson}
-              useNativeControls
+              useNativeControls={true}
               style={styles.image}
+              onError={onErrorVideo}
             />
           )
         ) : (
           <Image
             source={{
-              uri: courseDetail.imageUrl
-                ? courseDetail.imageUrl
-                : courseDetail.courseImage,
+              uri: imageUrl,
             }}
             style={styles.image}
           />

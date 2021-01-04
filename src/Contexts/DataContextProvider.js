@@ -41,13 +41,15 @@ export default ({ children }) => {
     } catch (err) {
       console.log(err);
       if (!isInternetReachable) {
-        PhoneStorage.load("@newreleased", "json").then((persistData) => {
-          if (persistData) {
-            setNewReleased(persistData);
-          } else {
-            setNewReleased([]);
-          }
-        });
+        PhoneStorage.load("@newreleased", "json")
+          .then((persistData) => {
+            if (persistData) {
+              setNewReleased(persistData);
+            } else {
+              setNewReleased([]);
+            }
+          })
+          .catch((err) => {});;
       }
     }
   };
@@ -60,7 +62,9 @@ export default ({ children }) => {
       let response = await res.json();
       setTopSell(response.payload);
       PhoneStorage.save("@topsell", JSON.stringify(response.payload));
-      FileSystemApi.downloadImageCouseList(JSON.stringify(response.payload));
+      FileSystemApi.downloadImageCouseList(
+        JSON.stringify(response.payload)
+      ).catch((err) => {});;
     } catch (err) {
       console.log(err);
       if (!isInternetReachable) {
@@ -83,7 +87,9 @@ export default ({ children }) => {
       let response = await res.json();
       setTopRated(response.payload);
       PhoneStorage.save("@toprated", JSON.stringify(response.payload));
-      FileSystemApi.downloadImageCouseList(JSON.stringify(response.payload));
+      FileSystemApi.downloadImageCouseList(
+        JSON.stringify(response.payload)
+      ).catch((err) => {});;
     } catch (err) {
       console.log(err);
       if (!isInternetReachable) {
@@ -106,18 +112,22 @@ export default ({ children }) => {
       let response = await res.json();
       setRecommended(response.payload);
       PhoneStorage.save("@recommended", JSON.stringify(response.payload));
-      FileSystemApi.downloadImageCouseList(JSON.stringify(response.payload));
+      FileSystemApi.downloadImageCouseList(
+        JSON.stringify(response.payload)
+      ).catch((err) => {});;
     } catch (err) {
       console.log(err);
-      if (!isInternetReachable) {
-        PhoneStorage.load("@recommended", "json").then((persistData) => {
-          if (persistData) {
-            setRecommended(persistData);
-          } else {
-            setRecommended([]);
-          }
-        });
-      }
+      try {
+        if (!isInternetReachable) {
+          PhoneStorage.load("@recommended", "json").then((persistData) => {
+            if (persistData) {
+              setRecommended(persistData);
+            } else {
+              setRecommended([]);
+            }
+          });
+        }
+      } catch (e) {}
     }
   };
   const getAuthors = async () => {
@@ -165,31 +175,33 @@ export default ({ children }) => {
     } catch (err) {
       console.log(err);
       if (!isInternetReachable) {
-        PhoneStorage.load("@instructorList", "json").then((persistData) => {
-          if (persistData) {
-            setAuthors(persistData);
-          } else {
-            setAuthors([]);
-          }
-        });
+        PhoneStorage.load("@instructorList", "json")
+          .then((persistData) => {
+            if (persistData) {
+              setAuthors(persistData);
+            } else {
+              setAuthors([]);
+            }
+          })
+          .catch((err) => {});;
       }
     }
   };
-  const getAuthorCourses = async (authorId) => {
-    let courseResult = [];
+  const getAuthorInfo = async (authorId) => {
+    let courseResult = null;
     try {
       let res = await ApiServices.getInstructorDetail(authorId);
       let response = await res.json();
-      courseResult = response.payload.courses;
+      courseResult = response.payload;
       PhoneStorage.save(
-        "@authorcourse_" + authorId,
-        JSON.stringify(response.payload.courses)
+        "@authorinfo_" + authorId,
+        JSON.stringify(response.payload)
       );
     } catch (err) {
       console.log(err);
       if (!isInternetReachable) {
         const persistData = await PhoneStorage.load(
-          "@authorcourse_" + authorId,
+          "@authorinfo_" + authorId,
           "json"
         );
         if (persistData) {
@@ -209,7 +221,7 @@ export default ({ children }) => {
     }
     const category_id = categories.map((n) => n.id);
     try {
-      let res = await ApiServices.search(category_id, courseName, 10, 1);
+      let res = await ApiServices.search(category_id, courseName, 10, 0);
       let response = await res.json();
 
       if (
@@ -255,9 +267,6 @@ export default ({ children }) => {
       return persistData;
     }
   };
-  const setIsInternetReachable = (value) => {
-    setInternetReachable(value);
-  };
   const store = {
     courses,
     authors,
@@ -274,13 +283,13 @@ export default ({ children }) => {
     getAuthors,
     searchCourses,
     getSearchCourses,
-    getAuthorCourses,
+    getAuthorInfo,
     getAuthors,
     getAllNewData,
     recommended,
     loadRecommended,
     isInternetReachable,
-    setIsInternetReachable: setIsInternetReachable,
+    setIsInternetReachable: setInternetReachable,
   };
 
   return <DataContext.Provider value={store}>{children}</DataContext.Provider>;

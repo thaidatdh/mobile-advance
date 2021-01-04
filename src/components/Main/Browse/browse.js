@@ -78,7 +78,7 @@ const Browse = ({ navigation }) => {
   const onPressCategory = async (categoryName, categoryId) => {
     try {
       let categoryList = [categoryId];
-      let res = await ApiServices.search(categoryList, "", 10, 1);
+      let res = await ApiServices.search(categoryList, "", 10, 0);
       let response = await res.json();
       if (
         response.payload !== undefined &&

@@ -10,6 +10,7 @@ import {
 import ApiServices from "../services/api-services";
 import PhoneStorage from "../services/phone-storage";
 import FileSystemApi from "../services/file-system-api";
+import { Alert } from "react-native";
 export const AuthContext = React.createContext(null);
 
 export default ({ children }) => {
@@ -35,7 +36,7 @@ export default ({ children }) => {
           );
           FileSystemApi.downloadImageCouseList(
             JSON.stringify(responseBookmark.payload)
-          );
+          ).catch((err) => {});;
         } else {
           setBookmark([]);
         }
@@ -64,7 +65,7 @@ export default ({ children }) => {
           );
           FileSystemApi.downloadImageCouseList(
             JSON.stringify(responseProcess.payload)
-          );
+          ).catch((err) => {});;
         } else {
           setChannel([]);
         }
@@ -158,6 +159,7 @@ export default ({ children }) => {
                 setBookmark(responseBookmark.payload);
               else {
                 console.log("error load fav");
+                NetInfo.addEventListener((state) => {});
                 NetInfo.fetch().then((state) => {
                   if (!state.isInternetReachable) {
                     PhoneStorage.load("@bookmark", "json").then(
@@ -183,6 +185,7 @@ export default ({ children }) => {
                 setChannel(responseProcess.payload);
               else {
                 console.log("error load pro");
+                NetInfo.addEventListener((state) => {});
                 NetInfo.fetch().then((state) => {
                   if (!state.isInternetReachable) {
                     PhoneStorage.load("@processCourses", "json").then(
@@ -261,16 +264,30 @@ export default ({ children }) => {
     return listDownload;
   };
   const loadDownloaded = async () => {
-    const downloadedCourses = await PhoneStorage.load("@download", "json");
-    if (downloadedCourses) setDownloaded(downloadedCourses);
-    else setDownloaded([]);
+    try {
+      const downloadedCourses = await PhoneStorage.load("@download", "json");
+      if (downloadedCourses) setDownloaded(downloadedCourses);
+      else setDownloaded([]);
+    }
+    catch(err) {
+      setDownloaded([]);
+    }
   };
-  const addDownloaded = (course) => {
+  const addDownloaded = async (course) => {
     let newDownloaded = downloaded.slice().concat(course);
     const listDownload = getListDownload(course);
-    FileSystemApi.downloadCourse(listDownload, course.id);
-    setDownloaded(newDownloaded);
-    PhoneStorage.save("@download", JSON.stringify(newDownloaded));
+    const courseTitle = course.title ? course.title : course.courseTitle;
+    FileSystemApi.downloadCourse(listDownload, course.id)
+      .then((rs) => {
+        if (rs) {
+          Alert.alert(courseTitle, "Download Completed");
+          setDownloaded(newDownloaded);
+          PhoneStorage.save("@download", JSON.stringify(newDownloaded));
+        } else {
+          Alert.alert(courseTitle, "Download Failed");
+        }
+      })
+      .catch((err) => {});;
   };
   const removeDownloaded = (course) => {
     let newDownloaded = downloaded.filter((e) => e.id !== course.id);
@@ -281,7 +298,7 @@ export default ({ children }) => {
   const removeAllDownloaded = () => {
     setDownloaded([]);
     PhoneStorage.save("@download", JSON.stringify([]));
-    FileSystemApi.deleteAllCourse();
+    FileSystemApi.deleteAllCourse().catch((err) => {});;
   };
   const isDownloaded = (id) => {
     const course = downloaded ? downloaded.find((e) => e.id === id) : null;
@@ -323,18 +340,18 @@ export default ({ children }) => {
   const addSearchHistory = async (searchValue) => {
     let newSearchHistory = searchHistory.slice().concat(searchValue);
     await setSearchHistory(newSearchHistory);
-    PhoneStorage.save("@searchHist", JSON.stringify(searchHistory));
+    PhoneStorage.save("@searchHist", JSON.stringify(newSearchHistory));
   };
   const removeSearchHistory = async (searchValue) => {
     let newSearchHistory = searchHistory
       .slice()
       .filter((e) => e !== searchValue);
     await setSearchHistory(newSearchHistory);
-    PhoneStorage.save("@searchHist", JSON.stringify(searchHistory));
+    PhoneStorage.save("@searchHist", JSON.stringify(newSearchHistory));
   };
   const removeAllSearchHistory = async () => {
     await setSearchHistory([]);
-    PhoneStorage.save("@searchHist", JSON.stringify(searchHistory));
+    PhoneStorage.save("@searchHist", JSON.stringify([]));
   };
   const updateSetting = async (title, updateAttribute) => {
     var index = settings.findIndex((x) => x.title === title);

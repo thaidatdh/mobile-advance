@@ -12,7 +12,9 @@ const Search = ({navigation}) => {
   const [inputValue, setInputValue] = useState("");
   const [courseData, setCourseData] = useState([]);
   const [isSearched, setIsSearched] = useState(false);
-  //const [authorData, setAuthorData] = useState([]);
+  const [authorData, setAuthorData] = useState([]);
+  const [authorsInfo, setAuthorsInfo] = useState({ total: 0, inRange: 0});
+  const [coursesInfo, setCoursesInfo] = useState({ total: 0, inRange: 0 });
   const {
     searchHistory,
     addSearchHistory,
@@ -34,7 +36,10 @@ const Search = ({navigation}) => {
     navigation.navigate("List Courses", { courses: courses, title: searchValue });
   }
   const onPressSeeAllAuthor = (authors) => {
-    navigation.navigate("List Authors", { authors: authors, title: "Search" });
+    navigation.navigate("List Authors", {
+      authors: authors,
+      title: searchValue,
+    });
   };
   const onTextChangeSearchValue = (text) => {
     setInputValue(text);
@@ -42,6 +47,9 @@ const Search = ({navigation}) => {
       setSearchValue("");
       setIsSearched(false);
       setCourseData([]);
+      setAuthorData([]);
+      setAuthorsInfo({ total: 0, inRange: 0 });
+      setCoursesInfo({ total: 0, inRange: 0 });
     }
   };
   const onSearch = async (text) => {
@@ -62,7 +70,7 @@ const Search = ({navigation}) => {
     }
     const category_id = categories.map((n) => n.id);
     try {
-      let res = await ApiServices.search(category_id, text, 10, 1);
+      /*let res = await ApiServices.search(category_id, text, 10, 0);
       let response = await res.json();
 
       if (
@@ -72,6 +80,40 @@ const Search = ({navigation}) => {
         await setCourseData(response.payload.rows);
       } else {
         setCourseData([]);
+      }*/
+      let res = await ApiServices.searchV2(text, 10, 0);
+      let response = await res.json();
+      if (
+        response.payload !== undefined &&
+        response.payload.courses != undefined &&
+        response.payload.courses.data != undefined
+      ) {
+        await setCourseData(response.payload.courses.data);
+        const info = {
+          total: response.payload.courses.total,
+          inRange: response.payload.courses.totalInPage,
+        };
+        await setCoursesInfo(info);
+      } else {
+        setCourseData([]);
+        const info = { total: 0, inRange: 0 };
+        setCoursesInfo(info);
+      }
+      if (
+        response.payload !== undefined &&
+        response.payload.instructors != undefined &&
+        response.payload.instructors.data != undefined
+      ) {
+        await setAuthorData(response.payload.instructors.data);
+        const info = {
+          total: response.payload.instructors.total,
+          inRange: response.payload.instructors.totalInPage,
+        };
+        await setAuthorsInfo(info);
+      } else {
+        setAuthorData([]);
+        const info = { total: 0, inRange: 0 };
+        setAuthorsInfo(info);
       }
       setIsSearched(true);
     } catch (err) {
@@ -115,11 +157,13 @@ const Search = ({navigation}) => {
         <SearchData
           searchValue={searchValue}
           coursesData={courseData}
-          //authorsData={authorData}
+          coursesInfo={coursesInfo}
+          authorsData={authorData}
+          authorsInfo={authorsInfo}
           onPressCourse={onPressCourse}
-          //onPressAuthor={onPressAuthor}
+          onPressAuthor={onPressAuthor}
           onPressSeeAllCourse={onPressSeeAllCourse}
-          //onPressSeeAllAuthor={onPressSeeAllAuthor}
+          onPressSeeAllAuthor={onPressSeeAllAuthor}
         />
       )}
     </SafeAreaView>

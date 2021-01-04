@@ -28,7 +28,9 @@ const SectionAuthorItem = (props) => {
         }
       }
     };
-    getImage();
+    try {
+      getImage();
+    } catch (err) {}
   }, []);
   return (
     <TouchableOpacity

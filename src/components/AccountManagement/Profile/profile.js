@@ -82,7 +82,10 @@ const Profile = ({ navigation }) => {
           setName(response.payload.name);
           setPhone(response.payload.phone);
           setType(response.payload.type);
-          PhoneStorage.save("@user", JSON.stringify(response.payload));
+          PhoneStorage.save(
+            "@user",
+            JSON.stringify(response.payload)
+          );
         }
       });
   }, [isUpdated]);

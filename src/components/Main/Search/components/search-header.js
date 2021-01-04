@@ -24,7 +24,7 @@ const SearchHeader = (props) => {
       {props.dataLength} {props.data}
     </Text>
     <TouchableOpacity onPress={props.onPress}>
-    <Text
+    {props.dataLength > 0 ? <Text
       style={{
         color: "#2384ae",
         textTransform: "uppercase",
@@ -32,7 +32,7 @@ const SearchHeader = (props) => {
     >
       {" "}
       See All
-    </Text>
+    </Text> : null}
   </TouchableOpacity>
   </View>
   );

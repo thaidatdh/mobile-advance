@@ -271,7 +271,9 @@ const CourseInfo = (props) => {
             }}
           >
             {courseDetail.averagePoint
-              ? courseDetail.averagePoint
+              ? typeof courseDetail.averagePoint == "string"
+                ? parseFloat(courseDetail.averagePoint).toFixed(1)
+                : courseDetail.averagePoint.toFixed(1)
               : courseDetail.contentPoint}
           </Text>
           <Text style={{ color: "lightgray", fontSize: 12 }}>
@@ -329,7 +331,9 @@ const CourseInfo = (props) => {
               Price: {courseDetail.price}
             </Text>
           </Button>
-          {props.learnedTime && props.learnedTime != "" && props.learnedTime.length > 16 ? (
+          {props.learnedTime &&
+          props.learnedTime != "" &&
+          props.learnedTime.length > 16 ? (
             <Button style={styles.buttons}>
               <Text style={{ color: "white", textTransform: "none" }}>
                 {"Last Learn: " +
@@ -338,9 +342,7 @@ const CourseInfo = (props) => {
                   props.learnedTime.substring(11, 16)}
               </Text>
             </Button>
-          ) : (
-            null
-          )}
+          ) : null}
         </View>
       </View>
 

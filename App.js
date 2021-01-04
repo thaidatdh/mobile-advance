@@ -95,18 +95,12 @@ const MainNavigator = () => {
   }, []);
   useEffect(() => {
     const CheckConnectivity = () => {
+      NetInfo.addEventListener((state) => {});
       NetInfo.fetch().then((state) => {
         if (!state.isInternetReachable) {
           Alert.alert(
             "Internet",
-            "This application require internet connection.\nYou may not use all feature with offline mode.",
-            [
-              {
-                text: "OK",
-                onPress: () => {},
-              },
-            ],
-            { cancelable: false }
+            "This application require internet connection.\nYou may not use all feature with offline mode."
           );
         }
       });
@@ -114,11 +108,10 @@ const MainNavigator = () => {
     CheckConnectivity();
   }, []);
   useEffect(() => {
-    const CheckConnectivity2 = async () => {
-      const state = await NetInfo.fetch();
-      await setIsInternetReachable(state.isInternetReachable);
-    };
-    CheckConnectivity2();
+    NetInfo.addEventListener((state) => {});
+    NetInfo.fetch().then((state) => {
+      setIsInternetReachable(state.isInternetReachable);
+    });
   });
   return (
     <NavigationContainer

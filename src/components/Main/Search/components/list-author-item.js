@@ -15,14 +15,13 @@ const ListAuthorItem = (props) => {
       onPress={() => props.onPress(props.item)}
     >
       <View style={styles.imageView}>
-        <Image
-          source={{ uri: props.item["user.avatar"] }}
-          style={styles.image}
-        />
+        <Image source={{ uri: props.item.avatar }} style={styles.image} />
       </View>
       <View style={{ marginLeft: 10 }}>
-        <Text style={styles.title}>{props.item["user.name"]}</Text>
-        <Text style={styles.darkText}>Point: {props.item.point}</Text>
+        <Text style={styles.title}>{props.item.name}</Text>
+        <Text style={styles.darkText}>
+          Number Courses: {props.item.numcourses}
+        </Text>
       </View>
     </TouchableOpacity>
   );

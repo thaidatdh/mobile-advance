@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ScrollView,
   View,
@@ -15,7 +15,7 @@ const { width, height } = Dimensions.get("window");
 const SearchData = (props) => {
   const renderCourses = (coursesList) => {
     return coursesList.slice().map((item, index) =>
-      index <= 5 ? (
+      index < 5 ? (
         <ListCourseItem key={"C_" + item.id.toString()} item={item} onPress={props.onPressCourse}/>
       ) : null
     );
@@ -24,7 +24,7 @@ const SearchData = (props) => {
     return pathsList
       .slice()
       .map((item, index) =>
-        index <= 5 ? (
+        index < 5 ? (
           <ListPathItem key={"P_" + item.id.toString()} item={item} />
         ) : null
       );
@@ -33,7 +33,7 @@ const SearchData = (props) => {
     return authorsList
       .slice()
       .map((item, index) =>
-        index <= 5 ? (
+        index < 5 ? (
           <ListAuthorItem
             key={"A_" + item.id.toString()}
             item={item}
@@ -53,20 +53,20 @@ const SearchData = (props) => {
       <ScrollView>
         <SearchHeader
           key="courseList"
-          dataLength={props.coursesData.length}
+          dataLength={props.coursesInfo.total}
           data="Courses"
           onPress={onSeeAllCourses}
         />
         {renderCourses(props.coursesData)}
         {/*<SearchHeader key="pathList" dataLength={paths.length} data="Paths" />
-        {renderPaths(paths)}
+        {renderPaths(paths)}*/}
         <SearchHeader
           key="authorList"
-          dataLength={props.authorsData.length}
+          dataLength={props.authorsInfo.total}
           data="Authors"
           onPress={onSeeAllAuthors}
         />
-        {renderAuthors(props.authorsData)}*/}
+        {renderAuthors(props.authorsData)}
       </ScrollView>
     </View>
   );

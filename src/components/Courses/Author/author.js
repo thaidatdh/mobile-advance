@@ -13,32 +13,50 @@ import {
 } from "react-native";
 import ListCourseItem from "../ListCourses/ListCourseItem/list-course-item";
 import { DataContext } from "../../../Contexts/DataContextProvider";
+import FileSystemApi from "../../../services/file-system-api";
 const { width, height } = Dimensions.get("window");
 const Author = ({ navigation, route }) => {
-  const { getAuthorCourses, isInternetReachable } = React.useContext(DataContext);
+  const { getAuthorInfo, isInternetReachable } = React.useContext(DataContext);
   const [author, setAuthor] = useState(route.params.author);
   const [courses, setCourses] = useState([]);
-  const [imageUrl, setImageUrl] = useState(route.params.author["user.avatar"]);
+  const [imageUrl, setImageUrl] = useState(
+    route.params.author["user.avatar"]
+      ? route.params.author["user.avatar"]
+      : route.params.author.avatar
+  );
   useEffect(() => {
-    navigation.setOptions({ title: route.params.author["user.name"] });
-    getAuthorCourses(route.params.author.id).then(res => setCourses(res));
+    navigation.setOptions({
+      title: route.params.author["user.name"]
+        ? route.params.author["user.name"]
+        : route.params.author.name,
+    });
+    getAuthorInfo(route.params.author.id).then((res) => {
+      if (res) {
+        setCourses(res.courses);
+        setAuthor(res);
+      }
+    });
   }, []);
-  
+
   useEffect(() => {
-    const getImage = async () => {
-      const url = route.params.author["user.avatar"];
+    const getImage = () => {
+      const url = route.params.author["user.avatar"]
+        ? route.params.author["user.avatar"]
+        : route.params.author.avatar;
       setImageUrl(url);
       if (!isInternetReachable) {
-        const courseImage = await FileSystemApi.getInstructorImage(
-          route.params.author.id,
-          url
-        );
-        if (courseImage) {
-          await setImageUrl(courseImage);
-        }
+        FileSystemApi.getInstructorImage(route.params.author.id, url)
+          .then((courseImage) => {
+            if (courseImage) {
+              setImageUrl(courseImage);
+            }
+          })
+          .catch((err) => {});
       }
     };
-    getImage();
+    try {
+      getImage();
+    } catch (err) {}
   }, []);
   const onPressCourse = (course) => {
     navigation.popToTop();
@@ -61,11 +79,42 @@ const Author = ({ navigation, route }) => {
       <ScrollView>
         <View key="AuthorInfo" style={styles.authorInfoView}>
           <Image source={{ uri: imageUrl }} style={styles.image} />
-          <Text style={styles.authorName}>{author["user.name"]}</Text>
+          <Text style={styles.authorName}>
+            {author["user.name"] ? author["user.name"] : author.name}
+          </Text>
           {author.intro ? (
             <Text style={styles.desc}>{author.intro}</Text>
           ) : null}
-          <Text style={styles.desc}>Email: {author["user.email"]}</Text>
+          <View style={styles.descView}>
+            <Text style={styles.desc}>Email:</Text>
+            <Text style={styles.desc}>
+              {author["user.email"] ? author["user.email"] : author.email}
+            </Text>
+          </View>
+          {author.skills ? (
+            <View style={styles.descView}>
+              <Text style={styles.desc}>Skills:</Text>
+              <Text style={styles.desc}>{author.skills.join(", ")}</Text>
+            </View>
+          ) : null}
+          {author.major ? (
+            <View style={styles.descView}>
+              <Text style={styles.desc}>Major:</Text>
+              <Text style={styles.desc}>{author.major}</Text>
+            </View>
+          ) : null}
+          {author.phone ? (
+            <View style={styles.descView}>
+              <Text style={styles.desc}>Phone:</Text>
+              <Text style={styles.desc}>{author.phone}</Text>
+            </View>
+          ) : null}
+          {author.totalCourse ? (
+            <View style={styles.descView}>
+              <Text style={styles.desc}>Total Courses:</Text>
+              <Text style={styles.desc}>{author.totalCourse}</Text>
+            </View>
+          ) : null}
         </View>
         {renderItems(courses)}
       </ScrollView>
@@ -76,7 +125,7 @@ const styles = StyleSheet.create({
   authorInfoView: {
     flex: 1,
     justifyContent: "center",
-    height: height,
+    height: height * 0.7,
   },
   image: {
     height: width * 0.3,
@@ -95,12 +144,17 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginTop: 20,
   },
+  descView: {
+    width: width * 0.8,
+    justifyContent: "space-between",
+    alignSelf: "center",
+    flexDirection: "row",
+  },
   desc: {
     color: "white",
-    width: width * 0.8,
     textAlign: "justify",
     marginBottom: 20,
-    alignSelf: 'center'
+    alignSelf: "center",
   },
 });
 export default Author;

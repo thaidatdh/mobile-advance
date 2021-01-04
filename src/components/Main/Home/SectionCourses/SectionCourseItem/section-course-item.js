@@ -62,8 +62,7 @@ const SectionCourseItem = ({ onPress, item }) => {
     if (item.latestLearnTime) {
       setLearnedTime(item.latestLearnTime);
       PhoneStorage.save("@LAST_LEARN_" + item.id, item.latestLearnTime);
-    }
-    else {
+    } else {
       const lastestLearnTime = PhoneStorage.load("@LAST_LEARN_" + item.id);
       if (lastestLearnTime) {
         setLearnedTime(lastestLearnTime);
@@ -78,8 +77,10 @@ const SectionCourseItem = ({ onPress, item }) => {
           await setImageUrl(courseImage);
         }
       }
-    }
-    getImage();
+    };
+    try {
+      getImage();
+    } catch (err) {}
     setCourseData(item);
     fetchData(item.id);
   }, []);
@@ -88,7 +89,7 @@ const SectionCourseItem = ({ onPress, item }) => {
       <View style={styles.imageView}>
         <Image
           source={{
-            uri: imageUrl
+            uri: imageUrl,
           }}
           style={styles.image}
         />
