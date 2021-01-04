@@ -15,12 +15,30 @@ import ListCourseItem from "../ListCourses/ListCourseItem/list-course-item";
 import { DataContext } from "../../../Contexts/DataContextProvider";
 const { width, height } = Dimensions.get("window");
 const Author = ({ navigation, route }) => {
-  const { getAuthorCourses } = React.useContext(DataContext);
+  const { getAuthorCourses, isInternetReachable } = React.useContext(DataContext);
   const [author, setAuthor] = useState(route.params.author);
   const [courses, setCourses] = useState([]);
+  const [imageUrl, setImageUrl] = useState(route.params.author["user.avatar"]);
   useEffect(() => {
     navigation.setOptions({ title: route.params.author["user.name"] });
     getAuthorCourses(route.params.author.id).then(res => setCourses(res));
+  }, []);
+  
+  useEffect(() => {
+    const getImage = async () => {
+      const url = route.params.author["user.avatar"];
+      setImageUrl(url);
+      if (!isInternetReachable) {
+        const courseImage = await FileSystemApi.getInstructorImage(
+          route.params.author.id,
+          url
+        );
+        if (courseImage) {
+          await setImageUrl(courseImage);
+        }
+      }
+    };
+    getImage();
   }, []);
   const onPressCourse = (course) => {
     navigation.popToTop();
@@ -42,9 +60,11 @@ const Author = ({ navigation, route }) => {
       <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
       <ScrollView>
         <View key="AuthorInfo" style={styles.authorInfoView}>
-          <Image source={{ uri: author["user.avatar"] }} style={styles.image} />
+          <Image source={{ uri: imageUrl }} style={styles.image} />
           <Text style={styles.authorName}>{author["user.name"]}</Text>
-          {author.intro ? <Text style={styles.desc}>{author.intro}</Text> : null }
+          {author.intro ? (
+            <Text style={styles.desc}>{author.intro}</Text>
+          ) : null}
           <Text style={styles.desc}>Email: {author["user.email"]}</Text>
         </View>
         {renderItems(courses)}

@@ -169,7 +169,6 @@ const getLessonSubtitle = (token, course_id, lesson_id) => {
     },
   };
   const url = `http://api.dev.letstudy.org/lesson/subtitle/${course_id}/${lesson_id}`;
-  console.log(url);
   return fetch(
     url,
     requestOptions

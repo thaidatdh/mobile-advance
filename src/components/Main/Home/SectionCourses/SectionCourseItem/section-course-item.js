@@ -11,12 +11,16 @@ import { DataContext } from "../../../../../Contexts/DataContextProvider";
 import { AuthContext } from "../../../../../Contexts/AuthContextProvider";
 import ApiServices from "../../../../../services/api-services";
 import PhoneStorage from "../../../../../services/phone-storage";
+import FileSystemApi from "../../../../../services/file-system-api";
 const { width, height } = Dimensions.get("window");
 const SectionCourseItem = ({ onPress, item }) => {
   const star = require("../../../../../../assets/star-rating.png");
   const [courseData, setCourseData] = useState(item);
   const [instructorName, setInstructorName] = useState("");
   const [learnedTime, setLearnedTime] = useState("");
+  const [imageUrl, setImageUrl] = useState(
+    item.courseImage ? item.courseImage : item.imageUrl
+  );
   const {
     getCourse,
     selectedCourse,
@@ -65,6 +69,17 @@ const SectionCourseItem = ({ onPress, item }) => {
         setLearnedTime(lastestLearnTime);
       }
     }
+    const getImage = async () => {
+      const url = item.courseImage ? item.courseImage : item.imageUrl;
+      setImageUrl(url);
+      if (!isInternetReachable) {
+        const courseImage = await FileSystemApi.getCourseImage(item.id, url);
+        if (courseImage) {
+          await setImageUrl(courseImage);
+        }
+      }
+    }
+    getImage();
     setCourseData(item);
     fetchData(item.id);
   }, []);
@@ -73,9 +88,7 @@ const SectionCourseItem = ({ onPress, item }) => {
       <View style={styles.imageView}>
         <Image
           source={{
-            uri: courseData.courseImage
-              ? courseData.courseImage
-              : courseData.imageUrl,
+            uri: imageUrl
           }}
           style={styles.image}
         />

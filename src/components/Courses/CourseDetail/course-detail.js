@@ -23,6 +23,12 @@ const CourseDetail = ({ navigation, route }) => {
   const [courseDetail, setCourseDetail] = useState(route.params.course);
   const [videoUrl, setVideoUrl] = useState(route.params.course.promoVidUrl);
   const [learnedTime, setLearnedTime] = useState("");
+  const [isLesson, setIsLesson] = useState(false);
+  const [imageUrl, setImageUrl] = useState(
+    route.params.course.courseImage
+      ? route.params.course.courseImage
+      : route.params.course.imageUrl
+  );
   const {
     authors,
     searchCourses,
@@ -95,22 +101,35 @@ const CourseDetail = ({ navigation, route }) => {
   };
   useEffect(() => {
     setVideoUrl(route.params.course.promoVidUrl);
-    console.log(route.params.course.promoVidUrl);
     if (!isInternetReachable) {
       setVideoUrl(null);
       console.log("null video");
     }
+    const getImage = async () => {
+      const url = route.params.course.courseImage
+        ? route.params.course.courseImage
+        : route.params.course.imageUrl;
+      setImageUrl(url);
+      if (!isInternetReachable) {
+        const courseImage = await FileSystemApi.getCourseImage(
+          route.params.course.id,
+          url
+        );
+        if (courseImage) {
+          await setImageUrl(courseImage);
+        }
+      }
+    };
+    getImage();
     setCourseDetail(route.params.course);
     fetchData(route.params.course.id);
   }, []);
-  useEffect(() => {
-    console.log(videoUrl);
-  })
   const ReloadData = () => {
     fetchData(route.params.course.id);
   };
   const onChangeVideo = (url, lession_id) => {
     setVideoUrl(url);
+    setIsLesson(true);
   };
   const onPressAuthor = (authorName) => {
     const author = authors.find((n) => n["user.name"] === authorName);
@@ -129,13 +148,14 @@ const CourseDetail = ({ navigation, route }) => {
             <Video
               source={{
                 uri: videoUrl,
+                overrideFileExtensionAndroid: 'mp4'
               }}
               rate={1.0}
               volume={1.0}
               isMuted={false}
               resizeMode="contain"
               shouldPlay
-              isLooping={false}
+              isLooping={!isLesson}
               useNativeControls
               style={styles.image}
             />

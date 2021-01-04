@@ -15,7 +15,9 @@ const Download = ({ navigation }) => {
   );
   useEffect(() => {
     const load = async () => {
-      loadRecommended(token, user.id);
+      if (user) {
+        loadRecommended(token, user.id);
+      }
     }
     load();
   }, []);

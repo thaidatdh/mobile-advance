@@ -4,18 +4,18 @@ import {
   StyleSheet,
   ImageBackground,
   TouchableOpacity,
-  Dimensions
+  Dimensions,
 } from "react-native";
-const {width, height} = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 const maxWidth = width * 0.4 > 300 ? 300 : width * 0.4;
 const SmallImageButton = (props) => {
   const texts = [];
-  let textValue = '';
-  let titleArray = props.title.split(' ');
+  let textValue = "";
+  let titleArray = props.title.split(" ");
   let titleArrayString = [];
   if (titleArray.length > 2) {
     let chunk_size = 2;
-    let index= 0;
+    let index = 0;
     for (index = 0; index < titleArray.length; index += chunk_size) {
       let myChunk = titleArray.slice(index, index + chunk_size);
       // Do something if you want with the group
@@ -42,12 +42,11 @@ const SmallImageButton = (props) => {
   return (
     <ImageBackground
       style={styles.button}
-      source={{
-        uri:
-          "https://th.bing.com/th/id/OIP.rv8UTbHAigbkqrZB1rKoHAHaEK?w=311&h=180&c=7&o=5&pid=1.7",
-      }}
+      source={require("../../../assets/buttonImage.png")}
     >
-      <TouchableOpacity style={styles.touch} onPress={props.onPress}>{texts}</TouchableOpacity>
+      <TouchableOpacity style={styles.touch} onPress={props.onPress}>
+        {texts}
+      </TouchableOpacity>
     </ImageBackground>
   );
 };

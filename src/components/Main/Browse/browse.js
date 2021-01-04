@@ -50,7 +50,6 @@ const Browse = ({ navigation }) => {
     loadTopSell();
     loadTopRated();
     if (user) loadRecommended(token, user.id);
-    if (token) console.log(token);
   }, []);
   const onPressNewReleaseButton = () => {
     navigation.navigate("List Courses", {

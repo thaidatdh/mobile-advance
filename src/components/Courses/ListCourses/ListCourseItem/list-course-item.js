@@ -20,6 +20,9 @@ const ListCourseItem = (props) => {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const [authors, setAuthors] = useState(props.author);
   const [course, setCourse] = useState(props.item);
+  const [imageUrl, setImageUrl] = useState(
+    props.item.courseImage ? props.item.courseImage : props.item.imageUrl
+  );
   const {
     user,
     addBookmark,
@@ -64,6 +67,22 @@ const ListCourseItem = (props) => {
         }
       }
     };
+    const getImage = async () => {
+      const url = props.item.courseImage
+        ? props.item.courseImage
+        : props.item.imageUrl;
+      setImageUrl(url);
+      if (!isInternetReachable) {
+        const courseImage = await FileSystemApi.getCourseImage(
+          props.item.id,
+          url
+        );
+        if (courseImage) {
+          await setImageUrl(courseImage);
+        }
+      }
+    }
+    getImage();
     setCourse(props.item);
     fetchData(props.item.id);
   }, []);

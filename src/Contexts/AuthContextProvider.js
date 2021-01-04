@@ -162,7 +162,6 @@ export default ({ children }) => {
                   if (!state.isInternetReachable) {
                     PhoneStorage.load("@bookmark", "json").then(
                       (persistBookmark) => {
-                        console.log(persistBookmark);
                         if (persistBookmark) {
                           setBookmark(persistBookmark);
                         } else {
@@ -188,7 +187,6 @@ export default ({ children }) => {
                   if (!state.isInternetReachable) {
                     PhoneStorage.load("@processCourses", "json").then(
                       (persistProcess) => {
-                        console.log(persistProcess);
                         if (persistProcess) {
                           setChannel(persistProcess);
                         } else {

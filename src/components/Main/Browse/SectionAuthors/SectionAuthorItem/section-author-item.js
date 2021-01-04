@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Image,
   View,
@@ -7,18 +7,35 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
-const {width, height} = Dimensions.get("window");
+import FileSystemApi from "../../../../../services/file-system-api";
+import { DataContext } from "../../../../../Contexts/DataContextProvider";
+const { width, height } = Dimensions.get("window");
 
 const SectionAuthorItem = (props) => {
+  const { isInternetReachable } = useContext(DataContext);
+  const [imageUrl, setImageUrl] = useState(props.author["user.avatar"]);
+  useEffect(() => {
+    const getImage = async () => {
+      const url = props.author["user.avatar"];
+      setImageUrl(url);
+      if (!isInternetReachable) {
+        const courseImage = await FileSystemApi.getInstructorImage(
+          props.author.id,
+          url
+        );
+        if (courseImage) {
+          await setImageUrl(courseImage);
+        }
+      }
+    };
+    getImage();
+  }, []);
   return (
     <TouchableOpacity
       style={styles.item}
       onPress={() => props.onPress(props.author)}
     >
-      <Image
-        source={{ uri: props.author["user.avatar"] }}
-        style={styles.image}
-      />
+      <Image source={{ uri: imageUrl }} style={styles.image} />
       <View style={styles.titleView}>
         <Text style={styles.title}>{props.author["user.name"]}</Text>
       </View>
@@ -33,7 +50,7 @@ const styles = StyleSheet.create({
     height: width * 0.3,
     maxWidth: 100,
     maxHeight: 150,
-    color: 'white',
+    color: "white",
     alignItems: "center",
   },
   image: {
@@ -45,14 +62,14 @@ const styles = StyleSheet.create({
   },
   titleView: {
     height: 50,
-    alignSelf: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column'
+    alignSelf: "center",
+    justifyContent: "center",
+    flexDirection: "column",
   },
   title: {
     fontWeight: "bold",
-    color: 'white',
-    textAlign: 'center',
+    color: "white",
+    textAlign: "center",
   },
 });
 export default SectionAuthorItem;
