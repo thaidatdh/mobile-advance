@@ -11,10 +11,11 @@ import {
 import { ScrollView } from "react-native-gesture-handler";
 import { Button, TextInput } from "react-native-paper";
 import { AuthContext } from "../../../Contexts/AuthContextProvider";
-
+import { SettingContext } from "../../../Contexts/SettingContextProvider";
 const { width, height } = Dimensions.get("window");
 
 const Register = ({navigation}) => {
+  const { theme } = React.useContext(SettingContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
@@ -77,48 +78,70 @@ const Register = ({navigation}) => {
   };
   const themeTextInput = {
     colors: {
-      placeholder: "#b4b5ba",
-      text: "white",
-      primary: "#2384ae",
-      underlineColor: "#2384ae",
-      background: "#1f242a",
+      placeholder: theme.c_b4b5ba,
+      text: theme.c_white,
+      primary: theme.c_2384ae,
+      underlineColor: theme.c_2384ae,
+      background: theme.c_1f242a,
     },
   };
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
+    <SafeAreaView
+      style={{ ...styles.container, backgroundColor: theme.c_0E0F13 }}
+    >
+      <StatusBar barStyle="light-content" backgroundColor={theme.c_0E0F13} />
       <ScrollView horizontal={false}>
         <View style={{ margin: 20 }} />
         <TextInput
-          style={styles.input}
+          style={{
+            ...styles.input,
+            backgroundColor: theme.c_1f242a,
+            color: theme.c_white,
+          }}
           label="Email *"
           theme={themeTextInput}
           value={email}
           onChangeText={(text) => setEmail(text)}
         />
         {/*<TextInput
-          style={styles.input}
+          style={{
+            ...styles.input,
+            backgroundColor: theme.c_1f242a,
+            color: theme.c_white,
+          }}
           label="Full Name *"
           theme={themeTextInput}
           value={name}
           onChangeText={(text) => setName(text)}
         />*/}
         <TextInput
-          style={styles.input}
+          style={{
+            ...styles.input,
+            backgroundColor: theme.c_1f242a,
+            color: theme.c_white,
+          }}
           label="Phone *"
           theme={themeTextInput}
           value={phone}
           onChangeText={(text) => setPhone(text)}
         />
         <TextInput
-          style={styles.input}
+          style={{
+            ...styles.input,
+            backgroundColor: theme.c_1f242a,
+            color: theme.c_white,
+          }}
           label="Username *"
           theme={themeTextInput}
           value={username}
           onChangeText={(text) => setUsername(text)}
         />
         <TextInput
-          style={styles.input}
+          style={{
+            ...styles.input,
+            backgroundColor: theme.c_1f242a,
+            color: theme.c_white,
+          }}
           label="Password"
           theme={themeTextInput}
           secureTextEntry={secureTextEntry}
@@ -130,7 +153,7 @@ const Register = ({navigation}) => {
                 style={{ alignSelf: "center", flexDirection: "column" }}
                 onPress={updateSecureTextEntry}
                 name="eye-off"
-                color="grey"
+                color={theme.c_gray}
                 centered={true}
                 size={20}
                 solid
@@ -140,7 +163,7 @@ const Register = ({navigation}) => {
                 style={{ flexDirection: "column", alignSelf: "center" }}
                 onPress={updateSecureTextEntry}
                 name="eye"
-                color="grey"
+                color={theme.c_gray}
                 size={20}
                 solid
               />
@@ -148,7 +171,11 @@ const Register = ({navigation}) => {
           }
         />
         <TextInput
-          style={styles.input}
+          style={{
+            ...styles.input,
+            backgroundColor: theme.c_1f242a,
+            color: theme.c_white,
+          }}
           label="Repeat Password"
           theme={themeTextInput}
           secureTextEntry={secureTextEntryRepeat}
@@ -160,7 +187,7 @@ const Register = ({navigation}) => {
                 style={{ alignSelf: "center", flexDirection: "column" }}
                 onPress={updateSecureTextEntryRepeat}
                 name="eye-off"
-                color="grey"
+                color={theme.c_gray}
                 centered={true}
                 size={20}
                 solid
@@ -170,7 +197,7 @@ const Register = ({navigation}) => {
                 style={{ flexDirection: "column", alignSelf: "center" }}
                 onPress={updateSecureTextEntryRepeat}
                 name="eye"
-                color="grey"
+                color={theme.c_gray}
                 size={20}
                 solid
               />

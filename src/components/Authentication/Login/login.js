@@ -12,14 +12,16 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import { Button, TextInput } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
 import { AuthContext } from "../../../Contexts/AuthContextProvider";
+import { SettingContext } from "../../../Contexts/SettingContextProvider";
 const { width, height } = Dimensions.get("window");
 
-const Login = ({navigation}) => {
+const Login = ({ navigation }) => {
+  const { theme } = React.useContext(SettingContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [isReadyToLogin, setIsReadyToLogin] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const { login } = React.useContext(AuthContext);
   const validateEmail = (email) => {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -46,39 +48,44 @@ const Login = ({navigation}) => {
       return;
     }
     let result = await login(username, password);
-    if (result === '') {
-      navigation.navigate('Main');
-    }
-    else {
+    if (result === "") {
+      navigation.navigate("Main");
+    } else {
       setError(result);
     }
   };
   const onSignUp = () => {
-    navigation.navigate('Sign Up');
-  }
+    navigation.navigate("Sign Up");
+  };
   const onForgetPassword = () => {
     navigation.navigate("Forget Password");
-  }
+  };
   const updateSecureTextEntry = () => {
     setSecureTextEntry(!secureTextEntry);
   };
   const themeTextInput = {
     colors: {
-      placeholder: "#b4b5ba",
-      text: "white",
-      primary: "#2384ae",
-      underlineColor: "#2384ae",
-      background: "#1f242a",
+      placeholder: theme.c_b4b5ba,
+      text: theme.c_white,
+      primary: theme.c_2384ae,
+      underlineColor: theme.c_2384ae,
+      background: theme.c_1f242a,
     },
   };
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
+    <SafeAreaView
+      style={{ ...styles.container, backgroundColor: theme.c_0E0F13 }}
+    >
+      <StatusBar barStyle="light-content" backgroundColor={theme.c_0E0F13} />
       <View style={{ margin: 20 }} />
       <ScrollView horizontal={false}>
         <TextInput
           name="username"
-          style={styles.input}
+          style={{
+            ...styles.input,
+            backgroundColor: theme.c_1f242a,
+            color: theme.c_white,
+          }}
           label="Email"
           theme={themeTextInput}
           value={username}
@@ -86,7 +93,11 @@ const Login = ({navigation}) => {
         />
         <TextInput
           name="password"
-          style={styles.input}
+          style={{
+            ...styles.input,
+            backgroundColor: theme.c_1f242a,
+            color: theme.c_white,
+          }}
           label="Password"
           theme={themeTextInput}
           secureTextEntry={secureTextEntry}
@@ -98,7 +109,7 @@ const Login = ({navigation}) => {
                 style={{ alignSelf: "center", flexDirection: "column" }}
                 onPress={updateSecureTextEntry}
                 name="eye-off"
-                color="grey"
+                color={theme.c_gray}
                 centered={true}
                 size={20}
                 solid
@@ -108,7 +119,7 @@ const Login = ({navigation}) => {
                 style={{ flexDirection: "column", alignSelf: "center" }}
                 onPress={updateSecureTextEntry}
                 name="eye"
-                color="grey"
+                color={theme.c_gray}
                 size={20}
                 solid
               />
@@ -119,7 +130,11 @@ const Login = ({navigation}) => {
           <Text style={{ color: "red", alignSelf: "center" }}>{error}</Text>
         )}
         <TouchableOpacity
-          style={isReadyToLogin ? styles.signInBtn : styles.signInBtnDisabled}
+          style={
+            isReadyToLogin
+              ? styles.signInBtn
+              : { ...styles.signInBtnDisabled, backgroundColor: theme.c_2b2c30 }
+          }
           disabled={!isReadyToLogin}
           onPress={onLogin}
         >

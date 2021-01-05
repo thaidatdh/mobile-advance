@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   StatusBar,
 } from "react-native";
+import { SettingContext } from "../../../Contexts/SettingContextProvider";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import { Button, TextInput } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
@@ -16,8 +17,9 @@ import ApiServices from "../../../services/api-services";
 const { width, height } = Dimensions.get("window");
 
 const ForgetPassword = ({ navigation }) => {
+  const { theme } = React.useContext(SettingContext);
   const [username, setUsername] = useState("");
-  const [isReadyToLogin, setIsReadyToLogin] = useState(false);
+  const [isReadyToSend, setIsReadyToSend] = useState(false);
   const [error, setError] = useState("");
   const validateEmail = (email) => {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -26,41 +28,46 @@ const ForgetPassword = ({ navigation }) => {
   const onUsernameChange = (text) => {
     setUsername(text);
     if (username.length > 0 && validateEmail(username)) {
-      setIsReadyToLogin(true);
+      setIsReadyToSend(true);
     } else {
-      setIsReadyToLogin(false);
+      setIsReadyToSend(false);
     }
   };
-  
+
   const onForget = async () => {
-    if (!isReadyToLogin) {
+    if (!isReadyToSend) {
       return;
     }
     try {
       let result = await ApiServices.forgetPassword(username);
       setError(result.message);
-    }
-    catch(err) {
-       setError(err.message);
+    } catch (err) {
+      setError(err.message);
     }
   };
   const themeTextInput = {
     colors: {
-      placeholder: "#b4b5ba",
-      text: "white",
-      primary: "#2384ae",
-      underlineColor: "#2384ae",
-      background: "#1f242a",
+      placeholder: theme.c_b4b5ba,
+      text: theme.c_white,
+      primary: theme.c_2384ae,
+      underlineColor: theme.c_2384ae,
+      background: theme.c_1f242a,
     },
   };
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
+    <SafeAreaView
+      style={{ ...styles.container, backgroundColor: theme.c_0E0F13 }}
+    >
+      <StatusBar barStyle="light-content" backgroundColor={theme.c_0E0F13} />
       <View style={{ margin: 20 }} />
       <ScrollView horizontal={false}>
         <TextInput
-          name="username"
-          style={styles.input}
+          name="email"
+          style={{
+            ...styles.input,
+            backgroundColor: theme.c_1f242a,
+            color: theme.c_white,
+          }}
           label="Email"
           theme={themeTextInput}
           value={username}
@@ -70,8 +77,12 @@ const ForgetPassword = ({ navigation }) => {
           <Text style={{ color: "red", alignSelf: "center" }}>{error}</Text>
         )}
         <TouchableOpacity
-          style={isReadyToLogin ? styles.signInBtn : styles.signInBtnDisabled}
-          disabled={!isReadyToLogin}
+          style={
+            isReadyToSend
+              ? styles.signInBtn
+              : { ...styles.signInBtnDisabled, backgroundColor: theme.c_2b2c30 }
+          }
+          disabled={!isReadyToSend}
           onPress={onForget}
         >
           <Text style={styles.buttonText}>Forget Password</Text>
