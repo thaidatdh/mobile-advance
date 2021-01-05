@@ -9,14 +9,16 @@ import { DataContext } from "../../../Contexts/DataContextProvider";
 import { useEffect } from "react/cjs/react.development";
 const { width, height } = Dimensions.get("window");
 const Download = ({ navigation }) => {
-  const { downloaded, removeAllDownloaded, user, token } = React.useContext(AuthContext);
-  const {
-    topSell,
-  } = React.useContext(DataContext);
+  const { downloaded, removeAllDownloaded, user, token } = React.useContext(
+    AuthContext
+  );
+  const { topSell } = React.useContext(DataContext);
   const findCourse = () => {
     navigation.navigate("List Courses", {
       title: "Top Sell",
       courses: topSell,
+      offset: 0,
+      onLoadMore: 'top-sell',
     });
   };
   const onPressCourse = (course) => {

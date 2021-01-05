@@ -55,24 +55,32 @@ const Browse = ({ navigation }) => {
     navigation.navigate("List Courses", {
       title: "New Released",
       courses: newReleased,
+      offset: 1,
+      onLoadMore: "top-new",
     });
   };
   const onPressRecommendedButton = () => {
     navigation.navigate("List Courses", {
       title: "Recommended",
       courses: recommended,
+      offset: 1,
+      onLoadMore: "recommended",
     });
   };
   const onPressRatedButton = () => {
     navigation.navigate("List Courses", {
       title: "Top Rated",
       courses: topRated,
+      offset: 1,
+      onLoadMore: "top-rated",
     });
   };
   const onPressSellButton = () => {
     navigation.navigate("List Courses", {
       title: "Top Sell",
       courses: topSell,
+      offset: 1,
+      onLoadMore: "top-sell",
     });
   };
   const onPressCategory = async (categoryName, categoryId) => {
@@ -109,6 +117,8 @@ const Browse = ({ navigation }) => {
     navigation.navigate("List Courses", {
       title: categoryName,
       courses: categoryCourse,
+      offset: categoryId,
+      onLoadMore: "category",
     });
   };
   const onPressSkills = (skills) => {

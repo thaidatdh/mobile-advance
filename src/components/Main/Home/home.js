@@ -17,7 +17,12 @@ const Home = ({ navigation }) => {
   const { user, channel, bookmark } = React.useContext(AuthContext);
   const { getAuthors } = React.useContext(DataContext);
   const handleSeeAll = (title, coursesList) => {
-    navigation.navigate("List Courses", { title: title, courses: coursesList });
+    navigation.navigate("List Courses", {
+      title: title,
+      courses: coursesList,
+      offset: 0,
+      onLoadMore: 'history',
+    });
   };
   const handleViewCourse = (course) => {
     navigation.navigate("Course", { course: course });

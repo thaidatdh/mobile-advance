@@ -8,11 +8,18 @@ import {
   Text,
   Dimensions,
   StatusBar,
+  TouchableOpacity,
+  StyleSheet,
 } from "react-native";
+import ApiServices from "../../../services/api-services";
 import ListCourseItem from "./ListCourseItem/list-course-item";
+import {AuthContext} from "../../../Contexts/AuthContextProvider"
 const { width, height } = Dimensions.get("window");
 const ListCourses = ({ navigation, route }) => {
   const [courses, setCourses] = useState(route.params.courses);
+  const [offset, setOffset] = useState(route.params.offset);
+  const [isMore, setIsMore] = useState(route.params.courses.length >= 10);
+  const { user, token } = React.useContext(AuthContext);
   useEffect(() => {
     navigation.setOptions({ title: route.params.title });
   }, []);
@@ -32,6 +39,50 @@ const ListCourses = ({ navigation, route }) => {
       />
     ));
   };
+  
+  const onLoadMore = (offset, currentLength) => {
+    switch (route.params.onLoadMore) {
+      case "top-rated":
+        return ApiServices.OnMoreButton.onLoadMoreTopRate(offset);
+      case "top-sell":
+        return ApiServices.OnMoreButton.onLoadMoreTopSell(offset);
+      case "top-new":
+        return ApiServices.OnMoreButton.onLoadMoreNewRelease(offset);
+      case "recommended":
+        {
+          if (user && token) {
+            return ApiServices.OnMoreButton.onLoadMoreRecommended(
+              currentLength,
+              token,
+              user
+            );
+          }
+          else {
+            return null;
+          }
+        }
+      case "history":
+        return null;
+      case "category": 
+        return ApiServices.OnMoreButton.onMoreCategory(currentLength, offset);
+      default:
+        return ApiServices.OnMoreButton.onMoreSearchCourse(
+          currentLength,
+          route.params.onLoadMore
+        );
+      // code block
+    }
+  }
+  const onMore = () => {
+    onLoadMore(offset, courses.length).then(newCourses => {
+      if (newCourses && newCourses.data) {
+        const newList = courses.slice().concat(newCourses.data);
+        setIsMore(newList.length % 10 == 0 && newList.length != courses.length);
+        setCourses(newList);
+        setOffset(newCourses.offset);
+      }
+    });
+  };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#0E0F13" }}>
       <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
@@ -47,9 +98,37 @@ const ListCourses = ({ navigation, route }) => {
           {route.params.title}
         </Text>
       </View>*/}
-      <ScrollView>{renderItems(courses)}</ScrollView>
+      <ScrollView>
+        {renderItems(courses)}
+        {isMore ? (
+          <TouchableOpacity onPress={onMore} style={styles.btn}>
+            <Text style={styles.textMore}>More</Text>
+          </TouchableOpacity>
+        ) : null}
+      </ScrollView>
     </SafeAreaView>
   );
 };
-
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#0E0F13",
+  },
+  btn: {
+    width: width * 0.8,
+    backgroundColor: "#0E0F13",
+    borderRadius: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    borderColor: "#2384ae",
+    borderWidth: 2,
+    marginBottom: 10,
+    alignSelf: "center",
+    marginTop: 20,
+    height: 30,
+  },
+  textMore: {
+    color: "#2384ae",
+  },
+});
 export default ListCourses;

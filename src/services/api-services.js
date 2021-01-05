@@ -353,6 +353,92 @@ const searchV2 = (keyword, limit, offset) => {
   };
   return fetch("http://api.dev.letstudy.org/course/searchV2", requestOptions);
 };
+const OnMoreButton = {
+  onLoadMoreNewRelease : (offset) => {
+    return getTopNew(10, offset + 1)
+      .then((res) => res.json())
+      .then((response) => {
+        return {
+          data: response.payload,
+          offset: offset + 1,
+        };
+      });
+  },
+  onLoadMoreTopRate : (offset) => {
+    return getTopRated(10, offset + 1)
+      .then((res) => res.json())
+      .then((response) => {
+        return {
+          data: response.payload,
+          offset: offset + 1,
+        };
+      });
+  },
+  onLoadMoreTopSell : (offset) => {
+    return getTopSell(10, offset + 1)
+      .then((res) => res.json())
+      .then((response) => {
+        return {
+          data: response.payload,
+          offset: offset + 1,
+        };
+      });
+  },
+  onLoadMoreRecommended : (offset, token, user) => {
+    if (token && user) {
+      return loadRecommended(token, user.id, 10, offset + 1)
+        .then((res) => res.json())
+        .then((response) => {
+          return {
+            data: response.payload,
+            offset: offset + 1,
+          };
+        });
+    } else {
+      return null;
+    }
+  },
+  onMoreSearchCourse : async (currentLength, keyword) => {
+    try {
+      let res = await searchV2(keyword, 10, currentLength);
+      let response = await res.json();
+      if (
+        response.payload !== undefined &&
+        response.payload.courses != undefined &&
+        response.payload.courses.data != undefined
+      ) {
+        return {
+          data: response.payload.courses.data,
+          offset: currentLength,
+        };
+      } else return null;
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
+  },
+  onMoreCategory : async (currentLength, categoryId) => {
+    try {
+      let categoryList = [categoryId];
+      let res = await ApiServices.search(categoryList, "", 10, currentLength);
+      let response = await res.json();
+      if (
+        response.payload !== undefined &&
+        response.payload.rows != undefined
+      ) {
+        return {
+          data: response.payload.rows,
+          offset: categoryId,
+        };
+      } else {
+        return null;
+      }
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
+  }
+}
 const ApiServices = {
   login,
   register,
@@ -379,5 +465,6 @@ const ApiServices = {
   forgetPassword,
   ratingCourse,
   searchV2,
+  OnMoreButton,
 };
 export default ApiServices;

@@ -125,28 +125,44 @@ const downloadImageCouseList = async (payloadStr) => {
   );
 };
 const getCourseVideo = async (course_id, filePath) => {
-  const fileUri = courseVideoDir(course_id, getFileExt(filePath));
-  const fileInfo = await FileSystem.getInfoAsync(fileUri);
-  if (fileInfo.exists) {
-    return fileUri;
+  try {
+    const fileUri = courseVideoDir(course_id, getFileExt(filePath));
+    const fileInfo = await FileSystem.getInfoAsync(fileUri);
+    if (fileInfo.exists) {
+      const rsUrl = FileSystem.getContentUriAsync(fileUri);
+      return rsUrl;
+    }
+    return null;
+  } catch (err) {
+    return null;
   }
-  return null;
 };
 const getCourseImage = async (course_id, filePath) => {
-  const fileUri = courseImageDir(course_id, getFileExt(filePath));
-  const fileInfo = await FileSystem.getInfoAsync(fileUri);
-  if (fileInfo.exists) {
-    return fileUri;
+  try {
+    const fileUri = courseImageDir(course_id, getFileExt(filePath));
+    const fileInfo = await FileSystem.getInfoAsync(fileUri);
+    if (fileInfo.exists) {
+      const rsUrl = FileSystem.getContentUriAsync(fileUri);
+      return rsUrl;
+    }
+    return null;
+  } catch (err) {
+    return null;
   }
-  return null;
 };
 const getInstructorImage = async (id, filePath) => {
-  const fileUri = instructorImageDir(id, getFileExt(filePath));
-  const fileInfo = await FileSystem.getInfoAsync(fileUri);
-  if (fileInfo.exists) {
-    return fileUri;
+  try {
+    const fileUri = instructorImageDir(id, getFileExt(filePath));
+    const fileInfo = await FileSystem.getInfoAsync(fileUri);
+    if (fileInfo.exists) {
+      const rsUrl = FileSystem.getContentUriAsync(fileUri);
+      return rsUrl;
+    }
+    return null;
   }
-  return null;
+  catch(err) {
+    return null;
+  }
 };
 const FileSystemApi = {
   downloadCourseImage,

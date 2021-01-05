@@ -7,13 +7,13 @@ import { AuthContext } from "../../../Contexts/AuthContextProvider";
 import { DataContext } from "../../../Contexts/DataContextProvider";
 import ApiServices from "../../../services/api-services";
 const { width, height } = Dimensions.get("window");
-const Search = ({navigation}) => {
+const Search = ({ navigation }) => {
   const [searchValue, setSearchValue] = useState("");
   const [inputValue, setInputValue] = useState("");
   const [courseData, setCourseData] = useState([]);
   const [isSearched, setIsSearched] = useState(false);
   const [authorData, setAuthorData] = useState([]);
-  const [authorsInfo, setAuthorsInfo] = useState({ total: 0, inRange: 0});
+  const [authorsInfo, setAuthorsInfo] = useState({ total: 0, inRange: 0 });
   const [coursesInfo, setCoursesInfo] = useState({ total: 0, inRange: 0 });
   const {
     searchHistory,
@@ -31,10 +31,15 @@ const Search = ({navigation}) => {
   };
   const onPressAuthor = (author) => {
     navigation.navigate("Author", { author: author });
-  }
+  };
   const onPressSeeAllCourse = (courses) => {
-    navigation.navigate("List Courses", { courses: courses, title: searchValue });
-  }
+    navigation.navigate("List Courses", {
+      courses: courses,
+      title: searchValue,
+      offset: 0,
+      onLoadMore: searchValue,
+    });
+  };
   const onPressSeeAllAuthor = (authors) => {
     navigation.navigate("List Authors", {
       authors: authors,

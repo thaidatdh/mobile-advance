@@ -160,7 +160,6 @@ const CourseDetail = ({ navigation, route }) => {
             .then((promoVidUrl) => {
               if (promoVidUrl) {
                 setVideoUrl(promoVidUrl);
-                alert(promoVidUrl);
                 setIsGetUrlOffline(false);
               }
             })
@@ -182,9 +181,6 @@ const CourseDetail = ({ navigation, route }) => {
       navigation.navigate("Author", { author: author });
     }
   };
-  const onErrorVideo = (e) => {
-    alert(e);
-  }
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
@@ -205,7 +201,6 @@ const CourseDetail = ({ navigation, route }) => {
               isLooping={!isLesson}
               useNativeControls={true}
               style={styles.image}
-              onError={onErrorVideo}
             />
           )
         ) : (
