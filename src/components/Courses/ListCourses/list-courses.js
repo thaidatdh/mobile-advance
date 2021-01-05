@@ -14,12 +14,14 @@ import {
 import ApiServices from "../../../services/api-services";
 import ListCourseItem from "./ListCourseItem/list-course-item";
 import {AuthContext} from "../../../Contexts/AuthContextProvider"
+import { SettingContext } from "../../../Contexts/SettingContextProvider";
 const { width, height } = Dimensions.get("window");
 const ListCourses = ({ navigation, route }) => {
   const [courses, setCourses] = useState(route.params.courses);
   const [offset, setOffset] = useState(route.params.offset);
   const [isMore, setIsMore] = useState(route.params.courses.length >= 10);
   const { user, token } = React.useContext(AuthContext);
+  const { theme } = React.useContext(SettingContext);
   useEffect(() => {
     navigation.setOptions({ title: route.params.title });
   }, []);
@@ -81,11 +83,14 @@ const ListCourses = ({ navigation, route }) => {
         setCourses(newList);
         setOffset(newCourses.offset);
       }
+      else {
+        setIsMore(false);
+      }
     });
   };
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#0E0F13" }}>
-      <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.c_0E0F13 }}>
+      <StatusBar barStyle="light-content" backgroundColor={theme.c_0E0F13} />
       {/*<View
         style={{
           marginLeft: 10,
@@ -101,7 +106,7 @@ const ListCourses = ({ navigation, route }) => {
       <ScrollView>
         {renderItems(courses)}
         {isMore ? (
-          <TouchableOpacity onPress={onMore} style={styles.btn}>
+          <TouchableOpacity onPress={onMore} style={{...styles.btn, backgroundColor: theme.c_0E0F13, borderColor: theme.c_2384ae}}>
             <Text style={styles.textMore}>More</Text>
           </TouchableOpacity>
         ) : null}

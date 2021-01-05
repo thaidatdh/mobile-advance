@@ -13,6 +13,7 @@ import { Menu } from "react-native-paper";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import { AuthContext } from "../../../../Contexts/AuthContextProvider";
 import { DataContext } from "../../../../Contexts/DataContextProvider";
+import { SettingContext } from "../../../../Contexts/SettingContextProvider";
 import ApiServices from "../../../../services/api-services";
 import PhoneStorage from "../../../../services/phone-storage";
 const { width, height } = Dimensions.get("window");
@@ -35,6 +36,7 @@ const ListCourseItem = (props) => {
     removeBookmark,
     removeDownloaded,
   } = React.useContext(AuthContext);
+  const { theme } = React.useContext(SettingContext);
   const { isInternetReachable } = React.useContext(DataContext);
   useEffect(() => {
     const fetchData = async (id) => {
@@ -136,28 +138,29 @@ const ListCourseItem = (props) => {
   useEffect(() => {
     //​
     const fetchDataAuth = async (id) => {
-      try {
-        let res = await ApiServices.getInstructorDetail(id);
-        let response = await res.json();
-        if (response.payload !== undefined) {
-          await setAuthors(response.payload.name);
-          PhoneStorage.save(
-            "@instructor_name_" + id,
-            JSON.stringify(response.payload.name)
-          );
-        }
-      } catch (err) {
-        console.log(err);
-        if (!isInternetReachable) {
-          PhoneStorage.load("@instructor_name_" + id, "json").then(
-            (persistData) => {
-              if (persistData) {
-                setAuthors(persistData);
+      ApiServices.getInstructorDetail(id)
+        .then((res) => res.json())
+        .then((response) => {
+          if (response.payload !== undefined) {
+            setAuthors(response.payload.name);
+            PhoneStorage.save(
+              "@instructor_name_" + id,
+              JSON.stringify(response.payload.name)
+            );
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          if (!isInternetReachable) {
+            PhoneStorage.load("@instructor_name_" + id, "json").then(
+              (persistData) => {
+                if (persistData) {
+                  setAuthors(persistData);
+                }
               }
-            }
-          );
-        }
-      }
+            );
+          }
+        });
     };
     if (
       (authors === null || authors === undefined || authors === "") &&
@@ -177,11 +180,13 @@ const ListCourseItem = (props) => {
         style={styles.image}
       />
       <View style={{ marginLeft: 10, flex: 1 }}>
-        <Text style={styles.title}>
+        <Text style={{ ...styles.title, color: theme.c_white }}>
           {course.title ? course.title : course.courseTitle}
         </Text>
-        <Text style={styles.darkText}>{authors}</Text>
-        <Text style={styles.darkText}>
+        <Text style={{ ...styles.darkText, color: theme.c_darkgray }}>
+          {authors}
+        </Text>
+        <Text style={{ ...styles.darkText, color: theme.c_darkgray }}>
           {course.status ? course.status + " | " : ""}
           {course.createdAt
             ? course.createdAt.substring(0, 10) + " | "
@@ -197,11 +202,13 @@ const ListCourseItem = (props) => {
             flexDirection: "row",
           }}
         >
-          <Text style={styles.darkText}>Rating: </Text>
-          <Text style={{ color: "#f1c40f" }}>
+          <Text style={{ ...styles.darkText, color: theme.c_darkgray }}>
+            Rating:{" "}
+          </Text>
+          <Text style={{ color: theme.c_f1c40f }}>
             {course.averagePoint ? course.averagePoint + " " : ""}
           </Text>
-          <Text style={styles.darkText}>
+          <Text style={{ ...styles.darkText, color: theme.c_darkgray }}>
             {course.ratedNumber ? "(" + course.ratedNumber + ")" : ""}
           </Text>
         </View>
@@ -213,7 +220,7 @@ const ListCourseItem = (props) => {
         anchor={
           <TouchableOpacity style={styles.options} onPress={onMenuOpen}>
             <FontAwesome5
-              style={{ color: "lightgray", alignSelf: "flex-end" }}
+              style={{ color: theme.c_lightgray, alignSelf: "flex-end" }}
               name="ellipsis-v"
               size={20}
             />

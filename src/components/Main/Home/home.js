@@ -13,9 +13,11 @@ import MAppBar from "../app-bar";
 import SignInSection from "../Browse/SignInSection/sign-in-section";
 import { AuthContext } from "../../../Contexts/AuthContextProvider";
 import { DataContext } from "../../../Contexts/DataContextProvider";
+import { SettingContext } from "../../../Contexts/SettingContextProvider";
 const Home = ({ navigation }) => {
   const { user, channel, bookmark } = React.useContext(AuthContext);
   const { getAuthors } = React.useContext(DataContext);
+  const { theme } = React.useContext(SettingContext);
   const handleSeeAll = (title, coursesList) => {
     navigation.navigate("List Courses", {
       title: title,
@@ -35,11 +37,13 @@ const Home = ({ navigation }) => {
   }, []);
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
+      <StatusBar barStyle="light-content" backgroundColor={theme.c_0E0F13} />
       <MAppBar navigation={navigation} title="Home" />
 
       {user ? (
-        <ScrollView style={styles.container}>
+        <ScrollView
+          style={{ ...styles.container, backgroundColor: theme.c_0E0F13 }}
+        >
           {/*<SectionCourses
             title="Continue learning"
             onSeeAll={handleSeeAll}
@@ -59,7 +63,7 @@ const Home = ({ navigation }) => {
           />
         </ScrollView>
       ) : (
-        <View style={styles.container}>
+        <View style={{ ...styles.container, backgroundColor: theme.c_0E0F13 }}>
           <SignInSection
             style={user ? styles.signedIn : styles.notSignedIn}
             isSignedIn={user ? true : false}

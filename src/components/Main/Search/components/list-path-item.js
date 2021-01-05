@@ -7,16 +7,18 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
+import { SettingContext } from "../../../../Contexts/SettingContextProvider";
 const { width, height } = Dimensions.get("window");
 const ListPathItem = (props) => {
+  const { theme } = React.useContext(SettingContext);
   return (
-    <TouchableOpacity style={styles.item}>
+    <TouchableOpacity style={{...styles.item, borderBottomColor: theme.c_gray}}>
       <Image
         source={require("../../../../../assets/bg.png")}
         style={styles.image}
       />
       <View style={{ marginLeft: 10 }}>
-        <Text style={styles.title}>{props.item.title}</Text>
+        <Text style={{...styles.title, color: theme.c_white}}>{props.item.title}</Text>
       </View>
     </TouchableOpacity>
   );

@@ -8,12 +8,13 @@ import {
   RadioButton,
   TextInput,
 } from "react-native-paper";
-
+import { SettingContext } from "../../../../../Contexts/SettingContextProvider";
 const RatingDialog = (props) => {
   const [checkedFormality, setCheckedFormality] = React.useState(1);
   const [checkedPresentation, setCheckedPresentation] = React.useState(1);
   const [checkedContent, setCheckedContent] = React.useState(1);
   const [content, setContent] = React.useState("");
+  const { theme } = React.useContext(SettingContext);
   const RatingPart = [
     {
       title: "Formality",
@@ -39,11 +40,11 @@ const RatingDialog = (props) => {
   ];
   const themeTextInput = {
     colors: {
-      placeholder: "#b4b5ba",
-      text: "white",
-      primary: "#2384ae",
-      underlineColor: "#2384ae",
-      background: "#1f242a",
+      placeholder: theme.c_b4b5ba,
+      text: theme.c_white,
+      primary: theme.c_2384ae,
+      underlineColor: theme.c_2384ae,
+      background: theme.c_1f242a,
     },
   };
   const resetValue = () => {
@@ -66,9 +67,11 @@ const RatingDialog = (props) => {
       <Dialog
         visible={props.visible}
         onDismiss={onHide}
-        style={styles.container}
+        style={{ ...styles.container, backgroundColor: theme.c_1f242a }}
       >
-        <Dialog.Title style={styles.text}>Rating</Dialog.Title>
+        <Dialog.Title style={{ ...styles.text, color: theme.c_white }}>
+          Rating
+        </Dialog.Title>
         <Dialog.Content>
           <ScrollView>
             {RatingPart.map((part) => (
@@ -80,7 +83,9 @@ const RatingDialog = (props) => {
                 }}
                 key={part.title}
               >
-                <Text style={styles.textTitle}>{part.title}</Text>
+                <Text style={{ ...styles.textTitle, color: theme.c_white }}>
+                  {part.title}
+                </Text>
                 {[1, 2, 3, 4, 5].map((n) => (
                   <View
                     style={{ flexDirection: "column", alignItems: "center" }}
@@ -91,7 +96,9 @@ const RatingDialog = (props) => {
                       status={part.value() === n ? "checked" : "unchecked"}
                       onPress={() => part.action(n)}
                     />
-                    <Text style={styles.text}>{n}</Text>
+                    <Text style={{ ...styles.text, color: theme.c_white }}>
+                      {n}
+                    </Text>
                   </View>
                 ))}
               </View>

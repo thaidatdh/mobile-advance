@@ -5,6 +5,7 @@ import SearchData from "./search-data";
 import SearchEmpty from "./search-empty";
 import { AuthContext } from "../../../Contexts/AuthContextProvider";
 import { DataContext } from "../../../Contexts/DataContextProvider";
+import { SettingContext } from "../../../Contexts/SettingContextProvider";
 import ApiServices from "../../../services/api-services";
 const { width, height } = Dimensions.get("window");
 const Search = ({ navigation }) => {
@@ -20,6 +21,7 @@ const Search = ({ navigation }) => {
     addSearchHistory,
     removeAllSearchHistory,
   } = React.useContext(AuthContext);
+  const { theme } = React.useContext(SettingContext);
   const {
     searchCourses,
     getSearchCourses,
@@ -129,21 +131,21 @@ const Search = ({ navigation }) => {
     <SafeAreaView
       style={{
         flex: 1,
-        backgroundColor: "#0E0F13",
+        backgroundColor: theme.c_0E0F13,
       }}
     >
-      <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
+      <StatusBar barStyle="light-content" backgroundColor={theme.c_0E0F13} />
       <TextInput
         style={{
-          backgroundColor: "#1f242a",
-          borderBottomColor: "gray",
+          backgroundColor: theme.c_1f242a,
+          borderBottomColor: theme.c_gray,
           borderBottomWidth: 1,
           paddingLeft: 10,
           paddingRight: 10,
         }}
-        placeholderTextColor="white"
+        placeholderTextColor={theme.c_white}
         placeholder="Search..."
-        theme={{ colors: { text: "white" } }}
+        theme={{ colors: { text: theme.c_white } }}
         returnKeyType="search"
         value={inputValue}
         multiline={false}

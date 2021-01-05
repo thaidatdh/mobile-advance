@@ -9,52 +9,67 @@ import {
   SafeAreaView,
   StatusBar,
 } from "react-native";
+import { SettingContext } from "../../../Contexts/SettingContextProvider";
 import TextSettingButton from "./SettingComponent/text-setting-button";
 import { Button } from "react-native-paper";
 import CheckSettingButton from "./SettingComponent/check-setting-button";
 import { AuthContext } from "../../../Contexts/AuthContextProvider";
+import { NavigationActions } from "react-navigation";
 const { width, height } = Dimensions.get("window");
 const Setting = ({ navigation }) => {
-  const { user, settings, updateSetting, logout } = React.useContext(AuthContext);
+  const { theme, switchTheme, isDark, isEnglish, switchLanguage } = React.useContext(SettingContext);
+  const { user, settings, updateSetting, logout } = React.useContext(
+    AuthContext
+  );
   const accountSetting = [
     {
       type: "text",
       title: "Account",
+      onPress: () => {
+        navigation.navigate("Profile");
+      },
     },
     {
       type: "text",
       title: "Subscription",
       desc: "Free",
-    },
-    {
-      type: "text",
-      title: "Communication Preference",
+      onPress: () => {},
     },
   ];
-
+  const themeItem = {
+    type: "switch",
+    title: isDark ? "Dark Mode" : "Light Mode",
+    desc: "Enable is Dark Mode. Disable is Light Mode",
+    isCheck: isDark,
+    onPress: () => {
+      switchTheme();
+    },
+  };
+  const languageItem = {
+    type: "switch",
+    title: isEnglish ? "Language" : "Ngôn ngữ",
+    desc: isEnglish ? "English" : "Vietnamese",
+    icon: 'language',
+    isCheck: isEnglish,
+    onPress: () => {
+      switchLanguage();
+    },
+  };
   const appVersion = {
     type: "text",
     title: "App version",
     desc: "1.0.0",
   };
   const onSignOut = () => {
-    navigation.navigate('Main');
+    navigation.navigate("Main");
     logout();
-  }
-  const renderAccountSection = () => {
-    return accountSetting.map((item) =>
-      item.type === "text" ? (
-        <TextSettingButton key={item.title} item={item} />
-      ) : (
-        <CheckSettingButton
-          key={item.title}
-          item={item}
-          onChange={updateSetting}
-        />
-      )
-    );
   };
-  const renderSettingSection = () => {
+  const renderAccountSection = () => {
+    return accountSetting.map((item) => (
+      <TextSettingButton key={item.title} item={item} onPress={item.onPress} />
+    ));
+  };
+  /*const renderSettingSection = () => {
     return settings.map((item) =>
       item.type === "text" ? (
         <TextSettingButton key={item.title} item={item} />
@@ -66,29 +81,70 @@ const Setting = ({ navigation }) => {
         />
       )
     );
-  };
+  };*/
   const renderAppVersion = () => {
     return <TextSettingButton item={appVersion} />;
   };
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
+    <SafeAreaView
+      style={{ ...styles.container, backgroundColor: theme.c_0E0F13 }}
+    >
+      <StatusBar barStyle="light-content" backgroundColor={theme.c_0E0F13} />
       <ScrollView
-        style={styles.container}
+        style={{ ...styles.container, backgroundColor: theme.c_0E0F13 }}
         contentContainerStyle={{ alignItems: "center" }}
       >
         <View style={styles.userContainer}>
           <Image source={{ uri: user.avatar }} style={styles.image} />
           <View style={styles.nameView}>
-            <Text style={styles.name}>{user.name}</Text>
-            <Text style={styles.username}>{user.type}</Text>
-            <Text style={styles.username}>{user.email}</Text>
+            <Text style={{ ...styles.name, color: theme.c_white }}>
+              {user.name}
+            </Text>
+            <Text style={{ ...styles.username, color: theme.c_gray }}>
+              {user.type}
+            </Text>
+            <Text style={{ ...styles.username, color: theme.c_gray }}>
+              {user.email}
+            </Text>
           </View>
         </View>
-        <View style={styles.sectionContainer}>{renderAccountSection()}</View>
-        <View style={styles.sectionContainer}>{renderSettingSection()}</View>
-        <View style={styles.sectionContainer}>{renderAppVersion()}</View>
-        <Button style={styles.signOut} onPress={onSignOut}>
+        <View
+          style={{
+            ...styles.sectionContainer,
+            borderBottomColor: theme.c_gray,
+          }}
+        >
+          {renderAccountSection()}
+        </View>
+        <View
+          style={{
+            ...styles.sectionContainer,
+            borderBottomColor: theme.c_gray,
+          }}
+        >
+          <CheckSettingButton
+            key={"theme"}
+            item={themeItem}
+            onChange={themeItem.onPress}
+          />
+          <CheckSettingButton
+            key={"lang"}
+            item={languageItem}
+            onChange={languageItem.onPress}
+          />
+        </View>
+        <View
+          style={{
+            ...styles.sectionContainer,
+            borderBottomColor: theme.c_gray,
+          }}
+        >
+          {renderAppVersion()}
+        </View>
+        <Button
+          style={{ ...styles.signOut, backgroundColor: theme.c_0E0F13 }}
+          onPress={onSignOut}
+        >
           <Text style={styles.buttonTextBlue}>Sign Out</Text>
         </Button>
       </ScrollView>

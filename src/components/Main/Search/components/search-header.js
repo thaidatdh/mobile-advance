@@ -6,8 +6,11 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
+import { SettingContext } from "../../../../Contexts/SettingContextProvider";
 const { width, height } = Dimensions.get("window");
+
 const SearchHeader = (props) => {
+  const { theme } = React.useContext(SettingContext);
   return (
     <View
     style={{
@@ -15,18 +18,18 @@ const SearchHeader = (props) => {
       marginTop: 20,
       marginBottom: 20,
       marginRight: 20,
-      color: "white",
+      color: theme.c_white,
       flexDirection: "row",
       justifyContent: "space-between",
     }}
   >
-    <Text style={{ color: "white", fontSize: 15 }}>
+    <Text style={{ color: theme.c_white, fontSize: 15 }}>
       {props.dataLength} {props.data}
     </Text>
     <TouchableOpacity onPress={props.onPress}>
     {props.dataLength > 0 ? <Text
       style={{
-        color: "#2384ae",
+        color: theme.c_2384ae,
         textTransform: "uppercase",
       }}
     >

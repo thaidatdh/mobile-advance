@@ -10,9 +10,10 @@ import ListCourseItem from "../../Courses/ListCourses/ListCourseItem/list-course
 import ListAuthorItem from "./components/list-author-item";
 import ListPathItem from "./components/list-path-item";
 import SearchHeader from "./components/search-header";
-
+import { SettingContext } from "../../../Contexts/SettingContextProvider";
 const { width, height } = Dimensions.get("window");
 const SearchData = (props) => {
+  const { theme } = React.useContext(SettingContext);
   const renderCourses = (coursesList) => {
     return coursesList.slice().map((item, index) =>
       index < 5 ? (
@@ -49,7 +50,7 @@ const SearchData = (props) => {
     props.onPressSeeAllAuthor(props.authorsData);
   };
   return (
-    <View style={{ flex: 1, backgroundColor: "#0E0F13" }}>
+    <View style={{ flex: 1, backgroundColor: theme.c_0E0F13 }}>
       <ScrollView>
         <SearchHeader
           key="courseList"
@@ -63,7 +64,7 @@ const SearchData = (props) => {
         <SearchHeader
           key="authorList"
           dataLength={props.authorsInfo.total}
-          data="Authors"
+          data="Instructors"
           onPress={onSeeAllAuthors}
         />
         {renderAuthors(props.authorsData)}

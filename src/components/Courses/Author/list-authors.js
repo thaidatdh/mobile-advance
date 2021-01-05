@@ -9,10 +9,12 @@ import {
   Dimensions,
   StatusBar,
 } from "react-native";
+import { SettingContext } from "../../../Contexts/SettingContextProvider";
 import ListAuthorItem from "../../Main/Search/components/list-author-item";
 const { width, height } = Dimensions.get("window");
 const ListAuthors = ({ navigation, route }) => {
   const [authors, setAuthors] = useState(route.params.authors);
+  const { theme } = React.useContext(SettingContext);
   useEffect(() => {
     navigation.setOptions({ title: route.params.title });
   }, []);
@@ -29,8 +31,8 @@ const ListAuthors = ({ navigation, route }) => {
     ));
   };
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#0E0F13" }}>
-      <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.c_0E0F13 }}>
+      <StatusBar barStyle="light-content" backgroundColor={theme.c_0E0F13} />
       <ScrollView>{renderItems(authors)}</ScrollView>
     </SafeAreaView>
   );

@@ -12,13 +12,19 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import { AuthContext } from "../../../../../Contexts/AuthContextProvider";
 import { DataContext } from "../../../../../Contexts/DataContextProvider";
 import ApiServices from "../../../../../services/api-services";
+import { SettingContext } from "../../../../../Contexts/SettingContextProvider";
 import PhoneStorage from "../../../../../services/phone-storage";
 const { width, height } = Dimensions.get("window");
 
 const ContentSubsection = (props) => {
-  const { token } = useContext(AuthContext);
+  const { theme } = React.useContext(SettingContext);
+  const { token, user, isChanneled } = useContext(AuthContext);
   const { isInternetReachable } = useContext(DataContext);
   const onClickLesson = async (item) => {
+    if (!token || !user || !isChanneled(item.courseId)) {
+      Alert.alert("Alert", "You have to owned course to watch this lesson!");
+      return;
+    }
     if (
       !isInternetReachable &&
       item.videoUrl.includes("youtube.com")
@@ -80,16 +86,16 @@ const ContentSubsection = (props) => {
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <View
             style={{
-              backgroundColor: "gray",
+              backgroundColor: theme.c_gray,
               borderRadius: 10,
               height: 10,
               width: 10,
               marginRight: 10,
             }}
           ></View>
-          <Text style={{ color: "white" }}>{item.name}</Text>
+          <Text style={{ color: theme.c_white }}>{item.name}</Text>
         </View>
-        <Text style={{ color: "white" }}>{item.hours.toFixed(3)}</Text>
+        <Text style={{ color: theme.c_white }}>{item.hours.toFixed(3)}</Text>
       </TouchableOpacity>
     ));
   };
@@ -106,9 +112,9 @@ const ContentSubsection = (props) => {
         <View style={{ flexDirection: "row", width: width * 0.9 }}>
           <View
             style={{
-              backgroundColor: "#1f242a",
+              backgroundColor: theme.c_1f242a,
               borderBottomWidth: 3,
-              borderColor: "#394249",
+              borderColor: theme.c_394249,
               width: width * 0.2,
               height: height * 0.08,
               maxWidth: 100,
@@ -116,13 +122,13 @@ const ContentSubsection = (props) => {
               justifyContent: "center",
             }}
           >
-            <Text style={{ color: "white", fontSize: 20, alignSelf: "center" }}>
+            <Text style={{ color: theme.c_white, fontSize: 20, alignSelf: "center" }}>
               {props.item.numberOrder}
             </Text>
           </View>
           <Text
             style={{
-              color: "white",
+              color: theme.c_white,
               width: width * 0.7,
               paddingLeft: 20,
               alignSelf: "center",

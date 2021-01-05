@@ -11,6 +11,7 @@ import { AuthContext } from "../../../Contexts/AuthContextProvider";
 import { DataContext } from "../../../Contexts/DataContextProvider";
 import ApiServices from "../../../services/api-services";
 import PhoneStorage from "../../../services/phone-storage";
+import { SettingContext } from "../../../Contexts/SettingContextProvider";
 const Browse = ({ navigation }) => {
   const imageButtonData = [
     {
@@ -44,6 +45,7 @@ const Browse = ({ navigation }) => {
     loadRecommended,
     isInternetReachable,
   } = React.useContext(DataContext);
+  const { theme } = React.useContext(SettingContext);
   const [categoryCourse, setCategoryCourse] = useState([]);
   useEffect(() => {
     loadNewReleased();
@@ -132,10 +134,14 @@ const Browse = ({ navigation }) => {
     navigation.navigate("Sign In");
   };
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
+    <SafeAreaView
+      style={{ ...styles.container, backgroundColor: theme.c_0E0F13 }}
+    >
+      <StatusBar barStyle="light-content" backgroundColor={theme.c_0E0F13} />
       <MAppBar navigation={navigation} title="Browse" />
-      <ScrollView style={styles.container}>
+      <ScrollView
+        style={{ ...styles.container, backgroundColor: theme.c_0E0F13 }}
+      >
         <SignInSection
           style={user ? styles.signedIn : styles.notSignedIn}
           isSignedIn={user ? true : false}
@@ -167,7 +173,7 @@ const Browse = ({ navigation }) => {
         {/*<SectionTags title="Popular Skills" onPress={onPressSkills} />
         <SectionPath title="Paths" />*/}
         <SectionAuthor
-          title="Top Authors"
+          title="Instructors"
           authors={authors}
           navigation={navigation}
         />

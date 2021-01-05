@@ -28,17 +28,20 @@ import Search from "./src/components/Main/Search/search";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import AuthProvider from "./src/Contexts/AuthContextProvider";
 import DataProvider from "./src/Contexts/DataContextProvider";
+import SettingProvider from "./src/Contexts/SettingContextProvider";
 import { Provider } from "react-native-paper";
 import Author from "./src/components/Courses/Author/author";
 import ListAuthors from "./src/components/Courses/Author/list-authors";
 import { AuthContext } from "./src/Contexts/AuthContextProvider";
 import { DataContext } from "./src/Contexts/DataContextProvider";
+import { SettingContext } from "./src/Contexts/SettingContextProvider";
 import ForgetPassword from "./src/components/Authentication/ForgetPassword/forget-password";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const BottomTabNavigator = () => {
+  const { theme } = React.useContext(SettingContext);
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -64,10 +67,10 @@ const BottomTabNavigator = () => {
         },
       })}
       tabBarOptions={{
-        activeTintColor: "#2384ae",
-        inactiveTintColor: "gray",
-        activeBackgroundColor: "#1f242a",
-        inactiveBackgroundColor: "#1f242a",
+        activeTintColor: theme.c_2384ae,
+        inactiveTintColor: theme.tinBottomBar,
+        activeBackgroundColor: theme.c_1f242a,
+        inactiveBackgroundColor: theme.c_1f242a,
       }}
     >
       <Tab.Screen name="Home" component={Home} />
@@ -82,8 +85,10 @@ const MainNavigator = () => {
   const { getAllNewData, setIsInternetReachable } = React.useContext(
     DataContext
   );
+  const { theme, loadPersistTheme } = React.useContext(SettingContext);
   useEffect(() => {
     const loadData = () => {
+      loadPersistTheme();
       loadPersistUserData();
       getAllNewData();
     };
@@ -115,7 +120,7 @@ const MainNavigator = () => {
   });
   return (
     <NavigationContainer
-      theme={{ colors: { background: "#1f242a", text: "white" } }}
+      theme={{ colors: { background: theme.c_1f242a, text: theme.c_white } }}
     >
       <Stack.Navigator>
         <Stack.Screen
@@ -139,11 +144,13 @@ const MainNavigator = () => {
 export default function App() {
   return (
     <Provider>
-      <AuthProvider>
-        <DataProvider>
-          <MainNavigator />
-        </DataProvider>
-      </AuthProvider>
+      <SettingProvider>
+        <AuthProvider>
+          <DataProvider>
+            <MainNavigator />
+          </DataProvider>
+        </AuthProvider>
+      </SettingProvider>
     </Provider>
   );
 }

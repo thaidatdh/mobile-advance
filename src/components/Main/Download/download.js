@@ -6,12 +6,13 @@ import DownloadEmpty from "./download-empty";
 import MAppBar from "../app-bar";
 import { AuthContext } from "../../../Contexts/AuthContextProvider";
 import { DataContext } from "../../../Contexts/DataContextProvider";
-import { useEffect } from "react/cjs/react.development";
+import { SettingContext } from "../../../Contexts/SettingContextProvider";
 const { width, height } = Dimensions.get("window");
 const Download = ({ navigation }) => {
   const { downloaded, removeAllDownloaded, user, token } = React.useContext(
     AuthContext
   );
+  const { theme } = React.useContext(SettingContext);
   const { topSell } = React.useContext(DataContext);
   const findCourse = () => {
     navigation.navigate("List Courses", {
@@ -25,8 +26,8 @@ const Download = ({ navigation }) => {
     navigation.navigate("Course", { course: course });
   };
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#0E0F13" }}>
-      <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.c_0E0F13 }}>
+      <StatusBar barStyle="light-content" backgroundColor={theme.c_0E0F13} />
       <MAppBar navigation={navigation} title="Download" />
       {downloaded && downloaded.length > 0 ? (
         <DownloadData

@@ -7,19 +7,21 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
+import { SettingContext } from "../../../../Contexts/SettingContextProvider";
 const { width, height } = Dimensions.get("window");
 const ListAuthorItem = (props) => {
+  const { theme } = React.useContext(SettingContext);
   return (
     <TouchableOpacity
-      style={styles.item}
+      style={{ ...styles.item, borderBottomColor: theme.c_gray}}
       onPress={() => props.onPress(props.item)}
     >
       <View style={styles.imageView}>
         <Image source={{ uri: props.item.avatar }} style={styles.image} />
       </View>
       <View style={{ marginLeft: 10 }}>
-        <Text style={styles.title}>{props.item.name}</Text>
-        <Text style={styles.darkText}>
+        <Text style={{...styles.title, color: theme.c_white}}>{props.item.name}</Text>
+        <Text style={{...styles.darkText, color: theme.c_darkgray}}>
           Number Courses: {props.item.numcourses}
         </Text>
       </View>

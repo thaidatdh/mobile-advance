@@ -15,6 +15,7 @@ import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { ScrollView } from "react-native-gesture-handler";
 import { Button, TextInput } from "react-native-paper";
 import { AuthContext } from "../../../Contexts/AuthContextProvider";
+import { SettingContext } from "../../../Contexts/SettingContextProvider";
 import ApiServices from "../../../services/api-services";
 import ProfileContentSecion from "./profile-content-section";
 import ImagePickerService from "../../../services/image-picker-service";
@@ -23,7 +24,7 @@ import PhoneStorage from "../../../services/phone-storage";
 const { width, height } = Dimensions.get("window");
 
 const Profile = ({ navigation }) => {
-  const sections = [
+  /*const sections = [
     {
       title: "total active days",
       value: "0",
@@ -39,7 +40,8 @@ const Profile = ({ navigation }) => {
       value: "N/A",
       subValue: "",
     },
-  ];
+  ];*/
+  const { theme } = React.useContext(SettingContext);
   const errorValue = [
     "Please enter required fields (*)",
     "Email is not valid",
@@ -82,10 +84,7 @@ const Profile = ({ navigation }) => {
           setName(response.payload.name);
           setPhone(response.payload.phone);
           setType(response.payload.type);
-          PhoneStorage.save(
-            "@user",
-            JSON.stringify(response.payload)
-          );
+          PhoneStorage.save("@user", JSON.stringify(response.payload));
         }
       });
   }, [isUpdated]);
@@ -230,14 +229,14 @@ const Profile = ({ navigation }) => {
   };
   const themeTextInput = {
     colors: {
-      placeholder: "#b4b5ba",
-      text: "white",
-      primary: "#2384ae",
-      underlineColor: "#2384ae",
-      background: "#1f242a",
+      placeholder: theme.c_b4b5ba,
+      text: theme.c_white,
+      primary: theme.c_2384ae,
+      underlineColor: theme.c_2384ae,
+      background: theme.c_1f242a,
     },
   };
-  const createSections = () => {
+  /*const createSections = () => {
     return sections.map((item) => (
       <ProfileContentSecion
         key={item.title}
@@ -246,16 +245,24 @@ const Profile = ({ navigation }) => {
         subValue={item.subValue}
       />
     ));
-  };
+  };*/
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
+    <SafeAreaView
+      style={{ ...styles.container, backgroundColor: theme.c_0E0F13 }}
+    >
+      <StatusBar barStyle="light-content" backgroundColor={theme.c_0E0F13} />
       <View style={styles.headerContainer}>
         <Image source={{ uri: avatar }} style={styles.image} />
         <View style={styles.nameView}>
-          <Text style={styles.name}>{user.name}</Text>
-          <Text style={styles.userType}>{user.type}</Text>
-          <Text style={styles.email}>{user.email}</Text>
+          <Text style={{ ...styles.name, color: theme.c_white }}>
+            {user.name}
+          </Text>
+          <Text style={{ ...styles.userType, color: theme.c_gray }}>
+            {user.type}
+          </Text>
+          <Text style={{ ...styles.email, color: theme.c_gray }}>
+            {user.email}
+          </Text>
         </View>
       </View>
       {/*<View style={{ margin: 20 }}>
@@ -277,23 +284,34 @@ const Profile = ({ navigation }) => {
           </Text>
         ) : null}
         <TouchableOpacity
-          style={{ ...styles.signOnSSOBtn, flexDirection: "row", padding: 5 }}
+          style={{
+            ...styles.signOnSSOBtn,
+            flexDirection: "row",
+            padding: 5,
+            backgroundColor: theme.c_0E0F13,
+          }}
           onPress={onSelectImage}
         >
-          <FontAwesome5Icon name="upload" color="white" />
-          <Text style={{ ...styles.buttonText, marginLeft: 10 }}>
+          <FontAwesome5Icon name="upload" color={theme.c_white} />
+          <Text
+            style={{
+              ...styles.buttonText,
+              marginLeft: 10,
+              color: theme.c_white,
+            }}
+          >
             Select Avatar
           </Text>
         </TouchableOpacity>
         <TextInput
-          style={styles.input}
+          style={{ ...styles.input, backgroundColor: theme.c_1f242a }}
           label="Full Name"
           theme={themeTextInput}
           value={name}
           onChangeText={(text) => setName(text)}
         />
         <TextInput
-          style={styles.input}
+          style={{ ...styles.input, backgroundColor: theme.c_1f242a }}
           label="Phone *"
           theme={themeTextInput}
           value={phone}
@@ -307,7 +325,7 @@ const Profile = ({ navigation }) => {
         </TouchableOpacity>
         {!isEditEmail ? (
           <Button
-            style={styles.signOnSSOBtn}
+            style={{ ...styles.signOnSSOBtn, backgroundColor: theme.c_0E0F13 }}
             onPress={() => setIsEditEmail(true)}
           >
             <Text style={styles.buttonTextBlue}>Update Email</Text>
@@ -315,7 +333,7 @@ const Profile = ({ navigation }) => {
         ) : (
           <View>
             <TextInput
-              style={styles.input}
+              style={{ ...styles.input, backgroundColor: theme.c_1f242a }}
               label="Email *"
               theme={themeTextInput}
               value={email}
@@ -333,7 +351,7 @@ const Profile = ({ navigation }) => {
         )}
         {!isEditPwd ? (
           <Button
-            style={styles.signOnSSOBtn}
+            style={{ ...styles.signOnSSOBtn, backgroundColor: theme.c_0E0F13 }}
             onPress={() => setIsEditPwd(true)}
           >
             <Text style={styles.buttonTextBlue}>Update Password</Text>
@@ -341,7 +359,7 @@ const Profile = ({ navigation }) => {
         ) : (
           <View>
             <TextInput
-              style={styles.input}
+              style={{ ...styles.input, backgroundColor: theme.c_1f242a }}
               label="Current Password"
               theme={themeTextInput}
               secureTextEntry={secureTextEntry}
@@ -371,7 +389,7 @@ const Profile = ({ navigation }) => {
               }
             />
             <TextInput
-              style={styles.input}
+              style={{ ...styles.input, backgroundColor: theme.c_1f242a }}
               label="New Password"
               theme={themeTextInput}
               secureTextEntry={secureTextEntryNew}

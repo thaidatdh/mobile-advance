@@ -1,21 +1,27 @@
 import React from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-
+import { SettingContext } from "../../../../../Contexts/SettingContextProvider";
 const ActionButton = (props) => {
+  const { theme } = React.useContext(SettingContext);
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.imageView} onPress={props.onPress}>
+      <TouchableOpacity
+        style={{ ...styles.imageView, backgroundColor: theme.c_394249 }}
+        onPress={props.onPress}
+      >
         <FontAwesome5
           style={styles.image}
           name={props.icon}
-          color="white"
+          color={theme.c_white}
           size={20}
           style={{ alignSelf: "center" }}
           solid={props.solid ? props.solid : false}
         />
       </TouchableOpacity>
-      <Text style={styles.title}>{props.title}</Text>
+      <Text style={{ ...styles.title, color: theme.c_white }}>
+        {props.title}
+      </Text>
     </View>
   );
 };

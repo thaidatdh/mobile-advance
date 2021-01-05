@@ -19,6 +19,7 @@ import SectionRating from "./components/section-rating";
 import SectionDescription from "./components/section-description";
 import { AuthContext } from "../../../../Contexts/AuthContextProvider";
 import { DataContext } from "../../../../Contexts/DataContextProvider";
+import { SettingContext } from "../../../../Contexts/SettingContextProvider";
 import { coursesData } from "../../../../data/dataMockup";
 import ApiServices from "../../../../services/api-services";
 import PhoneStorage from "../../../../services/phone-storage";
@@ -29,7 +30,7 @@ const CourseInfo = (props) => {
   const [isInContent, setIsInContent] = useState(0);
   const [authors, setAuthors] = useState(null);
   const [visible, setVisible] = React.useState(false);
-
+  const { theme } = React.useContext(SettingContext);
   const {
     user,
     token,
@@ -192,14 +193,21 @@ const CourseInfo = (props) => {
     contentPoint,
     content
   ) => {
-    ApiServices.ratingCourse(token, props.course.id, formalityPoint,
-    presentationPoint,
-    contentPoint,
-    content).then(res => res.json()).then(response => {
-      if (response.message == "OK") {
-        props.onReload();
-      }
-    }).catch(err => console.log(err));
+    ApiServices.ratingCourse(
+      token,
+      props.course.id,
+      formalityPoint,
+      presentationPoint,
+      contentPoint,
+      content
+    )
+      .then((res) => res.json())
+      .then((response) => {
+        if (response.message == "OK") {
+          props.onReload();
+        }
+      })
+      .catch((err) => console.log(err));
   };
   const onPressShare = async () => {
     try {
@@ -243,17 +251,39 @@ const CourseInfo = (props) => {
       />
     );
   };
-
+  const buttonSwitch = {
+    ...styles.buttonSwitch,
+    backgroundColor: theme.c_1f242a,
+  };
+  const buttonSwitchSelected = {
+    ...styles.buttonSwitchSelected,
+    backgroundColor: theme.c_1f242a,
+    borderBottomColor: theme.c_2384ae,
+  };
+  const buttonText = {
+    ...styles.buttonText,
+    color: theme.c_white,
+  }
+  const buttonTextSelect = {
+    ...styles.buttonTextSelect,
+    color: theme.c_2384ae,
+  };
   return (
-    <View style={styles.container}>
-      <View style={styles.infoSection}>
-        <Text style={styles.title}>
+    <View style={{ ...styles.container, backgroundColor: theme.c_0E0F13 }}>
+      <View
+        style={{
+          ...styles.infoSection,
+          backgroundColor: theme.c_1f242a,
+          color: theme.c_white,
+        }}
+      >
+        <Text style={{ ...styles.title, color: theme.c_white }}>
           {courseDetail.title ? courseDetail.title : courseDetail.courseTitle}
         </Text>
         <View style={styles.authors}>{renderAuthors(authors)}</View>
 
         <View style={{ flexDirection: "row" }}>
-          <Text style={{ color: "lightgray", fontSize: 12 }}>
+          <Text style={{ color: theme.c_lightgray, fontSize: 12 }}>
             {courseDetail.status ? courseDetail.status + " - " : ""}
             {courseDetail.createdAt
               ? courseDetail.createdAt.substring(0, 10) + " - "
@@ -276,7 +306,7 @@ const CourseInfo = (props) => {
                 : courseDetail.averagePoint.toFixed(1)
               : courseDetail.contentPoint}
           </Text>
-          <Text style={{ color: "lightgray", fontSize: 12 }}>
+          <Text style={{ color: theme.c_lightgray, fontSize: 12 }}>
             {courseDetail.ratedNumber != undefined
               ? "(" + courseDetail.ratedNumber + ")"
               : ""}
@@ -326,16 +356,20 @@ const CourseInfo = (props) => {
         </ScrollView>
 
         <View>
-          <Button style={styles.buttons}>
-            <Text style={{ color: "white", textTransform: "none" }}>
+          <Button
+            style={{ ...styles.buttons, backgroundColor: theme.c_394249 }}
+          >
+            <Text style={{ color: theme.c_white, textTransform: "none" }}>
               Price: {courseDetail.price}
             </Text>
           </Button>
           {props.learnedTime &&
           props.learnedTime != "" &&
           props.learnedTime.length > 16 ? (
-            <Button style={styles.buttons}>
-              <Text style={{ color: "white", textTransform: "none" }}>
+            <Button
+              style={{ ...styles.buttons, backgroundColor: theme.c_394249 }}
+            >
+              <Text style={{ color: theme.c_white, textTransform: "none" }}>
                 {"Last Learn: " +
                   props.learnedTime.substring(0, 10) +
                   " " +
@@ -350,7 +384,7 @@ const CourseInfo = (props) => {
         horizontal={true}
         contentContainerStyle={{
           height: height * 0.05,
-          backgroundColor: "#1f242a",
+          backgroundColor: theme.c_1f242a,
           flexDirection: "row",
           justifyContent: "center",
         }}
@@ -358,13 +392,13 @@ const CourseInfo = (props) => {
         <TouchableOpacity
           key="course_description"
           style={
-            isInContent != 0 ? styles.buttonSwitch : styles.buttonSwitchSelected
+            isInContent != 0 ? buttonSwitch : buttonSwitchSelected
           }
           onPress={onPressDescription}
         >
           <Text
             style={
-              isInContent != 0 ? styles.buttonText : styles.buttonTextSelect
+              isInContent != 0 ? buttonText : buttonTextSelect
             }
           >
             Description
@@ -373,13 +407,13 @@ const CourseInfo = (props) => {
         <TouchableOpacity
           key="course_rating"
           style={
-            isInContent != 3 ? styles.buttonSwitch : styles.buttonSwitchSelected
+            isInContent != 3 ? buttonSwitch : buttonSwitchSelected
           }
           onPress={onPressRating}
         >
           <Text
             style={
-              isInContent != 3 ? styles.buttonText : styles.buttonTextSelect
+              isInContent != 3 ? buttonText : buttonTextSelect
             }
           >
             Ratings
@@ -388,13 +422,13 @@ const CourseInfo = (props) => {
         <TouchableOpacity
           key="course_section"
           style={
-            isInContent != 1 ? styles.buttonSwitch : styles.buttonSwitchSelected
+            isInContent != 1 ? buttonSwitch : buttonSwitchSelected
           }
           onPress={onPressContent}
         >
           <Text
             style={
-              isInContent != 1 ? styles.buttonText : styles.buttonTextSelect
+              isInContent != 1 ? buttonText : buttonTextSelect
             }
           >
             Content
@@ -403,13 +437,13 @@ const CourseInfo = (props) => {
         <TouchableOpacity
           key="course_transcript"
           style={
-            isInContent != 2 ? styles.buttonSwitch : styles.buttonSwitchSelected
+            isInContent != 2 ? buttonSwitch : buttonSwitchSelected
           }
           onPress={onPressTranscript}
         >
           <Text
             style={
-              isInContent != 2 ? styles.buttonText : styles.buttonTextSelect
+              isInContent != 2 ? buttonText : buttonTextSelect
             }
           >
             Transcript
@@ -417,7 +451,7 @@ const CourseInfo = (props) => {
         </TouchableOpacity>
       </ScrollView>
 
-      <View style={styles.contentView}>
+      <View style={{...styles.contentView, backgroundColor: theme.c_white}}>
         {isInContent == 0 ? (
           <SectionDescription
             description={

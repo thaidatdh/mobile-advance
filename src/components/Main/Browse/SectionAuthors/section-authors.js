@@ -8,8 +8,9 @@ import {
 } from "react-native";
 import { Button } from "react-native-paper";
 import SectionAuthorItem from "./SectionAuthorItem/section-author-item";
-
+import { SettingContext } from "../../../../Contexts/SettingContextProvider";
 const SectionAuthor = (props) => {
+  const { theme } = React.useContext(SettingContext);
   const [authors] = useState(props.authors);
   const onPressAuthor = (author) => {
     props.navigation.navigate("Author", { author: author });
@@ -30,7 +31,7 @@ const SectionAuthor = (props) => {
   return (
     <View>
       <View>
-        <Text style={styles.titleText}>{props.title}</Text>
+        <Text style={{...styles.titleText, color: theme.c_white}}>{props.title}</Text>
       </View>
       <ScrollView style={{ paddingLeft: 10 }} horizontal={true}>
         {renderListItems(authors)}

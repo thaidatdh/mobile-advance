@@ -9,8 +9,10 @@ import {
 import { Menu, Divider, Provider, Appbar } from "react-native-paper";
 import { AuthContext } from "../../Contexts/AuthContextProvider";
 const { width, height } = Dimensions.get("window");
+import { SettingContext } from "../../Contexts/SettingContextProvider";
 const MAppBar = (props) => {
   const { user, logout } = React.useContext(AuthContext);
+  const { theme } = React.useContext(SettingContext);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const onClick = () => {
     if (user) {
@@ -39,9 +41,9 @@ const MAppBar = (props) => {
     props.navigation.navigate("Main");
   };
   return (
-    <Appbar.Header style={{ backgroundColor: "#1f242a"}} statusBarHeight={5}>
+    <Appbar.Header style={{ backgroundColor: theme.c_1f242a}} statusBarHeight={5}>
       <Appbar.Content title={props.title}/>
-      <Appbar.Action icon="account-circle" onPress={onClick} color="white" />
+      <Appbar.Action icon="account-circle" onPress={onClick} color={theme.c_white} />
       {user ? (
         <Menu
           visible={isMenuVisible}
@@ -49,7 +51,7 @@ const MAppBar = (props) => {
           anchor={
             <Appbar.Action
               icon="dots-vertical"
-              color="white"
+              color={theme.c_white}
               onPress={onMenuOpen}
             />
           }

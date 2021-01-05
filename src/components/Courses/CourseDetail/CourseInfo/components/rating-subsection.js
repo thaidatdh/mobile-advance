@@ -11,11 +11,13 @@ import {
 } from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import { AuthContext } from "../../../../../Contexts/AuthContextProvider";
+import { SettingContext } from "../../../../../Contexts/SettingContextProvider";
 import ApiServices from "../../../../../services/api-services";
 const { width, height } = Dimensions.get("window");
 
 const RatingSubsection = (props) => {
   const { token } = useContext(AuthContext);
+  const { theme } = React.useContext(SettingContext);
   return (
     <View style={{ width: width, marginBottom: 20, alignItems: "center" }}>
       <View
@@ -29,9 +31,9 @@ const RatingSubsection = (props) => {
         <View style={{ flexDirection: "row", width: width * 0.9 }}>
           <View
             style={{
-              backgroundColor: "#1f242a",
+              backgroundColor: theme.c_1f242a,
               borderBottomWidth: 3,
-              borderColor: "#394249",
+              borderColor: theme.c_394249,
               width: width * 0.2,
               height: height * 0.08,
               maxWidth: 100,
@@ -39,13 +41,19 @@ const RatingSubsection = (props) => {
               justifyContent: "center",
             }}
           >
-            <Text style={{ color: "white", fontSize: 20, alignSelf: "center" }}>
+            <Text
+              style={{
+                color: theme.c_white,
+                fontSize: 20,
+                alignSelf: "center",
+              }}
+            >
               {props.item.averagePoint.toFixed(1)}
             </Text>
           </View>
           <Text
             style={{
-              color: "white",
+              color: theme.c_white,
               width: width * 0.7,
               paddingLeft: 20,
               alignSelf: "center",
@@ -63,16 +71,18 @@ const RatingSubsection = (props) => {
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <View
               style={{
-                backgroundColor: "gray",
+                backgroundColor: theme.c_gray,
                 borderRadius: 10,
                 height: 10,
                 width: 10,
                 marginRight: 10,
               }}
             ></View>
-            <Text style={{ color: "white" }}>Presentation Point</Text>
+            <Text style={{ color: theme.c_white }}>Presentation Point</Text>
           </View>
-          <Text style={{ color: "white" }}>{props.item.presentationPoint}</Text>
+          <Text style={{ color: theme.c_white }}>
+            {props.item.presentationPoint}
+          </Text>
         </View>
         <View
           key={props.item.userId + props.item.id + "_2"}
@@ -81,16 +91,18 @@ const RatingSubsection = (props) => {
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <View
               style={{
-                backgroundColor: "gray",
+                backgroundColor: theme.c_gray,
                 borderRadius: 10,
                 height: 10,
                 width: 10,
                 marginRight: 10,
               }}
             ></View>
-            <Text style={{ color: "white" }}>Content Point</Text>
+            <Text style={{ color: theme.c_white }}>Content Point</Text>
           </View>
-          <Text style={{ color: "white" }}>{props.item.contentPoint}</Text>
+          <Text style={{ color: theme.c_white }}>
+            {props.item.contentPoint}
+          </Text>
         </View>
         <View
           key={props.item.userId + props.item.id + "_3"}
@@ -99,23 +111,25 @@ const RatingSubsection = (props) => {
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <View
               style={{
-                backgroundColor: "gray",
+                backgroundColor: theme.c_gray,
                 borderRadius: 10,
                 height: 10,
                 width: 10,
                 marginRight: 10,
               }}
             ></View>
-            <Text style={{ color: "white" }}>Formality Point</Text>
+            <Text style={{ color: theme.c_white }}>Formality Point</Text>
           </View>
-          <Text style={{ color: "white" }}>{props.item.formalityPoint}</Text>
+          <Text style={{ color: theme.c_white }}>
+            {props.item.formalityPoint}
+          </Text>
         </View>
         <View
           key={props.item.userId + props.item.id + "_0"}
           style={styles.item}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text style={{ color: "white" }}>{props.item.content}</Text>
+            <Text style={{ color: theme.c_white }}>{props.item.content}</Text>
           </View>
         </View>
       </View>

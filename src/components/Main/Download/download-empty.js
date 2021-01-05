@@ -1,16 +1,26 @@
 import React from "react";
-import {
-  View,
-  Text,
-  Dimensions
-} from "react-native";
-import {Button} from 'react-native-paper'
-const {width, height} = Dimensions.get("window");
+import { View, Text, Dimensions } from "react-native";
+import { Button } from "react-native-paper";
+import { SettingContext } from "../../../Contexts/SettingContextProvider";
+const { width, height } = Dimensions.get("window");
 const DownloadEmpty = (props) => {
+  const { theme } = React.useContext(SettingContext);
   return (
-    <View style={{flex:1, backgroundColor: "#0E0F13", justifyContent: 'center', alignItems:'center'}}>
-      <Button style={{width: width * 0.8, backgroundColor:'#2384ae'}} onPress={props.onCheckNotEmpty}>
-        <Text style={{color: 'white', textTransform: 'uppercase'}}>Find a course to download</Text>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: theme.c_0E0F13,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Button
+        style={{ width: width * 0.8, backgroundColor: theme.c_2384ae }}
+        onPress={props.onCheckNotEmpty}
+      >
+        <Text style={{ color: theme.c_white, textTransform: "uppercase" }}>
+          Find a course to download
+        </Text>
       </Button>
     </View>
   );

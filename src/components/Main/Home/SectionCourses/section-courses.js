@@ -1,13 +1,27 @@
-import React, { useState } from "react";
-import { ScrollView, View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  ScrollView,
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import SectionCourseItem from "./SectionCourseItem/section-course-item";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-import {coursesData} from "../../../../data/dataMockup"
+import { coursesData } from "../../../../data/dataMockup";
+import { SettingContext } from "../../../../Contexts/SettingContextProvider";
 const SectionCourses = ({ onSeeAll, title, onPressCourse, coursesList }) => {
+  const { theme } = React.useContext(SettingContext);
   const renderListItems = (courses) => {
-    return courses ? courses.map((item) => (
-      <SectionCourseItem key={item.id} item={item} onPress={onPressCourse} />
-    )) : null;
+    return courses
+      ? courses.map((item) => (
+          <SectionCourseItem
+            key={item.id}
+            item={item}
+            onPress={onPressCourse}
+          />
+        ))
+      : null;
   };
 
   return (
@@ -19,14 +33,14 @@ const SectionCourses = ({ onSeeAll, title, onPressCourse, coursesList }) => {
           justifyContent: "space-between",
         }}
       >
-        <Text style={styles.titleText}>{title}</Text>
+        <Text style={{...styles.titleText, color: theme.c_white}}>{title}</Text>
         <TouchableOpacity
           style={styles.seeAllButtonView}
           onPress={() => onSeeAll(title, coursesList)}
         >
-          <Text style={{ color: "lightgray", fontSize: 10 }}>
+          <Text style={{ color: theme.c_lightgray, fontSize: 10 }}>
             See all{" "}
-            <FontAwesome5 name={"angle-right"} color="lightgray" size={10} />
+            <FontAwesome5 name={"angle-right"} color={theme.c_lightgray} size={10} />
           </Text>
         </TouchableOpacity>
       </View>

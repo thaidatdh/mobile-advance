@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import ListCourseItem from "../ListCourses/ListCourseItem/list-course-item";
 import { DataContext } from "../../../Contexts/DataContextProvider";
+import { SettingContext } from "../../../Contexts/SettingContextProvider";
 import FileSystemApi from "../../../services/file-system-api";
 const { width, height } = Dimensions.get("window");
 const Author = ({ navigation, route }) => {
@@ -24,6 +25,7 @@ const Author = ({ navigation, route }) => {
       ? route.params.author["user.avatar"]
       : route.params.author.avatar
   );
+  const { theme } = React.useContext(SettingContext);
   useEffect(() => {
     navigation.setOptions({
       title: route.params.author["user.name"]
@@ -74,45 +76,63 @@ const Author = ({ navigation, route }) => {
     ));
   };
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#0E0F13" }}>
-      <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.c_0E0F13 }}>
+      <StatusBar barStyle="light-content" backgroundColor={theme.c_0E0F13} />
       <ScrollView>
         <View key="AuthorInfo" style={styles.authorInfoView}>
           <Image source={{ uri: imageUrl }} style={styles.image} />
-          <Text style={styles.authorName}>
+          <Text style={{ ...styles.authorName, color: theme.c_white }}>
             {author["user.name"] ? author["user.name"] : author.name}
           </Text>
           {author.intro ? (
-            <Text style={styles.desc}>{author.intro}</Text>
+            <Text style={{ ...styles.desc, color: theme.c_white }}>
+              {author.intro}
+            </Text>
           ) : null}
           <View style={styles.descView}>
-            <Text style={styles.desc}>Email:</Text>
-            <Text style={styles.desc}>
+            <Text style={{ ...styles.desc, color: theme.c_white }}>Email:</Text>
+            <Text style={{ ...styles.desc, color: theme.c_white }}>
               {author["user.email"] ? author["user.email"] : author.email}
             </Text>
           </View>
           {author.skills ? (
             <View style={styles.descView}>
-              <Text style={styles.desc}>Skills:</Text>
-              <Text style={styles.desc}>{author.skills.join(", ")}</Text>
+              <Text style={{ ...styles.desc, color: theme.c_white }}>
+                Skills:
+              </Text>
+              <Text style={{ ...styles.desc, color: theme.c_white }}>
+                {author.skills.join(", ")}
+              </Text>
             </View>
           ) : null}
           {author.major ? (
             <View style={styles.descView}>
-              <Text style={styles.desc}>Major:</Text>
-              <Text style={styles.desc}>{author.major}</Text>
+              <Text style={{ ...styles.desc, color: theme.c_white }}>
+                Major:
+              </Text>
+              <Text style={{ ...styles.desc, color: theme.c_white }}>
+                {author.major}
+              </Text>
             </View>
           ) : null}
           {author.phone ? (
             <View style={styles.descView}>
-              <Text style={styles.desc}>Phone:</Text>
-              <Text style={styles.desc}>{author.phone}</Text>
+              <Text style={{ ...styles.desc, color: theme.c_white }}>
+                Phone:
+              </Text>
+              <Text style={{ ...styles.desc, color: theme.c_white }}>
+                {author.phone}
+              </Text>
             </View>
           ) : null}
           {author.totalCourse ? (
             <View style={styles.descView}>
-              <Text style={styles.desc}>Total Courses:</Text>
-              <Text style={styles.desc}>{author.totalCourse}</Text>
+              <Text style={{ ...styles.desc, color: theme.c_white }}>
+                Total Courses:
+              </Text>
+              <Text style={{ ...styles.desc, color: theme.c_white }}>
+                {author.totalCourse}
+              </Text>
             </View>
           ) : null}
         </View>

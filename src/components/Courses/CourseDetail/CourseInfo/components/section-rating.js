@@ -2,15 +2,16 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { View, Dimensions, StyleSheet, Text, ScrollView } from "react-native";
 import RatingSubsection from "./rating-subsection";
-
+import { SettingContext } from "../../../../../Contexts/SettingContextProvider";
 const { width, height } = Dimensions.get("window");
 
 const SectionRating = (props) => {
+  const { theme } = React.useContext(SettingContext);
   const renderSubSections = (sections) => {
     if (sections === undefined)
       return (
         <View key="NULLVALUE" style={{ flex: 1, justifyContent: "center" }}>
-          <Text style={{ textAlign: "center", color: "white" }}>
+          <Text style={{ textAlign: "center", color: theme.c_white }}>
            No Rating
           </Text>
         </View>
@@ -23,7 +24,7 @@ const SectionRating = (props) => {
     ));
   };
   return (
-    <View style={styles.container}>
+    <View style={{ ...styles.container, backgroundColor: theme.c_0E0F13 }}>
       <ScrollView style={styles.scrollViewContainer} nestedScrollEnabled={true}>
         {renderSubSections(props.content.ratingList)}
       </ScrollView>

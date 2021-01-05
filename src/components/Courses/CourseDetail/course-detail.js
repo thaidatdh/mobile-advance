@@ -16,6 +16,7 @@ import { WebView } from "react-native-webview";
 import CourseInfo from "./CourseInfo/course-info";
 import { DataContext } from "../../../Contexts/DataContextProvider";
 import { AuthContext } from "../../../Contexts/AuthContextProvider";
+import { SettingContext } from "../../../Contexts/SettingContextProvider";
 import ApiServices from "../../../services/api-services";
 import PhoneStorage from "../../../services/phone-storage";
 import FileSystemApi from "../../../services/file-system-api";
@@ -39,6 +40,7 @@ const CourseDetail = ({ navigation, route }) => {
     isInternetReachable,
   } = React.useContext(DataContext);
   const { user, getLastLearnTime } = React.useContext(AuthContext);
+  const { theme } = React.useContext(SettingContext);
   useEffect(() => {
     navigation.setOptions({ title: route.params.course.title });
   }, []);
@@ -182,8 +184,10 @@ const CourseDetail = ({ navigation, route }) => {
     }
   };
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#0E0F13" />
+    <SafeAreaView
+      style={{ ...styles.container, backgroundColor: theme.c_0E0F13 }}
+    >
+      <StatusBar barStyle="light-content" backgroundColor={theme.c_0E0F13} />
       <View style={styles.imageView}>
         {videoUrl ? (
           videoUrl.includes("youtube.com") ? (

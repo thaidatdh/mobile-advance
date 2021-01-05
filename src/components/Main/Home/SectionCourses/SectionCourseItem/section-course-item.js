@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { DataContext } from "../../../../../Contexts/DataContextProvider";
 import { AuthContext } from "../../../../../Contexts/AuthContextProvider";
+import { SettingContext } from "../../../../../Contexts/SettingContextProvider";
 import ApiServices from "../../../../../services/api-services";
 import PhoneStorage from "../../../../../services/phone-storage";
 import FileSystemApi from "../../../../../services/file-system-api";
@@ -21,6 +22,7 @@ const SectionCourseItem = ({ onPress, item }) => {
   const [imageUrl, setImageUrl] = useState(
     item.courseImage ? item.courseImage : item.imageUrl
   );
+  const { theme } = React.useContext(SettingContext);
   const {
     getCourse,
     selectedCourse,
@@ -85,8 +87,11 @@ const SectionCourseItem = ({ onPress, item }) => {
     fetchData(item.id);
   }, []);
   return (
-    <TouchableOpacity style={styles.item} onPress={() => onPress(courseData)}>
-      <View style={styles.imageView}>
+    <TouchableOpacity
+      style={{ ...styles.item, backgroundColor: theme.c_2b2c30 }}
+      onPress={() => onPress(courseData)}
+    >
+      <View style={{ ...styles.imageView, backgroundColor: theme.c_black }}>
         <Image
           source={{
             uri: imageUrl,
@@ -96,11 +101,13 @@ const SectionCourseItem = ({ onPress, item }) => {
       </View>
 
       <View style={styles.textArea}>
-        <Text style={styles.text}>
+        <Text style={{...styles.text, color: theme.c_white}}>
           {courseData.courseTitle ? courseData.courseTitle : courseData.title}
         </Text>
-        <Text style={styles.darkText}>{instructorName}</Text>
-        <Text style={styles.darkText}>
+        <Text style={{ ...styles.darkText, color: theme.c_darkgray }}>
+          {instructorName}
+        </Text>
+        <Text style={{ ...styles.darkText, color: theme.c_darkgray }}>
           {(courseData.createdAt
             ? courseData.createdAt.substring(0, 10) + " | "
             : "") +
@@ -112,18 +119,20 @@ const SectionCourseItem = ({ onPress, item }) => {
           style={{
             flex: 1,
             flexDirection: "row",
-            backgroundColor: "#2b2c30",
+            backgroundColor: theme.c_2b2c30,
           }}
         >
-          <Text style={styles.darkText}>Rating: </Text>
-          <Text style={{ color: "#f1c40f" }}>
+          <Text style={{ ...styles.darkText, color: theme.c_darkgray }}>
+            Rating:{" "}
+          </Text>
+          <Text style={{ color: theme.c_f1c40f }}>
             {courseData.averagePoint
               ? courseData.averagePoint
               : courseData.courseAveragePoint
               ? courseData.courseAveragePoint.toFixed(2)
               : 0}
           </Text>
-          <Text style={styles.darkText}>
+          <Text style={{ ...styles.darkText, color: theme.c_darkgray }}>
             {courseData.ratedNumber ? " (" + courseData.ratedNumber + ")" : 0}
           </Text>
         </View>
@@ -132,11 +141,13 @@ const SectionCourseItem = ({ onPress, item }) => {
             style={{
               flex: 1,
               flexDirection: "row",
-              backgroundColor: "#2b2c30",
+              backgroundColor: theme.c_2b2c30,
             }}
           >
-            <Text style={styles.darkText}>Last Learn: </Text>
-            <Text style={styles.darkText}>
+            <Text style={{ ...styles.darkText, color: theme.c_darkgray }}>
+              Last Learn:{" "}
+            </Text>
+            <Text style={{ ...styles.darkText, color: theme.c_darkgray }}>
               {learnedTime.substring(0, 10) +
                 " " +
                 learnedTime.substring(11, 16)}
