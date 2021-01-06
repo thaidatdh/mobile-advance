@@ -17,29 +17,29 @@ import { AuthContext } from "../../../Contexts/AuthContextProvider";
 import { NavigationActions } from "react-navigation";
 const { width, height } = Dimensions.get("window");
 const Setting = ({ navigation }) => {
-  const { theme, switchTheme, isDark, isEnglish, switchLanguage } = React.useContext(SettingContext);
+  const { theme, switchTheme, isDark, isEnglish, switchLanguage, language } = React.useContext(SettingContext);
   const { user, settings, updateSetting, logout } = React.useContext(
     AuthContext
   );
   const accountSetting = [
     {
       type: "text",
-      title: "Account",
+      title: language.Account,
       onPress: () => {
         navigation.navigate("Profile");
       },
     },
     {
       type: "text",
-      title: "Subscription",
-      desc: "Free",
+      title: language.Subscription,
+      desc: language.Free,
       onPress: () => {},
     },
   ];
   const themeItem = {
     type: "switch",
-    title: isDark ? "Dark Mode" : "Light Mode",
-    desc: "Enable is Dark Mode. Disable is Light Mode",
+    title: isDark ? language.DarkMode : language.LightMode,
+    desc: language.DarkModeDesc,
     isCheck: isDark,
     onPress: () => {
       switchTheme();
@@ -47,9 +47,10 @@ const Setting = ({ navigation }) => {
   };
   const languageItem = {
     type: "switch",
-    title: isEnglish ? "Language" : "Ngôn ngữ",
-    desc: isEnglish ? "English" : "Vietnamese",
+    title: language.Language,
+    desc: language.LanguageValue,
     icon: 'language',
+
     isCheck: isEnglish,
     onPress: () => {
       switchLanguage();
@@ -57,7 +58,7 @@ const Setting = ({ navigation }) => {
   };
   const appVersion = {
     type: "text",
-    title: "App version",
+    title: language.Appversion,
     desc: "1.0.0",
   };
   const onSignOut = () => {
@@ -145,7 +146,7 @@ const Setting = ({ navigation }) => {
           style={{ ...styles.signOut, backgroundColor: theme.c_0E0F13 }}
           onPress={onSignOut}
         >
-          <Text style={styles.buttonTextBlue}>Sign Out</Text>
+          <Text style={styles.buttonTextBlue}>{language.SignOut}</Text>
         </Button>
       </ScrollView>
     </SafeAreaView>
