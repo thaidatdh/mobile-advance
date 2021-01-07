@@ -17,17 +17,17 @@ const SectionAuthorItem = (props) => {
   const { isInternetReachable } = useContext(DataContext);
   const [imageUrl, setImageUrl] = useState(props.author["user.avatar"]);
   useEffect(() => {
-    const getImage = async () => {
+    const getImage = () => {
       const url = props.author["user.avatar"];
       setImageUrl(url);
       if (!isInternetReachable) {
-        const courseImage = await FileSystemApi.getInstructorImage(
-          props.author.id,
-          url
-        );
-        if (courseImage) {
-          await setImageUrl(courseImage);
-        }
+        FileSystemApi.getInstructorImage(props.author.id, url)
+          .then((courseImage) => {
+            if (courseImage) {
+              setImageUrl(courseImage);
+            }
+          })
+          .catch((err) => {});
       }
     };
     try {
@@ -41,7 +41,9 @@ const SectionAuthorItem = (props) => {
     >
       <Image source={{ uri: imageUrl }} style={styles.image} />
       <View style={styles.titleView}>
-        <Text style={{...styles.title, color: theme.c_white}}>{props.author["user.name"]}</Text>
+        <Text style={{ ...styles.title, color: theme.c_white }}>
+          {props.author["user.name"]}
+        </Text>
       </View>
     </TouchableOpacity>
   );

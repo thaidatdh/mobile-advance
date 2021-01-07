@@ -137,6 +137,19 @@ const getCourseVideo = async (course_id, filePath) => {
     return null;
   }
 };
+const getLessonVideo = async (course_id, lesson_id, filePath) => {
+  try {
+    const fileUri = lessonDir(course_id, lesson_id, getFileExt(filePath));
+    const fileInfo = await FileSystem.getInfoAsync(fileUri);
+    if (fileInfo.exists) {
+      const rsUrl = FileSystem.getContentUriAsync(fileUri);
+      return rsUrl;
+    }
+    return null;
+  } catch (err) {
+    return null;
+  }
+};
 const getCourseImage = async (course_id, filePath) => {
   try {
     const fileUri = courseImageDir(course_id, getFileExt(filePath));
@@ -180,5 +193,6 @@ const FileSystemApi = {
   getCourseVideo,
   getCourseImage,
   getInstructorImage,
+  getLessonVideo,
 };
 export default FileSystemApi;

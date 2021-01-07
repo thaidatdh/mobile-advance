@@ -8,12 +8,14 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
+import NetInfo from "@react-native-community/netinfo";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import { AuthContext } from "../../../../../Contexts/AuthContextProvider";
 import { DataContext } from "../../../../../Contexts/DataContextProvider";
 import ApiServices from "../../../../../services/api-services";
 import { SettingContext } from "../../../../../Contexts/SettingContextProvider";
 import PhoneStorage from "../../../../../services/phone-storage";
+import FileSystemApi from "../../../../../services/file-system-api";
 const { width, height } = Dimensions.get("window");
 
 const ContentSubsection = (props) => {
@@ -21,6 +23,7 @@ const ContentSubsection = (props) => {
   const { token, user, isChanneled } = useContext(AuthContext);
   const { isInternetReachable } = useContext(DataContext);
   const onClickLesson = async (item) => {
+    NetInfo.addEventListener((state) => {});
     if (!token || !user || !isChanneled(item.courseId)) {
       Alert.alert(
         language.Alert,
@@ -28,10 +31,7 @@ const ContentSubsection = (props) => {
       );
       return;
     }
-    if (
-      !isInternetReachable &&
-      item.videoUrl.includes("youtube.com")
-    ) {
+    if (!isInternetReachable && item.videoUrl.includes("youtube.com")) {
       Alert.alert(
         "Internet",
         language.Cannotseethisvideobecauseitsaonlinesection
@@ -42,7 +42,24 @@ const ContentSubsection = (props) => {
       Alert.alert(language.Videonotfound, language.Videolinkisnull);
       return;
     }
-    if (item.videoUrl) props.onChangeVideo(item.videoUrl, item.id);
+    if (item.videoUrl) {
+      NetInfo.fetch()
+        .then((state) => {
+          if (!state.isInternetReachable) {
+            FileSystemApi.getLessonVideo(item.courseId, item.id, item.videoUrl)
+              .then((promoVidUrl) => {
+                if (promoVidUrl) {
+                  props.onChangeVideo(promoVidUrl, item.id);
+                }
+              })
+              .catch((err) => {});
+          }
+          else {
+            props.onChangeVideo(item.videoUrl, item.id);
+          }
+        })
+        .catch((err) => {});
+    }
     let content = item.name;
     if (item.content) {
       content = content ? content + "\n" + item.captionName : item.captionName;
@@ -50,30 +67,31 @@ const ContentSubsection = (props) => {
     if (item.captionName) {
       content = content ? content + "\n" + item.captionName : item.captionName;
     }
-    const subtitle = await ApiServices.getLessonSubtitle(
-      token,
-      item.courseId,
-      item.id
-    );
-    if (subtitle && subtitle.payload) {
-      let contentSub = language.Subtitle + ":\n" + subtitle.payload;
-      content = content ? content + "\n\n" + contentSub : contentSub;
-      PhoneStorage.save(
-        "@subtitle_" + item.courseId + item.id,
-        JSON.stringify(subtitle.payload)
-      );
-    } else {
-      if (!isInternetReachable) {
-        const persistData = await PhoneStorage.load(
-          "@subtitle_" + item.courseId + item.id,
-          "json"
-        );
-        if (persistData) {
+    ApiServices.getLessonSubtitle(token, item.courseId, item.id).then(
+      (subtitle) => {
+        if (subtitle && subtitle.payload) {
           let contentSub = language.Subtitle + ":\n" + subtitle.payload;
           content = content ? content + "\n\n" + contentSub : contentSub;
+          PhoneStorage.save(
+            "@subtitle_" + item.courseId + item.id,
+            JSON.stringify(subtitle.payload)
+          );
+        } else {
+          if (!isInternetReachable) {
+            PhoneStorage.load(
+              "@subtitle_" + item.courseId + item.id,
+              "json"
+            ).then((persistData) => {
+              if (persistData) {
+                let contentSub = language.Subtitle + ":\n" + subtitle.payload;
+                content = content ? content + "\n\n" + contentSub : contentSub;
+              }
+            });
+          }
         }
       }
-    }
+    );
+
     props.onChangeTranscript(content);
   };
   const renderListContent = (contents) => {
@@ -86,7 +104,7 @@ const ContentSubsection = (props) => {
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <View
             style={{
-              backgroundColor: theme.c_gray,
+              backgroundColor: props.currentLesson == item.id ? "red" : theme.c_gray,
               borderRadius: 10,
               height: 10,
               width: 10,
@@ -122,7 +140,13 @@ const ContentSubsection = (props) => {
               justifyContent: "center",
             }}
           >
-            <Text style={{ color: theme.c_white, fontSize: 20, alignSelf: "center" }}>
+            <Text
+              style={{
+                color: theme.c_white,
+                fontSize: 20,
+                alignSelf: "center",
+              }}
+            >
               {props.item.numberOrder}
             </Text>
           </View>

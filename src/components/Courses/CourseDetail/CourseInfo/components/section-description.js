@@ -4,7 +4,7 @@ import { SettingContext } from "../../../../../Contexts/SettingContextProvider";
 const {width, height} = Dimensions.get("window");
 
 const SectionDescription = (props) => {
-  const { theme } = React.useContext(SettingContext);
+  const { theme, language } = React.useContext(SettingContext);
   return (
     <ScrollView
       style={{ ...styles.container, backgroundColor: theme.c_0E0F13 }}
@@ -12,7 +12,7 @@ const SectionDescription = (props) => {
     >
       <View style={{ height: "100%", width: width * 0.9 }}>
         <Text style={{ color: theme.c_white, textAlign: "justify" }}>
-          {props.description}
+          {props.description == "" || !props.description ? language.NoContent : props.description}
         </Text>
       </View>
     </ScrollView>

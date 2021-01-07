@@ -210,10 +210,7 @@ const SectionCategories = (props) => {
   ];
   const { categories, loadCategories } = React.useContext(DataContext);
   useEffect(() => {
-    const loadData = async () => {
-      await loadCategories();
-    };
-    loadData();
+    loadCategories();
   }, []);
   const formatColor = (ary) => {
     return "rgb(" + ary.join(", ") + ",0.5)";

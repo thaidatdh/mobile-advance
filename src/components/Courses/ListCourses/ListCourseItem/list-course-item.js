@@ -39,35 +39,36 @@ const ListCourseItem = (props) => {
   const { theme, language } = React.useContext(SettingContext);
   const { isInternetReachable } = React.useContext(DataContext);
   useEffect(() => {
-    const fetchData = async (id) => {
-      try {
-        let res = await ApiServices.getCourseDetails(id, user ? user.id : id);
-        let response = await res.json();
-        if (response.payload !== undefined && response.payload !== null) {
-          await setCourse(response.payload);
-          PhoneStorage.save(
-            "@course_detail_info_" + id,
-            JSON.stringify(response.payload)
-          );
-          if (response.payload.instructor) {
-            await setAuthors(response.payload.instructor.name);
+    const fetchData = (id) => {
+      ApiServices.getCourseDetails(id, user ? user.id : id)
+        .then((res) => res.json())
+        .then((response) => {
+          if (response.payload !== undefined && response.payload !== null) {
+            setCourse(response.payload);
+            PhoneStorage.save(
+              "@course_detail_info_" + id,
+              JSON.stringify(response.payload)
+            );
+            if (response.payload.instructor) {
+              setAuthors(response.payload.instructor.name);
+            }
           }
-        }
-      } catch (err) {
-        console.log(err);
-        if (!isInternetReachable) {
-          PhoneStorage.load("@course_detail_info_" + id, "json").then(
-            (persistData) => {
-              if (persistData) {
-                setCourse(persistData);
-                if (persistData.instructor) {
-                  setAuthors(persistData.instructor.name);
+        })
+        .catch((err) => {
+          console.log(err);
+          if (!isInternetReachable) {
+            PhoneStorage.load("@course_detail_info_" + id, "json").then(
+              (persistData) => {
+                if (persistData) {
+                  setCourse(persistData);
+                  if (persistData.instructor) {
+                    setAuthors(persistData.instructor.name);
+                  }
                 }
               }
-            }
-          );
-        }
-      }
+            );
+          }
+        });
     };
     const getImage = async () => {
       const url = props.item.courseImage
@@ -139,7 +140,7 @@ const ListCourseItem = (props) => {
   };
   useEffect(() => {
     //​
-    const fetchDataAuth = async (id) => {
+    const fetchDataAuth = (id) => {
       ApiServices.getInstructorDetail(id)
         .then((res) => res.json())
         .then((response) => {
@@ -199,7 +200,9 @@ const ListCourseItem = (props) => {
               ": " +
               course.latestLearnTime.substring(0, 10)
             : ""}
-          {course.totalHours ? course.totalHours.toFixed(2) + " " + language.hours : ""}
+          {course.totalHours
+            ? course.totalHours.toFixed(2) + " " + language.hours
+            : ""}
         </Text>
         <View
           style={{

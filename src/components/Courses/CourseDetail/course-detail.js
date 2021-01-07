@@ -27,6 +27,7 @@ const CourseDetail = ({ navigation, route }) => {
   const [videoUrl, setVideoUrl] = useState("");
   const [learnedTime, setLearnedTime] = useState("");
   const [isLesson, setIsLesson] = useState(false);
+  const [currLesson, setCurrLesson] = useState(null);
   const [isGetUrlOffline, setIsGetUrlOffline] = useState(true);
   const [imageUrl, setImageUrl] = useState(
     route.params.course.courseImage
@@ -44,7 +45,7 @@ const CourseDetail = ({ navigation, route }) => {
   useEffect(() => {
     navigation.setOptions({ title: route.params.course.title });
   }, []);
-  const fetchData = async (id) => {
+  const fetchData = (id) => {
     if (route.params.course.latestLearnTime) {
       setLearnedTime(route.params.course.latestLearnTime);
       PhoneStorage.save(
@@ -65,44 +66,49 @@ const CourseDetail = ({ navigation, route }) => {
         }
       }
     }
-    try {
-      let res = await ApiServices.getCourseDetails(id, user ? user.id : id);
-      let response = await res.json();
-      if (response.payload !== undefined && response.payload !== null) {
-        await setCourseDetail(response.payload);
-        PhoneStorage.save(
-          "@course_detail_info_" + id,
-          JSON.stringify(response.payload)
-        );
-        if (response.payload.promoVidUrl) {
-          setVideoUrl(response.payload.promoVidUrl);
-        }
-      }
-    } catch (err) {
-      console.log(err);
-      PhoneStorage.load("@course_detail_info_" + id, "json").then(
-        (persistData) => {
-          if (persistData) {
-            setCourseDetail(persistData);
-            if (
-              persistData.promoVidUrl &&
-              !persistData.promoVidUrl.includes("youtube.com")
-            ) {
-              FileSystemApi.getCourseVideo(
-                persistData.id,
-                persistData.promoVidUrl
-              )
-                .then((promoVidUrl) => {
-                  if (promoVidUrl && promoVidUrl != "" && promoVidUrl != null) {
-                    setVideoUrl(promoVidUrl);
-                  }
-                })
-                .catch((err) => {});
-            }
+    ApiServices.getCourseDetails(id, user ? user.id : id)
+      .then((res) => res.json())
+      .then((response) => {
+        if (response.payload !== undefined && response.payload !== null) {
+          setCourseDetail(response.payload);
+          PhoneStorage.save(
+            "@course_detail_info_" + id,
+            JSON.stringify(response.payload)
+          );
+          if (response.payload.promoVidUrl) {
+            setVideoUrl(response.payload.promoVidUrl);
           }
         }
-      );
-    }
+      })
+      .catch((err) => {
+        console.log(err);
+        PhoneStorage.load("@course_detail_info_" + id, "json").then(
+          (persistData) => {
+            if (persistData) {
+              setCourseDetail(persistData);
+              if (
+                persistData.promoVidUrl &&
+                !persistData.promoVidUrl.includes("youtube.com")
+              ) {
+                FileSystemApi.getCourseVideo(
+                  persistData.id,
+                  persistData.promoVidUrl
+                )
+                  .then((promoVidUrl) => {
+                    if (
+                      promoVidUrl &&
+                      promoVidUrl != "" &&
+                      promoVidUrl != null
+                    ) {
+                      setVideoUrl(promoVidUrl);
+                    }
+                  })
+                  .catch((err) => {});
+              }
+            }
+          }
+        );
+      });
   };
   useEffect(() => {
     //setVideoUrl(route.params.course.promoVidUrl);
@@ -153,7 +159,7 @@ const CourseDetail = ({ navigation, route }) => {
     NetInfo.addEventListener((state) => {});
     NetInfo.fetch()
       .then((state) => {
-        if (!state.isInternetReachable && isGetUrlOffline) {
+        if (!state.isInternetReachable) {
           setVideoUrl(null);
           FileSystemApi.getCourseVideo(
             route.params.course.id,
@@ -162,20 +168,24 @@ const CourseDetail = ({ navigation, route }) => {
             .then((promoVidUrl) => {
               if (promoVidUrl) {
                 setVideoUrl(promoVidUrl);
-                setIsGetUrlOffline(false);
               }
             })
-            .catch((err) => { alert(language.canNotLoadVideo);});
+            .catch((err) => {
+              alert(language.canNotLoadVideo);
+            });
         }
       })
-      .catch((err) => {alert(language.canNotLoadVideo);});
-  }
+      .catch((err) => {
+        alert(language.canNotLoadVideo);
+      });
+  };
   const ReloadData = () => {
     fetchData(route.params.course.id);
   };
-  const onChangeVideo = (url, lession_id) => {
+  const onChangeVideo = (url, lesson_id) => {
     setVideoUrl(url);
     setIsLesson(true);
+    setCurrLesson(lesson_id);
   };
   const onPressAuthor = (authorName) => {
     const author = authors.find((n) => n["user.name"] === authorName);
@@ -224,6 +234,7 @@ const CourseDetail = ({ navigation, route }) => {
           onPressAuthor={onPressAuthor}
           onChangeVideo={onChangeVideo}
           onReload={ReloadData}
+          currentLesson={currLesson}
         />
       </ScrollView>
     </SafeAreaView>

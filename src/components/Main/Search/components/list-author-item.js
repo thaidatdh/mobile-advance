@@ -13,17 +13,34 @@ const ListAuthorItem = (props) => {
   const { theme, language } = React.useContext(SettingContext);
   return (
     <TouchableOpacity
-      style={{ ...styles.item, borderBottomColor: theme.c_gray}}
+      style={{ ...styles.item, borderBottomColor: theme.c_gray }}
       onPress={() => props.onPress(props.item)}
     >
       <View style={styles.imageView}>
-        <Image source={{ uri: props.item.avatar }} style={styles.image} />
+        <Image
+          source={{
+            uri: props.item.avatar
+              ? props.item.avatar
+              : props.item["user.avatar"],
+          }}
+          style={styles.image}
+        />
       </View>
-      <View style={{ marginLeft: 10 }}>
-        <Text style={{...styles.title, color: theme.c_white}}>{props.item.name}</Text>
-        <Text style={{...styles.darkText, color: theme.c_darkgray}}>
-          {language.NumberCourses}: {props.item.numcourses}
+      <View
+        style={
+          props.item.name
+            ? { marginLeft: 10 }
+            : { marginLeft: 10, justifyContent: "center" }
+        }
+      >
+        <Text style={{ ...styles.title, color: theme.c_white }}>
+          {props.item.name ? props.item.name : props.item["user.name"]}
         </Text>
+        {props.item.name ? (
+          <Text style={{ ...styles.darkText, color: theme.c_darkgray }}>
+            {language.NumberCourses}: {props.item.numcourses}
+          </Text>
+        ) : null}
       </View>
     </TouchableOpacity>
   );
@@ -42,8 +59,8 @@ const styles = StyleSheet.create({
   imageView: {
     width: width * 0.2,
     height: "80%",
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: "center",
+    alignItems: "center",
   },
   image: {
     width: width * 0.2 > height * 0.1 ? height * 0.1 : width * 0.2,
@@ -51,7 +68,7 @@ const styles = StyleSheet.create({
     borderRadius:
       width * 0.2 > height * 0.1 ? height * 0.1 * 0.5 : width * 0.2 * 0.5,
     paddingBottom: 5,
-    alignSelf: 'center'
+    alignSelf: "center",
   },
   title: {
     fontSize: 16,

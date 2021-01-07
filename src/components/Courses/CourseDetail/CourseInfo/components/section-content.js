@@ -95,6 +95,7 @@ const SectionContent = (props) => {
         item={item}
         onChangeVideo={props.onChangeVideo}
         onChangeTranscript={props.onChangeTranscript}
+        currentLesson={props.currentLesson}
       />
     ));
   };

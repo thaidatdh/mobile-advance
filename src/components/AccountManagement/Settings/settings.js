@@ -35,8 +35,7 @@ const Setting = ({ navigation }) => {
       onPress: () => {
         if (user) {
           navigation.navigate("Profile");
-        }
-        else {
+        } else {
           navigation.navigate("Sign In");
         }
       },
@@ -156,12 +155,14 @@ const Setting = ({ navigation }) => {
         >
           {renderAppVersion()}
         </View>
-        <Button
-          style={{ ...styles.signOut, backgroundColor: theme.c_0E0F13 }}
-          onPress={onSignOut}
-        >
-          <Text style={styles.buttonTextBlue}>{language.SignOut}</Text>
-        </Button>
+        {user ? (
+          <Button
+            style={{ ...styles.signOut, backgroundColor: theme.c_0E0F13 }}
+            onPress={onSignOut}
+          >
+            <Text style={styles.buttonTextBlue}>{language.SignOut}</Text>
+          </Button>
+        ) : null}
       </ScrollView>
     </SafeAreaView>
   );

@@ -173,6 +173,7 @@ const english = {
   RepeatPassword: "Repeat Password",
   Username: "Username",
   canNotLoadVideo: "Can not load video",
+  NoContent: "No Content",
 };
 const vietnamese = {
   Home: "Home",
@@ -180,7 +181,7 @@ const vietnamese = {
   Download_2: "Tải về",
   Browse: "Browse",
   Search: "Tìm kiếm",
-  SeeAll: "Xem hết",
+  SeeAll: "Xem tất cả",
   Internet: "Internet",
   NoInternetAlert:
     "Ứng dụng cần mạng.\nỨng dụng có thể hoạt động không đúng khi không có mạng.",
@@ -227,7 +228,7 @@ const vietnamese = {
   LogintoRatethiscourse: "Đăng nhập để đánh giá!",
   Youhavetoowncoursetorate: "Cần mua khoá học để đánh giá!",
   Bookmarked: "Đã thích",
-  Owned: "Owned",
+  Owned: "Đã mua",
   Downloaded: "Đã tải",
   Rate: "Đánh giá",
   LastLearn: "Lần cuối",
@@ -297,6 +298,7 @@ const vietnamese = {
   RepeatPassword: "Nhập lại mật khẩu",
   Username: "Tên đăng nhập",
   canNotLoadVideo: "Không thể tải video",
+  NoContent: "Không có nội dung",
 };
 export const Languages = {
   english,

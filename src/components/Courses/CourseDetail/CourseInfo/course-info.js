@@ -65,29 +65,30 @@ const CourseInfo = (props) => {
   }, []);
   useEffect(() => {
     //​
-    const fetchDataAuth = async (id) => {
-      try {
-        let res = await ApiServices.getInstructorDetail(id);
-        let response = await res.json();
-        if (response.payload !== undefined) {
-          await setAuthors(response.payload.name);
-          PhoneStorage.save(
-            "@instructor_name_" + id,
-            JSON.stringify(response.payload.name)
-          );
-        }
-      } catch (err) {
-        console.log(err);
-        if (!isInternetReachable) {
-          PhoneStorage.load("@instructor_name_" + id, "json").then(
-            (persistData) => {
-              if (persistData) {
-                setAuthors(persistData);
+    const fetchDataAuth = (id) => {
+      ApiServices.getInstructorDetail(id)
+        .then((res) => res.json())
+        .then((response) => {
+          if (response.payload !== undefined) {
+            setAuthors(response.payload.name);
+            PhoneStorage.save(
+              "@instructor_name_" + id,
+              JSON.stringify(response.payload.name)
+            );
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          if (!isInternetReachable) {
+            PhoneStorage.load("@instructor_name_" + id, "json").then(
+              (persistData) => {
+                if (persistData) {
+                  setAuthors(persistData);
+                }
               }
-            }
-          );
-        }
-      }
+            );
+          }
+        });
     };
     setAuthors(props.course["instructor.user.name"]);
     if (props.course.instructor) {
@@ -461,6 +462,7 @@ const CourseInfo = (props) => {
             content={props.course.section}
             onChangeVideo={props.onChangeVideo}
             onChangeTranscript={onChangeTranscript}
+            currentLesson={props.currentLesson}
           />
         ) : isInContent == 2 ? (
           <SectionDescription description={transcript} />

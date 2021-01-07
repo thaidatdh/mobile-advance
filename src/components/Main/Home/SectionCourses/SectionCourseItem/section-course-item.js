@@ -31,53 +31,56 @@ const SectionCourseItem = ({ onPress, item }) => {
   } = useContext(DataContext);
   const { user } = useContext(AuthContext);
   useEffect(() => {
-    const fetchData = async (id) => {
-      try {
-        let res = await ApiServices.getCourseDetails(id, user ? user.id : id);
-        let response = await res.json();
-        if (response.payload !== undefined && response.payload !== null) {
-          await setCourseData(response.payload);
-          PhoneStorage.save(
-            "@course_detail_info_" + id,
-            JSON.stringify(response.payload)
-          );
-          if (response.payload.instructor) {
-            await setInstructorName(response.payload.instructor.name);
+    const fetchData = (id) => {
+      ApiServices.getCourseDetails(id, user ? user.id : id)
+        .then((res) => res.json())
+        .then((response) => {
+          if (response.payload !== undefined && response.payload !== null) {
+            setCourseData(response.payload);
+            PhoneStorage.save(
+              "@course_detail_info_" + id,
+              JSON.stringify(response.payload)
+            );
+            if (response.payload.instructor) {
+              setInstructorName(response.payload.instructor.name);
+            }
           }
-        }
-      } catch (err) {
-        console.log(err);
-        if (!isInternetReachable) {
-          PhoneStorage.load("@course_detail_info_" + id, "json").then(
-            (persistData) => {
-              if (persistData) {
-                setCourseData(persistData);
-                if (persistData.instructor) {
-                  setInstructorName(persistData.instructor.name);
+        })
+        .catch((err) => {
+          console.log(err);
+          if (!isInternetReachable) {
+            PhoneStorage.load("@course_detail_info_" + id, "json").then(
+              (persistData) => {
+                if (persistData) {
+                  setCourseData(persistData);
+                  if (persistData.instructor) {
+                    setInstructorName(persistData.instructor.name);
+                  }
                 }
               }
-            }
-          );
-        }
-      }
+            );
+          }
+        });
     };
     if (item.latestLearnTime) {
       setLearnedTime(item.latestLearnTime);
       PhoneStorage.save("@LAST_LEARN_" + item.id, item.latestLearnTime);
     } else {
-      const lastestLearnTime = PhoneStorage.load("@LAST_LEARN_" + item.id);
-      if (lastestLearnTime) {
-        setLearnedTime(lastestLearnTime);
-      }
+      PhoneStorage.load("@LAST_LEARN_" + item.id).then((lastestLearnTime) => {
+        if (lastestLearnTime) {
+          setLearnedTime(lastestLearnTime);
+        }
+      });
     }
-    const getImage = async () => {
+    const getImage = () => {
       const url = item.courseImage ? item.courseImage : item.imageUrl;
       setImageUrl(url);
       if (!isInternetReachable) {
-        const courseImage = await FileSystemApi.getCourseImage(item.id, url);
-        if (courseImage) {
-          await setImageUrl(courseImage);
-        }
+        FileSystemApi.getCourseImage(item.id, url).then((courseImage) => {
+          if (courseImage) {
+            setImageUrl(courseImage);
+          }
+        });
       }
     };
     try {
