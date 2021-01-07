@@ -13,24 +13,6 @@ import ApiServices from "../../../services/api-services";
 import PhoneStorage from "../../../services/phone-storage";
 import { SettingContext } from "../../../Contexts/SettingContextProvider";
 const Browse = ({ navigation }) => {
-  const imageButtonData = [
-    {
-      id: 1,
-      title: ["New", "Releases"],
-    },
-    {
-      id: 2,
-      title: ["Top Sell"],
-    },
-    {
-      id: 3,
-      title: ["Top Rated"],
-    },
-    {
-      id: 4,
-      title: ["Recommended"],
-    },
-  ];
   const { user, token } = React.useContext(AuthContext);
   const {
     courses,
@@ -45,8 +27,26 @@ const Browse = ({ navigation }) => {
     loadRecommended,
     isInternetReachable,
   } = React.useContext(DataContext);
-  const { theme } = React.useContext(SettingContext);
+  const { theme, language } = React.useContext(SettingContext);
   const [categoryCourse, setCategoryCourse] = useState([]);
+  const imageButtonData = [
+    {
+      id: 1,
+      title: language.NewReleasedList,
+    },
+    {
+      id: 2,
+      title: [language.TopSell],
+    },
+    {
+      id: 3,
+      title: [language.TopRated],
+    },
+    {
+      id: 4,
+      title: [language.Recommended],
+    },
+  ];
   useEffect(() => {
     loadNewReleased();
     loadTopSell();
@@ -55,7 +55,7 @@ const Browse = ({ navigation }) => {
   }, []);
   const onPressNewReleaseButton = () => {
     navigation.navigate("List Courses", {
-      title: "New Released",
+      title: language.NewReleased,
       courses: newReleased,
       offset: 1,
       onLoadMore: "top-new",
@@ -63,7 +63,7 @@ const Browse = ({ navigation }) => {
   };
   const onPressRecommendedButton = () => {
     navigation.navigate("List Courses", {
-      title: "Recommended",
+      title: language.Recommended,
       courses: recommended,
       offset: 1,
       onLoadMore: "recommended",
@@ -71,7 +71,7 @@ const Browse = ({ navigation }) => {
   };
   const onPressRatedButton = () => {
     navigation.navigate("List Courses", {
-      title: "Top Rated",
+      title: language.TopRated,
       courses: topRated,
       offset: 1,
       onLoadMore: "top-rated",
@@ -79,7 +79,7 @@ const Browse = ({ navigation }) => {
   };
   const onPressSellButton = () => {
     navigation.navigate("List Courses", {
-      title: "Top Sell",
+      title: language.TopSell,
       courses: topSell,
       offset: 1,
       onLoadMore: "top-sell",
@@ -138,7 +138,7 @@ const Browse = ({ navigation }) => {
       style={{ ...styles.container, backgroundColor: theme.c_0E0F13 }}
     >
       <StatusBar barStyle="light-content" backgroundColor={theme.c_0E0F13} />
-      <MAppBar navigation={navigation} title="Browse" />
+      <MAppBar navigation={navigation} title={language.Browse} />
       <ScrollView
         style={{ ...styles.container, backgroundColor: theme.c_0E0F13 }}
       >
@@ -173,7 +173,7 @@ const Browse = ({ navigation }) => {
         {/*<SectionTags title="Popular Skills" onPress={onPressSkills} />
         <SectionPath title="Paths" />*/}
         <SectionAuthor
-          title="Instructors"
+          title={language.Instructors}
           authors={authors}
           navigation={navigation}
         />

@@ -10,7 +10,7 @@ import {
 import { SettingContext } from "../../../../Contexts/SettingContextProvider";
 const { width, height } = Dimensions.get("window");
 const ListAuthorItem = (props) => {
-  const { theme } = React.useContext(SettingContext);
+  const { theme, language } = React.useContext(SettingContext);
   return (
     <TouchableOpacity
       style={{ ...styles.item, borderBottomColor: theme.c_gray}}
@@ -22,7 +22,7 @@ const ListAuthorItem = (props) => {
       <View style={{ marginLeft: 10 }}>
         <Text style={{...styles.title, color: theme.c_white}}>{props.item.name}</Text>
         <Text style={{...styles.darkText, color: theme.c_darkgray}}>
-          Number Courses: {props.item.numcourses}
+          {language.NumberCourses}: {props.item.numcourses}
         </Text>
       </View>
     </TouchableOpacity>

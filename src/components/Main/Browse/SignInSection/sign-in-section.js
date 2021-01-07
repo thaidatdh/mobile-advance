@@ -5,7 +5,7 @@ import { SettingContext } from "../../../../Contexts/SettingContextProvider";
 const {width, height} = Dimensions.get("window");
 
 const SignInSection = (props) => {
-  const { theme } = React.useContext(SettingContext);
+  const { theme, language } = React.useContext(SettingContext);
    if (props.isSignedIn) {
       return <View/>
    }
@@ -20,16 +20,15 @@ const SignInSection = (props) => {
      >
        <View style={{ width: width * 0.7 }}>
          <Text style={{ ...styles.textBold, color: theme.c_white }}>
-           Sign in to skill up today
+           {language.Signintoskilluptoday}
          </Text>
          <Text style={{ ...styles.text, color: theme.c_white }}>
-           Keep your skill up-to-date with access to thousands of courses by
-           industry experts.
+           {language.Keepyourskilluptodate}
          </Text>
        </View>
 
        <Button style={styles.signInBtn} onPress={() => props.onPress()}>
-         <Text style={styles.buttonText}>sign in to start watching</Text>
+         <Text style={styles.buttonText}>{language.signintostartwatching}</Text>
        </Button>
      </View>
    );

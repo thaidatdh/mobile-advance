@@ -25,7 +25,7 @@ const Author = ({ navigation, route }) => {
       ? route.params.author["user.avatar"]
       : route.params.author.avatar
   );
-  const { theme } = React.useContext(SettingContext);
+  const { theme, language } = React.useContext(SettingContext);
   useEffect(() => {
     navigation.setOptions({
       title: route.params.author["user.name"]
@@ -98,7 +98,7 @@ const Author = ({ navigation, route }) => {
           {author.skills ? (
             <View style={styles.descView}>
               <Text style={{ ...styles.desc, color: theme.c_white }}>
-                Skills:
+                {language.Skills}:
               </Text>
               <Text style={{ ...styles.desc, color: theme.c_white }}>
                 {author.skills.join(", ")}
@@ -108,7 +108,7 @@ const Author = ({ navigation, route }) => {
           {author.major ? (
             <View style={styles.descView}>
               <Text style={{ ...styles.desc, color: theme.c_white }}>
-                Major:
+                {language.Major}:
               </Text>
               <Text style={{ ...styles.desc, color: theme.c_white }}>
                 {author.major}
@@ -118,7 +118,7 @@ const Author = ({ navigation, route }) => {
           {author.phone ? (
             <View style={styles.descView}>
               <Text style={{ ...styles.desc, color: theme.c_white }}>
-                Phone:
+                {language.Phone}:
               </Text>
               <Text style={{ ...styles.desc, color: theme.c_white }}>
                 {author.phone}
@@ -128,7 +128,7 @@ const Author = ({ navigation, route }) => {
           {author.totalCourse ? (
             <View style={styles.descView}>
               <Text style={{ ...styles.desc, color: theme.c_white }}>
-                Total Courses:
+                {language.TotalCourses}:
               </Text>
               <Text style={{ ...styles.desc, color: theme.c_white }}>
                 {author.totalCourse}

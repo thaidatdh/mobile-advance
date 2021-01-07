@@ -15,14 +15,14 @@ import PhoneStorage from "../../../../../services/phone-storage";
 import FileSystemApi from "../../../../../services/file-system-api";
 const { width, height } = Dimensions.get("window");
 const SectionCourseItem = ({ onPress, item }) => {
-  const star = require("../../../../../../assets/star-rating.png");
+  //const star = require("../../../../../../assets/star-rating.png");
   const [courseData, setCourseData] = useState(item);
   const [instructorName, setInstructorName] = useState("");
   const [learnedTime, setLearnedTime] = useState("");
   const [imageUrl, setImageUrl] = useState(
     item.courseImage ? item.courseImage : item.imageUrl
   );
-  const { theme } = React.useContext(SettingContext);
+  const { theme, language } = React.useContext(SettingContext);
   const {
     getCourse,
     selectedCourse,
@@ -101,7 +101,7 @@ const SectionCourseItem = ({ onPress, item }) => {
       </View>
 
       <View style={styles.textArea}>
-        <Text style={{...styles.text, color: theme.c_white}}>
+        <Text style={{ ...styles.text, color: theme.c_white }}>
           {courseData.courseTitle ? courseData.courseTitle : courseData.title}
         </Text>
         <Text style={{ ...styles.darkText, color: theme.c_darkgray }}>
@@ -123,7 +123,8 @@ const SectionCourseItem = ({ onPress, item }) => {
           }}
         >
           <Text style={{ ...styles.darkText, color: theme.c_darkgray }}>
-            Rating:{" "}
+            {language.Rating}
+            {": "}
           </Text>
           <Text style={{ color: theme.c_f1c40f }}>
             {courseData.averagePoint
@@ -145,7 +146,7 @@ const SectionCourseItem = ({ onPress, item }) => {
             }}
           >
             <Text style={{ ...styles.darkText, color: theme.c_darkgray }}>
-              Last Learn:{" "}
+              {language.LastLearn}:{" "}
             </Text>
             <Text style={{ ...styles.darkText, color: theme.c_darkgray }}>
               {learnedTime.substring(0, 10) +

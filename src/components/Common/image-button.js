@@ -14,7 +14,7 @@ const ImageButton = (props) => {
   if (Array.isArray(props.title)) {
     for (const [index, value] of props.title.entries()) {
       texts.push(
-        <Text key={value} style={styles.text}>
+        <Text key={value + index} style={styles.text}>
           {value}
         </Text>
       );

@@ -12,7 +12,7 @@ const { width, height } = Dimensions.get("window");
 import { SettingContext } from "../../Contexts/SettingContextProvider";
 const MAppBar = (props) => {
   const { user, logout } = React.useContext(AuthContext);
-  const { theme } = React.useContext(SettingContext);
+  const { theme, language } = React.useContext(SettingContext);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const onClick = () => {
     if (user) {
@@ -41,30 +41,39 @@ const MAppBar = (props) => {
     props.navigation.navigate("Main");
   };
   return (
-    <Appbar.Header style={{ backgroundColor: theme.c_1f242a}} statusBarHeight={5}>
-      <Appbar.Content title={props.title}/>
-      <Appbar.Action icon="account-circle" onPress={onClick} color={theme.c_white} />
-      {user ? (
-        <Menu
-          visible={isMenuVisible}
-          onDismiss={onMenuDismiss}
-          anchor={
-            <Appbar.Action
-              icon="dots-vertical"
-              color={theme.c_white}
-              onPress={onMenuOpen}
-            />
-          }
-        >
-          <Menu.Item onPress={onSetting} title="Settings" />
-          <Menu.Item onPress={onProfile} title="Profile" />
-          <Divider />
-          <Menu.Item onPress={onSignOut} title="Sign Out" />
-        </Menu>
-      ) : null}
+    <Appbar.Header
+      style={{ backgroundColor: theme.c_1f242a }}
+      statusBarHeight={5}
+    >
+      <Appbar.Content title={props.title} />
+      <Appbar.Action
+        icon="account-circle"
+        onPress={onClick}
+        color={theme.c_white}
+      />
+
+      <Menu
+        visible={isMenuVisible}
+        onDismiss={onMenuDismiss}
+        anchor={
+          <Appbar.Action
+            icon="dots-vertical"
+            color={theme.c_white}
+            onPress={onMenuOpen}
+          />
+        }
+      >
+        <Menu.Item onPress={onSetting} title={language.Settings} />
+        {user ? (
+          <Menu.Item onPress={onProfile} title={language.Profile} />
+        ) : null}
+        {user ? <Divider /> : null}
+        {user ? (
+          <Menu.Item onPress={onSignOut} title={language.SignOut} />
+        ) : null}
+      </Menu>
     </Appbar.Header>
   );
 };
-const styles = StyleSheet.create({
-});
+const styles = StyleSheet.create({});
 export default MAppBar;

@@ -10,7 +10,7 @@ import { SettingContext } from "../../../../Contexts/SettingContextProvider";
 const { width, height } = Dimensions.get("window");
 
 const SearchHeader = (props) => {
-  const { theme } = React.useContext(SettingContext);
+  const { theme, language } = React.useContext(SettingContext);
   return (
     <View
     style={{
@@ -34,7 +34,7 @@ const SearchHeader = (props) => {
       }}
     >
       {" "}
-      See All
+      {language.SeeAll}
     </Text> : null}
   </TouchableOpacity>
   </View>

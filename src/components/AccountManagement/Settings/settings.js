@@ -17,7 +17,14 @@ import { AuthContext } from "../../../Contexts/AuthContextProvider";
 import { NavigationActions } from "react-navigation";
 const { width, height } = Dimensions.get("window");
 const Setting = ({ navigation }) => {
-  const { theme, switchTheme, isDark, isEnglish, switchLanguage, language } = React.useContext(SettingContext);
+  const {
+    theme,
+    switchTheme,
+    isDark,
+    isEnglish,
+    switchLanguage,
+    language,
+  } = React.useContext(SettingContext);
   const { user, settings, updateSetting, logout } = React.useContext(
     AuthContext
   );
@@ -26,7 +33,12 @@ const Setting = ({ navigation }) => {
       type: "text",
       title: language.Account,
       onPress: () => {
-        navigation.navigate("Profile");
+        if (user) {
+          navigation.navigate("Profile");
+        }
+        else {
+          navigation.navigate("Sign In");
+        }
       },
     },
     {
@@ -49,7 +61,7 @@ const Setting = ({ navigation }) => {
     type: "switch",
     title: language.Language,
     desc: language.LanguageValue,
-    icon: 'language',
+    icon: "language",
 
     isCheck: isEnglish,
     onPress: () => {
@@ -95,20 +107,22 @@ const Setting = ({ navigation }) => {
         style={{ ...styles.container, backgroundColor: theme.c_0E0F13 }}
         contentContainerStyle={{ alignItems: "center" }}
       >
-        <View style={styles.userContainer}>
-          <Image source={{ uri: user.avatar }} style={styles.image} />
-          <View style={styles.nameView}>
-            <Text style={{ ...styles.name, color: theme.c_white }}>
-              {user.name}
-            </Text>
-            <Text style={{ ...styles.username, color: theme.c_gray }}>
-              {user.type}
-            </Text>
-            <Text style={{ ...styles.username, color: theme.c_gray }}>
-              {user.email}
-            </Text>
+        {user ? (
+          <View style={styles.userContainer}>
+            <Image source={{ uri: user.avatar }} style={styles.image} />
+            <View style={styles.nameView}>
+              <Text style={{ ...styles.name, color: theme.c_white }}>
+                {user.name}
+              </Text>
+              <Text style={{ ...styles.username, color: theme.c_gray }}>
+                {user.type}
+              </Text>
+              <Text style={{ ...styles.username, color: theme.c_gray }}>
+                {user.email}
+              </Text>
+            </View>
           </View>
-        </View>
+        ) : null}
         <View
           style={{
             ...styles.sectionContainer,

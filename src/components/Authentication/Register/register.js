@@ -15,7 +15,7 @@ import { SettingContext } from "../../../Contexts/SettingContextProvider";
 const { width, height } = Dimensions.get("window");
 
 const Register = ({navigation}) => {
-  const { theme } = React.useContext(SettingContext);
+  const { theme, language } = React.useContext(SettingContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
@@ -29,13 +29,7 @@ const Register = ({navigation}) => {
 
   const { register } = React.useContext(AuthContext);
 
-  const errorValue = [
-    "Please enter required fields (*)",
-    "Email is not valid",
-    "Password should include atleast 8 characters",
-    "Repeat Password is incorrect",
-    "Username already exists",
-  ];
+  const errorValue = language.errorValuesUserInfo;
   const updateSecureTextEntry = () => {
     setSecureTextEntry(!secureTextEntry);
   };
@@ -120,7 +114,7 @@ const Register = ({navigation}) => {
             backgroundColor: theme.c_1f242a,
             color: theme.c_white,
           }}
-          label="Phone *"
+          label={language.Phone + " *"}
           theme={themeTextInput}
           value={phone}
           onChangeText={(text) => setPhone(text)}
@@ -131,7 +125,7 @@ const Register = ({navigation}) => {
             backgroundColor: theme.c_1f242a,
             color: theme.c_white,
           }}
-          label="Username *"
+          label={language.Username + " *"}
           theme={themeTextInput}
           value={username}
           onChangeText={(text) => setUsername(text)}
@@ -142,7 +136,7 @@ const Register = ({navigation}) => {
             backgroundColor: theme.c_1f242a,
             color: theme.c_white,
           }}
-          label="Password"
+          label={language.Password}
           theme={themeTextInput}
           secureTextEntry={secureTextEntry}
           value={password}
@@ -176,7 +170,7 @@ const Register = ({navigation}) => {
             backgroundColor: theme.c_1f242a,
             color: theme.c_white,
           }}
-          label="Repeat Password"
+          label={language.RepeatPassword}
           theme={themeTextInput}
           secureTextEntry={secureTextEntryRepeat}
           value={repeatPassword}
@@ -208,10 +202,10 @@ const Register = ({navigation}) => {
           <Text style={{ color: "red" }}>{errorCode}</Text>
         ) : null}
         <TouchableOpacity style={styles.signInBtn} onPress={onRegister}>
-          <Text style={styles.buttonText}>SIGN UP</Text>
+          <Text style={styles.buttonText}>{language.SignUp}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.linkBtn} onPress={onSignIn}>
-          <Text style={styles.buttonTextBlue}>Sign In</Text>
+          <Text style={styles.buttonTextBlue}>{language.SignIn}</Text>
         </TouchableOpacity>
         {/*<Button style={styles.signOnSSOBtn}>
           <Text style={styles.buttonTextBlue}>Use Single Sign-On (SSO)</Text>

@@ -21,7 +21,7 @@ const Search = ({ navigation }) => {
     addSearchHistory,
     removeAllSearchHistory,
   } = React.useContext(AuthContext);
-  const { theme } = React.useContext(SettingContext);
+  const { theme, language } = React.useContext(SettingContext);
   const {
     searchCourses,
     getSearchCourses,
@@ -144,7 +144,7 @@ const Search = ({ navigation }) => {
           paddingRight: 10,
         }}
         placeholderTextColor={theme.c_white}
-        placeholder="Search..."
+        placeholder={language.Search + "..."}
         theme={{ colors: { text: theme.c_white } }}
         returnKeyType="search"
         value={inputValue}

@@ -21,7 +21,7 @@ const ListCourses = ({ navigation, route }) => {
   const [offset, setOffset] = useState(route.params.offset);
   const [isMore, setIsMore] = useState(route.params.courses.length >= 10);
   const { user, token } = React.useContext(AuthContext);
-  const { theme } = React.useContext(SettingContext);
+  const { theme, language } = React.useContext(SettingContext);
   useEffect(() => {
     navigation.setOptions({ title: route.params.title });
   }, []);
@@ -107,7 +107,7 @@ const ListCourses = ({ navigation, route }) => {
         {renderItems(courses)}
         {isMore ? (
           <TouchableOpacity onPress={onMore} style={{...styles.btn, backgroundColor: theme.c_0E0F13, borderColor: theme.c_2384ae}}>
-            <Text style={styles.textMore}>More</Text>
+            <Text style={styles.textMore}>{language.More}</Text>
           </TouchableOpacity>
         ) : null}
       </ScrollView>

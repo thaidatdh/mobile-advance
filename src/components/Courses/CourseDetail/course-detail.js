@@ -40,7 +40,7 @@ const CourseDetail = ({ navigation, route }) => {
     isInternetReachable,
   } = React.useContext(DataContext);
   const { user, getLastLearnTime } = React.useContext(AuthContext);
-  const { theme } = React.useContext(SettingContext);
+  const { theme, language } = React.useContext(SettingContext);
   useEffect(() => {
     navigation.setOptions({ title: route.params.course.title });
   }, []);
@@ -149,7 +149,7 @@ const CourseDetail = ({ navigation, route }) => {
       .catch((err) => {});
   }, []);
 
-  useEffect(() => {
+  const onVideoError = (e) => {
     NetInfo.addEventListener((state) => {});
     NetInfo.fetch()
       .then((state) => {
@@ -165,11 +165,11 @@ const CourseDetail = ({ navigation, route }) => {
                 setIsGetUrlOffline(false);
               }
             })
-            .catch((err) => {});
+            .catch((err) => { alert(language.canNotLoadVideo);});
         }
       })
-      .catch((err) => {});
-  });
+      .catch((err) => {alert(language.canNotLoadVideo);});
+  }
   const ReloadData = () => {
     fetchData(route.params.course.id);
   };
@@ -205,6 +205,7 @@ const CourseDetail = ({ navigation, route }) => {
               isLooping={!isLesson}
               useNativeControls={true}
               style={styles.image}
+              onError={onVideoError}
             />
           )
         ) : (

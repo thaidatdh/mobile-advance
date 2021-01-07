@@ -80,11 +80,13 @@ const SectionContent = (props) => {
       ],
     },
   ];
-  const { theme } = React.useContext(SettingContext);
+  const { theme, language } = React.useContext(SettingContext);
   const renderSubSections = (sections) => {
     if (sections === undefined) return (
-      <View key="NULLVALUE" style={{flex: 1, justifyContent: 'center'}}>
-        <Text style={{textAlign: 'center', color:'white'}}>Buy course to see</Text>
+      <View key="NULLVALUE" style={{ flex: 1, justifyContent: "center" }}>
+        <Text style={{ textAlign: "center", color: "white" }}>
+          {language.Buycoursetosee}
+        </Text>
       </View>
     );
     return sections.map((item) => (

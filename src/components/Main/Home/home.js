@@ -17,7 +17,7 @@ import { SettingContext } from "../../../Contexts/SettingContextProvider";
 const Home = ({ navigation }) => {
   const { user, channel, bookmark } = React.useContext(AuthContext);
   const { getAuthors } = React.useContext(DataContext);
-  const { theme } = React.useContext(SettingContext);
+  const { theme, language } = React.useContext(SettingContext);
   const handleSeeAll = (title, coursesList) => {
     navigation.navigate("List Courses", {
       title: title,
@@ -38,7 +38,7 @@ const Home = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={theme.c_0E0F13} />
-      <MAppBar navigation={navigation} title="Home" />
+      <MAppBar navigation={navigation} title={language.Home} />
 
       {user ? (
         <ScrollView
@@ -50,13 +50,13 @@ const Home = ({ navigation }) => {
             onPressCourse={handleViewCourse}
           />*/}
           <SectionCourses
-            title="Progress"
+            title={language.Progress}
             onSeeAll={handleSeeAll}
             onPressCourse={handleViewCourse}
             coursesList={channel}
           />
           <SectionCourses
-            title="Bookmark"
+            title={language.Bookmark}
             onSeeAll={handleSeeAll}
             onPressCourse={handleViewCourse}
             coursesList={bookmark}

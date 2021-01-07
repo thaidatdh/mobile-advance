@@ -11,7 +11,7 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import { coursesData } from "../../../../data/dataMockup";
 import { SettingContext } from "../../../../Contexts/SettingContextProvider";
 const SectionCourses = ({ onSeeAll, title, onPressCourse, coursesList }) => {
-  const { theme } = React.useContext(SettingContext);
+  const { theme, language } = React.useContext(SettingContext);
   const renderListItems = (courses) => {
     return courses
       ? courses.map((item) => (
@@ -39,7 +39,7 @@ const SectionCourses = ({ onSeeAll, title, onPressCourse, coursesList }) => {
           onPress={() => onSeeAll(title, coursesList)}
         >
           <Text style={{ color: theme.c_lightgray, fontSize: 10 }}>
-            See all{" "}
+            {language.SeeAll}{" "}
             <FontAwesome5 name={"angle-right"} color={theme.c_lightgray} size={10} />
           </Text>
         </TouchableOpacity>

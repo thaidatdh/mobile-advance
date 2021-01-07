@@ -12,11 +12,11 @@ const Download = ({ navigation }) => {
   const { downloaded, removeAllDownloaded, user, token } = React.useContext(
     AuthContext
   );
-  const { theme } = React.useContext(SettingContext);
+  const { theme, language } = React.useContext(SettingContext);
   const { topSell } = React.useContext(DataContext);
   const findCourse = () => {
     navigation.navigate("List Courses", {
-      title: "Top Sell",
+      title: language.TopSell,
       courses: topSell,
       offset: 0,
       onLoadMore: 'top-sell',
@@ -28,7 +28,7 @@ const Download = ({ navigation }) => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.c_0E0F13 }}>
       <StatusBar barStyle="light-content" backgroundColor={theme.c_0E0F13} />
-      <MAppBar navigation={navigation} title="Download" />
+      <MAppBar navigation={navigation} title={language.Download} />
       {downloaded && downloaded.length > 0 ? (
         <DownloadData
           courses={downloaded}

@@ -17,12 +17,15 @@ import PhoneStorage from "../../../../../services/phone-storage";
 const { width, height } = Dimensions.get("window");
 
 const ContentSubsection = (props) => {
-  const { theme } = React.useContext(SettingContext);
+  const { theme, language } = React.useContext(SettingContext);
   const { token, user, isChanneled } = useContext(AuthContext);
   const { isInternetReachable } = useContext(DataContext);
   const onClickLesson = async (item) => {
     if (!token || !user || !isChanneled(item.courseId)) {
-      Alert.alert("Alert", "You have to owned course to watch this lesson!");
+      Alert.alert(
+        language.Alert,
+        language.Youhavetoownedcoursetowatchthislesson
+      );
       return;
     }
     if (
@@ -31,15 +34,12 @@ const ContentSubsection = (props) => {
     ) {
       Alert.alert(
         "Internet",
-        "Cannot see this video because it's a online section."
+        language.Cannotseethisvideobecauseitsaonlinesection
       );
       return;
     }
     if (!item.videoUrl) {
-      Alert.alert(
-        "Video not found",
-        "Video link is null"
-      );
+      Alert.alert(language.Videonotfound, language.Videolinkisnull);
       return;
     }
     if (item.videoUrl) props.onChangeVideo(item.videoUrl, item.id);
@@ -56,7 +56,7 @@ const ContentSubsection = (props) => {
       item.id
     );
     if (subtitle && subtitle.payload) {
-      let contentSub = "Subtitle:\n" + subtitle.payload;
+      let contentSub = language.Subtitle + ":\n" + subtitle.payload;
       content = content ? content + "\n\n" + contentSub : contentSub;
       PhoneStorage.save(
         "@subtitle_" + item.courseId + item.id,
@@ -69,7 +69,7 @@ const ContentSubsection = (props) => {
           "json"
         );
         if (persistData) {
-          let contentSub = "Subtitle:\n" + subtitle.payload;
+          let contentSub = language.Subtitle + ":\n" + subtitle.payload;
           content = content ? content + "\n\n" + contentSub : contentSub;
         }
       }

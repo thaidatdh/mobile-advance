@@ -6,13 +6,13 @@ import { SettingContext } from "../../../../../Contexts/SettingContextProvider";
 const { width, height } = Dimensions.get("window");
 
 const SectionRating = (props) => {
-  const { theme } = React.useContext(SettingContext);
+  const { theme, language } = React.useContext(SettingContext);
   const renderSubSections = (sections) => {
     if (sections === undefined)
       return (
         <View key="NULLVALUE" style={{ flex: 1, justifyContent: "center" }}>
           <Text style={{ textAlign: "center", color: theme.c_white }}>
-           No Rating
+           {language.NoRating}
           </Text>
         </View>
       );

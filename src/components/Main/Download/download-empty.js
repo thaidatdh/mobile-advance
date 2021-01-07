@@ -4,7 +4,7 @@ import { Button } from "react-native-paper";
 import { SettingContext } from "../../../Contexts/SettingContextProvider";
 const { width, height } = Dimensions.get("window");
 const DownloadEmpty = (props) => {
-  const { theme } = React.useContext(SettingContext);
+  const { theme, language } = React.useContext(SettingContext);
   return (
     <View
       style={{
@@ -19,7 +19,7 @@ const DownloadEmpty = (props) => {
         onPress={props.onCheckNotEmpty}
       >
         <Text style={{ color: theme.c_white, textTransform: "uppercase" }}>
-          Find a course to download
+          {language.FindACourseToDownload}
         </Text>
       </Button>
     </View>

@@ -36,7 +36,7 @@ const ListCourseItem = (props) => {
     removeBookmark,
     removeDownloaded,
   } = React.useContext(AuthContext);
-  const { theme } = React.useContext(SettingContext);
+  const { theme, language } = React.useContext(SettingContext);
   const { isInternetReachable } = React.useContext(DataContext);
   useEffect(() => {
     const fetchData = async (id) => {
@@ -102,7 +102,9 @@ const ListCourseItem = (props) => {
     try {
       const message =
         (course.title ? course.title : course.courseTitle) +
-        "\nAverage Point: " +
+        "\n" +
+        language.AveragePoint +
+        ": " +
         course.averagePoint;
       const result = await Share.share({
         message: message,
@@ -193,9 +195,11 @@ const ListCourseItem = (props) => {
             : course.updatedAt
             ? course.updatedAt.substring(0, 10) + " | "
             : course.latestLearnTime
-            ? "Latest learn time: " + course.latestLearnTime.substring(0, 10)
+            ? language.Latestlearntime +
+              ": " +
+              course.latestLearnTime.substring(0, 10)
             : ""}
-          {course.totalHours ? course.totalHours.toFixed(2) + " hours" : ""}
+          {course.totalHours ? course.totalHours.toFixed(2) + " " + language.hours : ""}
         </Text>
         <View
           style={{
@@ -203,7 +207,8 @@ const ListCourseItem = (props) => {
           }}
         >
           <Text style={{ ...styles.darkText, color: theme.c_darkgray }}>
-            Rating:{" "}
+            {language.Rating}
+            {": "}
           </Text>
           <Text style={{ color: theme.c_f1c40f }}>
             {course.averagePoint ? course.averagePoint + " " : ""}
@@ -227,22 +232,28 @@ const ListCourseItem = (props) => {
           </TouchableOpacity>
         }
       >
-        <Menu.Item onPress={onShare} title="Share" />
+        <Menu.Item onPress={onShare} title={language.Share} />
         {user ? (
           !isBookmarked(course.id) ? (
-            <Menu.Item onPress={onBookmark} title="Add Bookmark" />
+            <Menu.Item onPress={onBookmark} title={language.AddBookmark} />
           ) : (
-            <Menu.Item onPress={onRemoveBookmark} title="Remove Bookmark" />
+            <Menu.Item
+              onPress={onRemoveBookmark}
+              title={language.RemoveBookmark}
+            />
           )
         ) : null}
         {user ? (
           !isChanneled(course.id) ? (
-            <Menu.Item onPress={onChannel} title="Buy Course" />
+            <Menu.Item onPress={onChannel} title={language.BuyCourse} />
           ) : null
         ) : /*<Menu.Item onPress={onRemoveChannel} title="Remove Channel" />*/
         null}
         {isDownloaded(course.id) ? (
-          <Menu.Item onPress={onRemoveDownload} title="Remove Downloaded" />
+          <Menu.Item
+            onPress={onRemoveDownload}
+            title={language.RemoveDownloaded}
+          />
         ) : null}
       </Menu>
     </TouchableOpacity>

@@ -30,7 +30,7 @@ const CourseInfo = (props) => {
   const [isInContent, setIsInContent] = useState(0);
   const [authors, setAuthors] = useState(null);
   const [visible, setVisible] = React.useState(false);
-  const { theme } = React.useContext(SettingContext);
+  const { theme, language } = React.useContext(SettingContext);
   const {
     user,
     token,
@@ -117,7 +117,7 @@ const CourseInfo = (props) => {
     if (!user) {
       Alert.alert(
         props.course.title ? props.course.title : props.course.courseTitle,
-        "Login to Bookmark!"
+        language.LogintoBookmark
       );
       return;
     }
@@ -133,7 +133,7 @@ const CourseInfo = (props) => {
     if (!user) {
       Alert.alert(
         props.course.title ? props.course.title : props.course.courseTitle,
-        "Login to buy!"
+        language.Logintobuy
       );
       return;
     }
@@ -143,7 +143,7 @@ const CourseInfo = (props) => {
     } else {
       Alert.alert(
         props.course.title ? props.course.title : props.course.courseTitle,
-        "Can not buy selected course. It's not free!"
+        language.Cannotbuyselectedcourse
       );
     }
   };
@@ -151,14 +151,14 @@ const CourseInfo = (props) => {
     if (!user) {
       Alert.alert(
         props.course.title ? props.course.title : props.course.courseTitle,
-        "Login to Download!"
+        language.LogintoDownload
       );
       return;
     }
     if (!isChannelCourse) {
       Alert.alert(
         props.course.title ? props.course.title : props.course.courseTitle,
-        "You have to own course to download!"
+        language.Youhavetoowncoursetodownload
       );
       return;
     }
@@ -174,14 +174,14 @@ const CourseInfo = (props) => {
     if (!user) {
       Alert.alert(
         props.course.title ? props.course.title : props.course.courseTitle,
-        "Login to Rate this course!"
+        language.LogintoRatethiscourse
       );
       return;
     }
     if (!isChannelCourse) {
       Alert.alert(
         props.course.title ? props.course.title : props.course.courseTitle,
-        "You have to own course to rate!"
+        language.Youhavetoowncoursetorate
       );
       return;
     }
@@ -213,7 +213,9 @@ const CourseInfo = (props) => {
     try {
       const message =
         (props.course.title ? props.course.title : props.course.courseTitle) +
-        "\nAverage Point: " +
+        "\n" +
+        language.AveragePoint +
+        ": " +
         props.course.averagePoint;
       const result = await Share.share({
         message: message,
@@ -263,7 +265,7 @@ const CourseInfo = (props) => {
   const buttonText = {
     ...styles.buttonText,
     color: theme.c_white,
-  }
+  };
   const buttonTextSelect = {
     ...styles.buttonTextSelect,
     color: theme.c_2384ae,
@@ -324,32 +326,36 @@ const CourseInfo = (props) => {
         >
           <ActionButton
             key="likebtn"
-            title={!isBookmarkedCourse ? "Bookmark" : "Bookmarked"}
+            title={
+              !isBookmarkedCourse ? language.Bookmark : language.Bookmarked
+            }
             icon="bookmark"
             solid={isBookmarkedCourse}
             onPress={onPressBookmark}
           />
           <ActionButton
             key="buybtn"
-            title={!isChannelCourse ? "Buy Course" : "Owned"}
+            title={!isChannelCourse ? language.BuyCourse : language.Owned}
             icon={!isChannelCourse ? "plus" : "check"}
             onPress={onPressAddToChannel}
           />
           <ActionButton
             key="downloadbtn"
-            title={!isDownloadedCourse ? "Download" : "Downloaded"}
+            title={
+              !isDownloadedCourse ? language.Download_2 : language.Downloaded
+            }
             icon="download"
             onPress={onPressDownload}
           />
           <ActionButton
             key="sharebtn"
-            title="Share"
+            title={language.Share}
             icon="share"
             onPress={onPressShare}
           />
           <ActionButton
             key="ratebtn"
-            title="Rate"
+            title={language.Rate}
             icon="comment-alt"
             onPress={onPressComment}
           />
@@ -360,7 +366,7 @@ const CourseInfo = (props) => {
             style={{ ...styles.buttons, backgroundColor: theme.c_394249 }}
           >
             <Text style={{ color: theme.c_white, textTransform: "none" }}>
-              Price: {courseDetail.price}
+              {language.Price}: {courseDetail.price}
             </Text>
           </Button>
           {props.learnedTime &&
@@ -370,7 +376,8 @@ const CourseInfo = (props) => {
               style={{ ...styles.buttons, backgroundColor: theme.c_394249 }}
             >
               <Text style={{ color: theme.c_white, textTransform: "none" }}>
-                {"Last Learn: " +
+                {language.LastLearn +
+                  ": " +
                   props.learnedTime.substring(0, 10) +
                   " " +
                   props.learnedTime.substring(11, 16)}
@@ -391,67 +398,43 @@ const CourseInfo = (props) => {
       >
         <TouchableOpacity
           key="course_description"
-          style={
-            isInContent != 0 ? buttonSwitch : buttonSwitchSelected
-          }
+          style={isInContent != 0 ? buttonSwitch : buttonSwitchSelected}
           onPress={onPressDescription}
         >
-          <Text
-            style={
-              isInContent != 0 ? buttonText : buttonTextSelect
-            }
-          >
-            Description
+          <Text style={isInContent != 0 ? buttonText : buttonTextSelect}>
+            {language.Description}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
           key="course_rating"
-          style={
-            isInContent != 3 ? buttonSwitch : buttonSwitchSelected
-          }
+          style={isInContent != 3 ? buttonSwitch : buttonSwitchSelected}
           onPress={onPressRating}
         >
-          <Text
-            style={
-              isInContent != 3 ? buttonText : buttonTextSelect
-            }
-          >
-            Ratings
+          <Text style={isInContent != 3 ? buttonText : buttonTextSelect}>
+            {language.Ratings}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
           key="course_section"
-          style={
-            isInContent != 1 ? buttonSwitch : buttonSwitchSelected
-          }
+          style={isInContent != 1 ? buttonSwitch : buttonSwitchSelected}
           onPress={onPressContent}
         >
-          <Text
-            style={
-              isInContent != 1 ? buttonText : buttonTextSelect
-            }
-          >
-            Content
+          <Text style={isInContent != 1 ? buttonText : buttonTextSelect}>
+            {language.Content}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
           key="course_transcript"
-          style={
-            isInContent != 2 ? buttonSwitch : buttonSwitchSelected
-          }
+          style={isInContent != 2 ? buttonSwitch : buttonSwitchSelected}
           onPress={onPressTranscript}
         >
-          <Text
-            style={
-              isInContent != 2 ? buttonText : buttonTextSelect
-            }
-          >
-            Transcript
+          <Text style={isInContent != 2 ? buttonText : buttonTextSelect}>
+            {language.Transcript}
           </Text>
         </TouchableOpacity>
       </ScrollView>
 
-      <View style={{...styles.contentView, backgroundColor: theme.c_white}}>
+      <View style={{ ...styles.contentView, backgroundColor: theme.c_white }}>
         {isInContent == 0 ? (
           <SectionDescription
             description={
@@ -459,11 +442,16 @@ const CourseInfo = (props) => {
                 ? courseDetail.description +
                   (courseDetail.subtitle ? "\n" + courseDetail.subtitle : "") +
                   (courseDetail.requirement
-                    ? "\nRequirement:\n - " +
+                    ? "\n" +
+                      language.Requirement +
+                      ":\n - " +
                       courseDetail.requirement.join("\n - ")
                     : "") +
                   (courseDetail.learnWhat
-                    ? "\nLearn:\n - " + courseDetail.learnWhat.join("\n - ")
+                    ? "\n" +
+                      language.Learn +
+                      ":\n - " +
+                      courseDetail.learnWhat.join("\n - ")
                     : "")
                 : ""
             }

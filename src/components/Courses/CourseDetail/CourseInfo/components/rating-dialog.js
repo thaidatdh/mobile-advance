@@ -14,24 +14,24 @@ const RatingDialog = (props) => {
   const [checkedPresentation, setCheckedPresentation] = React.useState(1);
   const [checkedContent, setCheckedContent] = React.useState(1);
   const [content, setContent] = React.useState("");
-  const { theme } = React.useContext(SettingContext);
+  const { theme, language } = React.useContext(SettingContext);
   const RatingPart = [
     {
-      title: "Formality",
+      title: language.Formality,
       action: setCheckedFormality,
       value: () => {
         return checkedFormality;
       },
     },
     {
-      title: "Presentation",
+      title: language.Presentation,
       action: setCheckedPresentation,
       value: () => {
         return checkedPresentation;
       },
     },
     {
-      title: "Content",
+      title: language.Content,
       action: setCheckedContent,
       value: () => {
         return checkedContent;
@@ -70,7 +70,7 @@ const RatingDialog = (props) => {
         style={{ ...styles.container, backgroundColor: theme.c_1f242a }}
       >
         <Dialog.Title style={{ ...styles.text, color: theme.c_white }}>
-          Rating
+          {language.Rating}
         </Dialog.Title>
         <Dialog.Content>
           <ScrollView>
@@ -111,7 +111,7 @@ const RatingDialog = (props) => {
                 key="comment"
                 name="content"
                 style={styles.input}
-                label="Comment"
+                label={language.Comment}
                 theme={themeTextInput}
                 multiline
                 mode="outlined"
@@ -126,9 +126,9 @@ const RatingDialog = (props) => {
         </Dialog.Content>
         <Dialog.Actions>
           <Button onPress={onSave} style={styles.saveButton}>
-            Rate
+            {language.Rate}
           </Button>
-          <Button onPress={onHide}>Cancel</Button>
+          <Button onPress={onHide}>{language.Cancel}</Button>
         </Dialog.Actions>
       </Dialog>
     </Portal>

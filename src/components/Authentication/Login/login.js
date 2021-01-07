@@ -16,7 +16,7 @@ import { SettingContext } from "../../../Contexts/SettingContextProvider";
 const { width, height } = Dimensions.get("window");
 
 const Login = ({ navigation }) => {
-  const { theme } = React.useContext(SettingContext);
+  const { theme, language } = React.useContext(SettingContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [secureTextEntry, setSecureTextEntry] = useState(true);
@@ -98,7 +98,7 @@ const Login = ({ navigation }) => {
             backgroundColor: theme.c_1f242a,
             color: theme.c_white,
           }}
-          label="Password"
+          label={language.Password}
           theme={themeTextInput}
           secureTextEntry={secureTextEntry}
           value={password}
@@ -138,16 +138,18 @@ const Login = ({ navigation }) => {
           disabled={!isReadyToLogin}
           onPress={onLogin}
         >
-          <Text style={styles.buttonText}>SIGN IN</Text>
+          <Text style={styles.buttonText}>{language.SignIn}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.linkBtn} onPress={onForgetPassword}>
-          <Text style={styles.buttonTextBlue}>Forgot Password?</Text>
+          <Text style={styles.buttonTextBlue}>
+            {language.ForgotPassword + "?"}
+          </Text>
         </TouchableOpacity>
         {/*<Button style={styles.signOnSSOBtn}>
           <Text style={styles.buttonTextBlue}>Use Single Sign-On (SSO)</Text>
         </Button>*/}
         <TouchableOpacity style={styles.linkBtn} onPress={onSignUp}>
-          <Text style={styles.buttonTextBlue}>Sign up FREE</Text>
+          <Text style={styles.buttonTextBlue}>{language.SignupFREE}</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>

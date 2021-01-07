@@ -17,7 +17,7 @@ const { width, height } = Dimensions.get("window");
 
 const RatingSubsection = (props) => {
   const { token } = useContext(AuthContext);
-  const { theme } = React.useContext(SettingContext);
+  const { theme, language } = React.useContext(SettingContext);
   return (
     <View style={{ width: width, marginBottom: 20, alignItems: "center" }}>
       <View
@@ -78,7 +78,9 @@ const RatingSubsection = (props) => {
                 marginRight: 10,
               }}
             ></View>
-            <Text style={{ color: theme.c_white }}>Presentation Point</Text>
+            <Text style={{ color: theme.c_white }}>
+              {language.PresentationPoint}
+            </Text>
           </View>
           <Text style={{ color: theme.c_white }}>
             {props.item.presentationPoint}
@@ -98,7 +100,9 @@ const RatingSubsection = (props) => {
                 marginRight: 10,
               }}
             ></View>
-            <Text style={{ color: theme.c_white }}>Content Point</Text>
+            <Text style={{ color: theme.c_white }}>
+              {language.ContentPoint}
+            </Text>
           </View>
           <Text style={{ color: theme.c_white }}>
             {props.item.contentPoint}
@@ -118,7 +122,9 @@ const RatingSubsection = (props) => {
                 marginRight: 10,
               }}
             ></View>
-            <Text style={{ color: theme.c_white }}>Formality Point</Text>
+            <Text style={{ color: theme.c_white }}>
+              {language.FormalityPoint}
+            </Text>
           </View>
           <Text style={{ color: theme.c_white }}>
             {props.item.formalityPoint}

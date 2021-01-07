@@ -28,7 +28,7 @@ import Search from "./src/components/Main/Search/search";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import AuthProvider from "./src/Contexts/AuthContextProvider";
 import DataProvider from "./src/Contexts/DataContextProvider";
-import SettingProvider from "./src/Contexts/SettingContextProvider";
+import SettingProvider, { Languages } from "./src/Contexts/SettingContextProvider";
 import { Provider } from "react-native-paper";
 import Author from "./src/components/Courses/Author/author";
 import ListAuthors from "./src/components/Courses/Author/list-authors";
@@ -85,7 +85,7 @@ const MainNavigator = () => {
   const { getAllNewData, setIsInternetReachable } = React.useContext(
     DataContext
   );
-  const { theme, loadPersistTheme } = React.useContext(SettingContext);
+  const { theme, loadPersistTheme, language } = React.useContext(SettingContext);
   useEffect(() => {
     const loadData = () => {
       loadPersistTheme();
@@ -132,11 +132,27 @@ const MainNavigator = () => {
         <Stack.Screen name="Author" component={Author} />
         <Stack.Screen name="List Authors" component={ListAuthors} />
         <Stack.Screen name="Course" component={CourseDetail} />
-        <Stack.Screen name="Sign In" component={Login} />
-        <Stack.Screen name="Sign Up" component={Register} />
+        <Stack.Screen
+          name="Sign In"
+          component={Login}
+          options={{ title: language.SignIn }}
+        />
+        <Stack.Screen
+          name="Sign Up"
+          component={Register}
+          options={{ title: language.SignUp }}
+        />
         <Stack.Screen name="Profile" component={Profile} />
-        <Stack.Screen name="Forget Password" component={ForgetPassword} />
-        <Stack.Screen name="Settings" component={Setting} />
+        <Stack.Screen
+          name="Forget Password"
+          component={ForgetPassword}
+          options={{ title: language.ForgetPassword }}
+        />
+        <Stack.Screen
+          name="Settings"
+          component={Setting}
+          options={{ title: language.Settings }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

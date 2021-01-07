@@ -13,7 +13,7 @@ import { SettingContext } from "../../../Contexts/SettingContextProvider";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 const { width, height } = Dimensions.get("window");
 const SearchEmpty = (props) => {
-  const { theme } = React.useContext(SettingContext);
+  const { theme, language } = React.useContext(SettingContext);
   const renderItems = (coursesList) => {
     return coursesList.map((item) => (
       <TouchableOpacity
@@ -40,7 +40,7 @@ const SearchEmpty = (props) => {
         }}
       >
         <Text style={{ color: theme.c_white, fontSize: 15 }}>
-          Recent searches
+          {language.RecentSearches}
         </Text>
         <TouchableOpacity onPress={props.onClearAll}>
           <Text
@@ -51,7 +51,7 @@ const SearchEmpty = (props) => {
             }}
           >
             {" "}
-            Clear all
+            {language.ClearAll}
           </Text>
         </TouchableOpacity>
       </View>

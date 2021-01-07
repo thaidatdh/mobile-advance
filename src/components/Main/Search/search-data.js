@@ -13,7 +13,7 @@ import SearchHeader from "./components/search-header";
 import { SettingContext } from "../../../Contexts/SettingContextProvider";
 const { width, height } = Dimensions.get("window");
 const SearchData = (props) => {
-  const { theme } = React.useContext(SettingContext);
+  const { theme, language } = React.useContext(SettingContext);
   const renderCourses = (coursesList) => {
     return coursesList.slice().map((item, index) =>
       index < 5 ? (
@@ -21,7 +21,7 @@ const SearchData = (props) => {
       ) : null
     );
   };
-  const renderPaths = (pathsList) => {
+  /*const renderPaths = (pathsList) => {
     return pathsList
       .slice()
       .map((item, index) =>
@@ -29,7 +29,7 @@ const SearchData = (props) => {
           <ListPathItem key={"P_" + item.id.toString()} item={item} />
         ) : null
       );
-  };
+  };*/
   const renderAuthors = (authorsList) => {
     return authorsList
       .slice()
@@ -55,7 +55,7 @@ const SearchData = (props) => {
         <SearchHeader
           key="courseList"
           dataLength={props.coursesInfo.total}
-          data="Courses"
+          data={language.Courses}
           onPress={onSeeAllCourses}
         />
         {renderCourses(props.coursesData)}
@@ -64,7 +64,7 @@ const SearchData = (props) => {
         <SearchHeader
           key="authorList"
           dataLength={props.authorsInfo.total}
-          data="Instructors"
+          data={language.Instructors}
           onPress={onSeeAllAuthors}
         />
         {renderAuthors(props.authorsData)}

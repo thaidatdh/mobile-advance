@@ -17,10 +17,11 @@ import ApiServices from "../../../services/api-services";
 const { width, height } = Dimensions.get("window");
 
 const ForgetPassword = ({ navigation }) => {
-  const { theme } = React.useContext(SettingContext);
+  const { theme, language } = React.useContext(SettingContext);
   const [username, setUsername] = useState("");
   const [isReadyToSend, setIsReadyToSend] = useState(false);
   const [error, setError] = useState("");
+
   const validateEmail = (email) => {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
@@ -85,7 +86,7 @@ const ForgetPassword = ({ navigation }) => {
           disabled={!isReadyToSend}
           onPress={onForget}
         >
-          <Text style={styles.buttonText}>Forget Password</Text>
+          <Text style={styles.buttonText}>{language.ForgetPassword}</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
