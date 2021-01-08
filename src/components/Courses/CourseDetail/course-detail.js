@@ -40,11 +40,22 @@ const CourseDetail = ({ navigation, route }) => {
     getSearchCourses,
     isInternetReachable,
   } = React.useContext(DataContext);
-  const { user, getLastLearnTime } = React.useContext(AuthContext);
+  const { user, token, getLastLearnTime, isChanneled } = React.useContext(AuthContext);
   const { theme, language } = React.useContext(SettingContext);
   useEffect(() => {
     navigation.setOptions({ title: route.params.course.title });
   }, []);
+  const getLastLesson = (id) => {
+    if (user && token && isChanneled(id)) {
+      ApiServices.getLastWatchLesson(token, id).then(res => res.json()).then(response => {
+        if (response.payload) {
+          setIsLesson(true);
+          setCurrLesson(response.payload.lessonId);
+          setVideoUrl(response.payload.videoUrl);
+        }
+      }).catch(err => {});
+    }
+  }
   const fetchData = (id) => {
     if (route.params.course.latestLearnTime) {
       setLearnedTime(route.params.course.latestLearnTime);
@@ -78,6 +89,7 @@ const CourseDetail = ({ navigation, route }) => {
           if (response.payload.promoVidUrl) {
             setVideoUrl(response.payload.promoVidUrl);
           }
+          getLastLesson(route.params.course.id);
         }
       })
       .catch((err) => {
@@ -156,6 +168,7 @@ const CourseDetail = ({ navigation, route }) => {
   }, []);
 
   const onVideoError = (e) => {
+    console.log(e);
     NetInfo.addEventListener((state) => {});
     NetInfo.fetch()
       .then((state) => {
@@ -181,6 +194,7 @@ const CourseDetail = ({ navigation, route }) => {
   };
   const ReloadData = () => {
     fetchData(route.params.course.id);
+    getLastLesson(route.params.course.id);
   };
   const onChangeVideo = (url, lesson_id) => {
     setVideoUrl(url);
@@ -201,7 +215,12 @@ const CourseDetail = ({ navigation, route }) => {
       <View style={styles.imageView}>
         {videoUrl ? (
           videoUrl.includes("youtube.com") ? (
-            <WebView source={{ uri: videoUrl }} />
+            <WebView 
+              source={{ uri: videoUrl }} 
+              mediaPlaybackRequiresUserAction={false} 
+              allowsInlineMediaPlayback={true}
+              allowsFullscreenVideo={true}
+            />
           ) : (
             <Video
               source={{

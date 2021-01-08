@@ -67,6 +67,7 @@ const ContentSubsection = (props) => {
     if (item.captionName) {
       content = content ? content + "\n" + item.captionName : item.captionName;
     }
+    ApiServices.updateLessonStatus(token, item.id).catch(err => {});
     ApiServices.getLessonSubtitle(token, item.courseId, item.id).then(
       (subtitle) => {
         if (subtitle && subtitle.payload) {

@@ -353,6 +353,29 @@ const searchV2 = (keyword, limit, offset) => {
   };
   return fetch("http://api.dev.letstudy.org/course/searchV2", requestOptions);
 };
+const updateLessonStatus = (token, lesson_id) => {
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
+    body: JSON.stringify({
+      lessonId: lesson_id
+    }),
+  };
+  return fetch("http://api.dev.letstudy.org/lesson/update-status", requestOptions);
+}
+const getLastWatchLesson = (token, course_id) => {
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
+  };
+  return fetch("http://api.dev.letstudy.org/course/last-watched-lesson/" + course_id, requestOptions);
+}
 const OnMoreButton = {
   onLoadMoreNewRelease : (offset) => {
     return getTopNew(10, offset + 1)
@@ -466,5 +489,7 @@ const ApiServices = {
   ratingCourse,
   searchV2,
   OnMoreButton,
+  updateLessonStatus,
+  getLastWatchLesson,
 };
 export default ApiServices;
