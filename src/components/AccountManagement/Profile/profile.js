@@ -41,14 +41,8 @@ const Profile = ({ navigation }) => {
       subValue: "",
     },
   ];*/
-  const { theme } = React.useContext(SettingContext);
-  const errorValue = [
-    "Please enter required fields (*)",
-    "Email is not valid",
-    "Password should include atleast 8 characters",
-    "Repeat Password is incorrect",
-    "Username already exists",
-  ];
+  const { theme, language } = React.useContext(SettingContext);
+  const errorValue = language.errorValuesUserInfo;
   const { user, token, setUser } = React.useContext(AuthContext);
   const [username, setUsername] = useState(user.username);
   const [type, setType] = useState(user.type);
@@ -72,6 +66,9 @@ const Profile = ({ navigation }) => {
   };
   useEffect(() => {
     onUpdate();
+    navigation.setOptions({
+      title: language.Profile,
+    });
   }, []);
   useEffect(() => {
     ApiServices.getUserInfo(token)
@@ -115,9 +112,9 @@ const Profile = ({ navigation }) => {
           setUser(response.payload);
           setErrorCode("");
           onUpdate();
-          setSuccessMessage("Updated user info successfully");
+          setSuccessMessage(language.Updateduserinfosuccessfully);
         } else {
-          setErrorCode("Update failed");
+          setErrorCode(language.Updatefailed);
           setSuccessMessage("");
         }
       })
@@ -136,7 +133,7 @@ const Profile = ({ navigation }) => {
       setSuccessMessage("");
       return;
     } else if (email == user.email) {
-      setErrorCodeEmail("Please enter different email to change email");
+      setErrorCodeEmail(language.Pleaseenterdifferentemailtochangeemail);
       setSuccessMessage("");
       return;
     }
@@ -150,9 +147,9 @@ const Profile = ({ navigation }) => {
           setUser(newUser);
           setErrorCodeEmail("");
           onUpdate();
-          setSuccessMessage("Updated email successfully");
+          setSuccessMessage(language.Updatedemailsuccessfully);
         } else {
-          setErrorCodeEmail("Email đã tồn tại");
+          setErrorCodeEmail(language.EmailAlreadyExisted);
           setSuccessMessage("");
         }
       })
@@ -167,7 +164,7 @@ const Profile = ({ navigation }) => {
       setSuccessMessage("");
       return;
     } else if (password == newPassword) {
-      setErrorCodePwd("Please enter different password");
+      setErrorCodePwd(language.Pleaseenterdifferentpassword);
       setSuccessMessage("");
       return;
     }
@@ -179,14 +176,12 @@ const Profile = ({ navigation }) => {
     ApiServices.changePassword(token, data)
       .then((res) => {
         if (!res.ok) {
-          setErrorCodePwd(
-            "Mật khẩu cũ không đúng\nhoặc không giống mật khẩu mới"
-          );
+          setErrorCodePwd(language.PwdNotcorrect);
           setSuccessMessage("");
         } else {
           setErrorCodePwd("");
           onUpdate();
-          setSuccessMessage("Updated password successfully");
+          setSuccessMessage(language.Updatedpasswordsuccessfully);
         }
       })
       .catch((err) => {
@@ -199,7 +194,7 @@ const Profile = ({ navigation }) => {
       if (Platform.OS !== "web") {
         const { status } = await ImagePickerService.requestPermission();
         if (status !== "granted") {
-          alert("Sorry, we need permissions to make this work!");
+          alert(language.Sorryweneedpermissionstomakethiswork);
           return;
         }
       }
@@ -217,7 +212,7 @@ const Profile = ({ navigation }) => {
           setAvatar(uploadResult.data.link);
           setErrorCode("");
         } else {
-          setErrorCode("Upload Image failed!");
+          setErrorCode(language.UploadImagefailed);
           setSuccessMessage("");
         }
       }
@@ -300,19 +295,19 @@ const Profile = ({ navigation }) => {
               color: theme.c_white,
             }}
           >
-            Select Avatar
+            {language.SelectAvatar}
           </Text>
         </TouchableOpacity>
         <TextInput
           style={{ ...styles.input, backgroundColor: theme.c_1f242a }}
-          label="Full Name"
+          label={language.FullName}
           theme={themeTextInput}
           value={name}
           onChangeText={(text) => setName(text)}
         />
         <TextInput
           style={{ ...styles.input, backgroundColor: theme.c_1f242a }}
-          label="Phone *"
+          label={language.Phone + " *"}
           theme={themeTextInput}
           value={phone}
           onChangeText={(text) => setPhone(text)}
@@ -321,14 +316,14 @@ const Profile = ({ navigation }) => {
           <Text style={{ color: "red", textAlign: "center" }}>{errorCode}</Text>
         ) : null}
         <TouchableOpacity style={styles.signInBtn} onPress={onUpdateProfile}>
-          <Text style={styles.buttonText}>Update</Text>
+          <Text style={styles.buttonText}>{language.Update}</Text>
         </TouchableOpacity>
         {!isEditEmail ? (
           <Button
             style={{ ...styles.signOnSSOBtn, backgroundColor: theme.c_0E0F13 }}
             onPress={() => setIsEditEmail(true)}
           >
-            <Text style={styles.buttonTextBlue}>Update Email</Text>
+            <Text style={styles.buttonTextBlue}>{language.UpdateEmail}</Text>
           </Button>
         ) : (
           <View>
@@ -345,7 +340,7 @@ const Profile = ({ navigation }) => {
               </Text>
             ) : null}
             <TouchableOpacity style={styles.signInBtn} onPress={onEmailChange}>
-              <Text style={styles.buttonText}>Update Email</Text>
+              <Text style={styles.buttonText}>{language.UpdateEmail}</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -354,13 +349,13 @@ const Profile = ({ navigation }) => {
             style={{ ...styles.signOnSSOBtn, backgroundColor: theme.c_0E0F13 }}
             onPress={() => setIsEditPwd(true)}
           >
-            <Text style={styles.buttonTextBlue}>Update Password</Text>
+            <Text style={styles.buttonTextBlue}>{language.UpdatePassword}</Text>
           </Button>
         ) : (
           <View>
             <TextInput
               style={{ ...styles.input, backgroundColor: theme.c_1f242a }}
-              label="Current Password"
+              label={language.CurrentPassword}
               theme={themeTextInput}
               secureTextEntry={secureTextEntry}
               value={password}
@@ -390,7 +385,7 @@ const Profile = ({ navigation }) => {
             />
             <TextInput
               style={{ ...styles.input, backgroundColor: theme.c_1f242a }}
-              label="New Password"
+              label={language.NewPassword}
               theme={themeTextInput}
               secureTextEntry={secureTextEntryNew}
               value={newPassword}
@@ -427,7 +422,7 @@ const Profile = ({ navigation }) => {
               style={styles.signInBtn}
               onPress={onPasswordChange}
             >
-              <Text style={styles.buttonText}>Update Password</Text>
+              <Text style={styles.buttonText}>{language.UpdatePassword}</Text>
             </TouchableOpacity>
           </View>
         )}

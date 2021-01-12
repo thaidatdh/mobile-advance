@@ -174,6 +174,9 @@ const english = {
   Username: "Username",
   canNotLoadVideo: "Can not load video",
   NoContent: "No Content",
+  noCoursefound: "No course found",
+  noAuthorfound: "No instructor found",
+  FullName: "Full Name",
 };
 const vietnamese = {
   Home: "Home",
@@ -299,6 +302,9 @@ const vietnamese = {
   Username: "Tên đăng nhập",
   canNotLoadVideo: "Không thể tải video",
   NoContent: "Không có nội dung",
+  noCoursefound: "Không có khóa học nào",
+  noAuthorfound: "Không có giáo viên nào",
+  FullName: "Họ tên",
 };
 export const Languages = {
   english,

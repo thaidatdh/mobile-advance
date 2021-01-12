@@ -15,11 +15,24 @@ const { width, height } = Dimensions.get("window");
 const SearchData = (props) => {
   const { theme, language } = React.useContext(SettingContext);
   const renderCourses = (coursesList) => {
-    return coursesList.slice().map((item, index) =>
-      index < 5 ? (
-        <ListCourseItem key={"C_" + item.id.toString()} item={item} onPress={props.onPressCourse}/>
-      ) : null
-    );
+    if (coursesList == undefined || coursesList.length == 0) {
+      return (
+        <Text style={{ color: "red", textAlign: "center" }}>
+          {language.noCoursefound}
+        </Text>
+      );
+    }
+    return coursesList
+      .slice()
+      .map((item, index) =>
+        index < 5 ? (
+          <ListCourseItem
+            key={"C_" + item.id.toString()}
+            item={item}
+            onPress={props.onPressCourse}
+          />
+        ) : null
+      );
   };
   /*const renderPaths = (pathsList) => {
     return pathsList
@@ -31,6 +44,13 @@ const SearchData = (props) => {
       );
   };*/
   const renderAuthors = (authorsList) => {
+    if (authorsList == undefined || authorsList.length == 0) {
+      return (
+        <Text style={{ color: "red", textAlign: "center" }}>
+          {language.noAuthorfound}
+        </Text>
+      );
+    }
     return authorsList
       .slice()
       .map((item, index) =>
@@ -45,7 +65,7 @@ const SearchData = (props) => {
   };
   const onSeeAllCourses = () => {
     props.onPressSeeAllCourse(props.coursesData);
-  }
+  };
   const onSeeAllAuthors = () => {
     props.onPressSeeAllAuthor(props.authorsData);
   };
